@@ -23,9 +23,6 @@ is not. Hardware inputs and assumptions remain visible and exportable.
 [Methodology](docs/methodology.md) ·
 [Third-party credits](THIRD_PARTY_NOTICES.md)
 
-The browser edition becomes available after GitHub Pages is configured to deploy
-from the `production` branch, **`/(root)`**.
-
 ![LLM-ServeScope overview](https://ryeii.github.io/LLM-ServeScope/docs/screenshots/github-pages.png)
 
 ## What it models
