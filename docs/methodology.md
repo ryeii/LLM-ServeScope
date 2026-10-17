@@ -5,6 +5,16 @@ model. This is not a page-level memory simulator, a cycle-accurate GPU emulator,
 or a validated predictor of a new chip. Every run separates architecture/workload
 facts from equations, scenario assumptions and native profile-derived results.
 
+## Credits
+
+LLM-ServeScope's behavioral modeling extension, scenario controls, visualizations,
+interface, browser execution layer and native backend integration are by
+[ryeii (Ryan Z An)](https://github.com/ryeii). The optional LLMServingSim 2.0
+reference backend is by CASYS Lab at KAIST (Jaehong Cho, Hyunmin Choi, Guseul Heo
+and Jongse Park), using their scheduler, measured profiles, Chakra DAG generation
+and ASTRA-Sim integration. SimPy supplies discrete-event scheduling for the
+behavioral engine. See [full credits and notices](../THIRD_PARTY_NOTICES.md).
+
 ## Operation model
 
 Model geometry is taken from pinned KAIST or publisher configuration files (or

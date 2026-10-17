@@ -1,4 +1,11 @@
-# Third-party credits and notices
+# Project and third-party credits and notices
+
+## LLM-ServeScope — project design and implementation
+
+[ryeii (Ryan Z An)](https://github.com/ryeii) created LLM-ServeScope's behavioral
+modeling extension, serving scenario controls, visualizations, user interface,
+browser execution layer and native backend integration. The upstream reference
+backend and third-party runtime components are credited separately below.
 
 ## LLMServingSim 2.0 — CASYS Lab at KAIST
 

@@ -95,7 +95,15 @@ ASTRA-Sim. It does not turn the behavioral model into a mechanistic GPU or memor
 simulator. Use detailed traces or an appropriate mechanistic simulator when
 instruction-, cycle-, page- or transaction-level behavior is the question.
 
-## Credit to LLMServingSim 2.0
+## Credits
+
+### LLM-ServeScope — ryeii (Ryan Z An)
+
+[ryeii (Ryan Z An)](https://github.com/ryeii) created LLM-ServeScope, including
+its behavioral modeling extension, serving scenario controls, visualizations,
+user interface, browser execution layer and native backend integration.
+
+### Reference backend — LLMServingSim 2.0
 
 LLMServingSim 2.0 is developed by **CASYS Lab at KAIST**. Credit goes to
 **Jaehong Cho, Hyunmin Choi, Guseul Heo and Jongse Park** for

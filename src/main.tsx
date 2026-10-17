@@ -2383,7 +2383,10 @@ function App() {
                 width="18"
                 height="18"
               />
-              LLM-ServeScope
+              LLM-ServeScope ·
+              <a href="https://github.com/ryeii" target="_blank" rel="noreferrer">
+                ryeii (Ryan Z An)
+              </a>
             </span>
             <a
               className="footer-credit"
@@ -2391,7 +2394,7 @@ function App() {
               target="_blank"
               rel="noreferrer"
             >
-              Credits: LLMServingSim 2.0 · CASYS Lab, KAIST
+              Reference backend: LLMServingSim 2.0 · CASYS Lab, KAIST
             </a>
             <button onClick={() => setShowMethods(true)}>
               Model notes
@@ -2441,7 +2444,16 @@ function App() {
               supplied specification. It is an independently implemented
               extension, not a reimplementation of KAIST’s measured clocks.
             </p>
-            <h3>Credit: LLMServingSim 2.0 · CASYS Lab, KAIST</h3>
+            <h3>LLM-ServeScope design and implementation</h3>
+            <p>
+              <a href="https://github.com/ryeii" target="_blank" rel="noreferrer">
+                ryeii (Ryan Z An)
+              </a>{" "}
+              created LLM-ServeScope: the behavioral modeling extension,
+              serving scenario controls, visualizations, user interface,
+              browser execution layer and native backend integration.
+            </p>
+            <h3>Reference backend: LLMServingSim 2.0 · CASYS Lab, KAIST</h3>
             <p>
               Jaehong Cho, Hyunmin Choi, Guseul Heo and Jongse Park developed
               LLMServingSim 2.0. Their MIT-licensed scheduler, measured profiles
