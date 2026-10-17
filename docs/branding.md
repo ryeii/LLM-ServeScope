@@ -22,3 +22,10 @@ logo release live (source `f3ae9ec`, production `eee9286`). The browser viewport
 was explicitly set to 1512 × 1050 for the desktop layout; the full-page capture
 is 1512 × 1402. Only its encoding was converted from JPEG to PNG. Regression
 tests do not overwrite this live-site capture with a localhost image.
+
+## README image delivery
+
+The README embeds the logo and desktop screenshot using absolute GitHub Pages
+URLs. The Pages build copies `docs/screenshots/github-pages.png` into the same
+path in its output; Vite copies the logo from `public/brand`. This keeps both
+README images available without relying on GitHub raw-image delivery.

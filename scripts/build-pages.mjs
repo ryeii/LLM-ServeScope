@@ -64,6 +64,8 @@ for (const name of [
 ])
   copy(`licenses/${name}`, `${output}/licenses/${name}`);
 copy("THIRD_PARTY_NOTICES.md", `${output}/THIRD_PARTY_NOTICES.md`);
+// Serve README imagery from Pages, avoiding dependence on GitHub raw-image delivery.
+copy("docs/screenshots/github-pages.png", `${output}/docs/screenshots/github-pages.png`);
 writeFileSync(
   `${output}/README.md`,
   `# LLM-ServeScope production deployment

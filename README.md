@@ -1,6 +1,6 @@
 # LLM-ServeScope
 
-<img src="public/brand/servescope-serving-telescope.png" alt="LLM-ServeScope logo" width="96" height="96" />
+<img src="https://ryeii.github.io/LLM-ServeScope/brand/servescope-serving-telescope.png" alt="LLM-ServeScope logo" width="96" height="96" />
 
 **Behavioral modeling of LLM serving, backed by a SimPy discrete-event simulation.**
 
@@ -24,7 +24,7 @@ is not. Hardware inputs and assumptions remain visible and exportable.
 The browser edition becomes available after GitHub Pages is configured to deploy
 from the `production` branch, **`/(root)`**.
 
-![LLM-ServeScope overview](docs/screenshots/github-pages.png)
+![LLM-ServeScope overview](https://ryeii.github.io/LLM-ServeScope/docs/screenshots/github-pages.png)
 
 ## What it models
 
