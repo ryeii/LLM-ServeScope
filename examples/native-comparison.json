@@ -1,0 +1,112 @@
+{
+  "kind": "actual_native_simulator_results",
+  "workload": {
+    "requests": 4,
+    "input_tokens": 128,
+    "output_tokens": 8
+  },
+  "results": [
+    {
+      "run": "native-demo-tp1",
+      "result_path": "runs/native-demo-tp1/result.json",
+      "result_sha256": "aa3bb4767e2d37bfe2e0ed2c5783c8adf0f25e331dab3bd442e38d073ecafa79",
+      "hardware": "RTXPRO6000",
+      "tp": 1,
+      "link_bandwidth_gibps": 16,
+      "metrics": {
+        "request_count": 4,
+        "output_tokens": 32,
+        "native_total_clocks_ns": 102459747,
+        "simulated_duration_ms": 102.459747,
+        "request_span_ms": 102.459747,
+        "output_tokens_per_second": 312.3177729494101,
+        "request_span_output_tokens_per_second": 312.3177729494101,
+        "all_tokens_per_second": 5309.402140139971,
+        "request_throughput_per_second": 39.03972161867626,
+        "mean_ttft_ms": 24.690517,
+        "mean_tpot_ms": 11.10989,
+        "mean_latency_ms": 102.459747,
+        "mean_queue_ms": 1e-06,
+        "p50_ttft_ms": 24.690517,
+        "p99_ttft_ms": 24.690517,
+        "p50_tpot_ms": 11.10989,
+        "p99_tpot_ms": 11.10989
+      },
+      "pins": {
+        "LLMServingSim": "b09c7aaab4b072d73136641841cc2688616c49eb",
+        "ASTRA-Sim": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+        "Chakra": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd"
+      },
+      "graph_node_count": 294,
+      "graph_edge_count": 293
+    },
+    {
+      "run": "native-demo-tp2",
+      "result_path": "runs/native-demo-tp2/result.json",
+      "result_sha256": "ae5a019b5644128d3a5967f60a28afae09c03bb5af9ed75ea39f20dfdc462879",
+      "hardware": "RTXPRO6000",
+      "tp": 2,
+      "link_bandwidth_gibps": 16,
+      "metrics": {
+        "request_count": 4,
+        "output_tokens": 32,
+        "native_total_clocks_ns": 76267560,
+        "simulated_duration_ms": 76.26756,
+        "request_span_ms": 75.26756,
+        "output_tokens_per_second": 419.57550497223195,
+        "request_span_output_tokens_per_second": 425.149958361876,
+        "all_tokens_per_second": 7132.783584527943,
+        "request_throughput_per_second": 52.446938121528994,
+        "mean_ttft_ms": 29.956251,
+        "mean_tpot_ms": 6.473044,
+        "mean_latency_ms": 75.26756,
+        "mean_queue_ms": 1e-06,
+        "p50_ttft_ms": 29.956251,
+        "p99_ttft_ms": 29.956251,
+        "p50_tpot_ms": 6.473044,
+        "p99_tpot_ms": 6.473044
+      },
+      "pins": {
+        "LLMServingSim": "b09c7aaab4b072d73136641841cc2688616c49eb",
+        "ASTRA-Sim": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+        "Chakra": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd"
+      },
+      "graph_node_count": 360,
+      "graph_edge_count": 359
+    },
+    {
+      "run": "native-demo-tp2-link1",
+      "result_path": "runs/native-demo-tp2-link1/result.json",
+      "result_sha256": "bd0dcac191686e47bee156de483b3af848707fc6c0b11c1cec5c3d0950d939ac",
+      "hardware": "RTXPRO6000",
+      "tp": 2,
+      "link_bandwidth_gibps": 1.0,
+      "metrics": {
+        "request_count": 4,
+        "output_tokens": 32,
+        "native_total_clocks_ns": 330905562,
+        "simulated_duration_ms": 330.905562,
+        "request_span_ms": 329.905562,
+        "output_tokens_per_second": 96.70432798588016,
+        "request_span_output_tokens_per_second": 96.9974552899475,
+        "all_tokens_per_second": 1643.9735757599626,
+        "request_throughput_per_second": 12.08804099823502,
+        "mean_ttft_ms": 268.4412,
+        "mean_tpot_ms": 8.780623,
+        "mean_latency_ms": 329.905562,
+        "mean_queue_ms": 1e-06,
+        "p50_ttft_ms": 268.4412,
+        "p99_ttft_ms": 268.4412,
+        "p50_tpot_ms": 8.780623,
+        "p99_tpot_ms": 8.780623
+      },
+      "pins": {
+        "LLMServingSim": "b09c7aaab4b072d73136641841cc2688616c49eb",
+        "ASTRA-Sim": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+        "Chakra": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd"
+      },
+      "graph_node_count": 360,
+      "graph_edge_count": 359
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.venv*/
+.vendor/
+.cache/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+runs/
+
+.native/
+*.tsbuildinfo
+test-results/
+playwright-report/

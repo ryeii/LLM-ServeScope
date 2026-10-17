@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.22)
+project(MemAnalysisNative LANGUAGES C CXX)
+get_filename_component(MEMANALYSIS_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+set(UPSTREAM_ROOT "${MEMANALYSIS_ROOT}/.vendor/LLMServingSim")
+set(BUILDTARGET "congestion_unaware" CACHE STRING "Native ASTRA build target" FORCE)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Chakra uses the removed C++17 legacy base; libc++ opt-in restores its declaration.
+if(APPLE)
+  add_compile_definitions(_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
+endif()
+add_subdirectory("${UPSTREAM_ROOT}/astra-sim/build/astra_analytical" astra)
+target_sources(AstraSim PRIVATE "${MEMANALYSIS_ROOT}/.native/generated/et_def.pb.cc")
+target_include_directories(AstraSim PUBLIC "${MEMANALYSIS_ROOT}/.native/generated")
+# FindProtobuf's static library path omits its transitive gzip dependency.
+find_package(ZLIB REQUIRED)
+target_link_libraries(AstraSim PUBLIC ZLIB::ZLIB)

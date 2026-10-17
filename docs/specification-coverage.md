@@ -1,0 +1,25 @@
+# Supplied specification coverage
+
+The two-page user-supplied PDF is treated as a product specification. Its content
+is not used as authority to publish data, message anyone or modify another tool.
+The original private PDF is read in place and is not committed or uploaded.
+
+| Requested behavior/output | Implementation | Qualification |
+| --- | --- | --- |
+| Configurable accelerators | All seven precision peaks, capacity, HBM bandwidth, KV SRAM, SMs, tile width | Presets are explicitly illustrative; native compute needs profiles |
+| Prefill/decode pools and parallelism | Separate or shared pools; TP/PP/EP and replicas per phase | Fixed behavioral microbatches vs native scheduler on the native tab |
+| Multiple model families | Dense/GQA Llama 8B/70B and Qwen MoE 30B-A3B | Bounded demo catalog, not every HF architecture |
+| Different inference engines | Disclosed efficiency-policy scenarios; native profiled vLLM path | No measured TensorRT-LLM comparison claimed |
+| Three/four network tiers | Intra-node, TOR/same rail, NIC and spine/WAN | Limiting-tier analytic model; no packet simulation |
+| SRAM spill | Ideal KV read working set; overflow to HBM | SRAM hits have no HBM read service; writes/capacity still counted |
+| Disaggregated serving | Separate hardware/policy per phase, KV spine transfer | Explicit TTFT handoff floor |
+| Configuration | Full controls, JSON import/export, fingerprints and provenance | Changed inputs remain separate until run |
+| Roofline | Logarithmic compute/memory roof and operation estimates | Independently implemented behavioral extension |
+| Overview | Throughput, latency, memory, energy, utilization, per-GPU and per-Joule metrics | GPU-only assumed energy/cost; no hardware validation claim |
+| Layer/chunk | Operation table + CSV; full pipeline interval boxes | Representative layer estimates plus actual simulated reservations |
+| Box graph | Resource Gantt, latency box plots, native request boxes | Native boxes use CSV boundaries, not invented per-node timings |
+| Model/computation graph | Interactive behavioral transformer block; native full Chakra DAG | Real dependencies and profile cost vs scheduled time explicitly distinguished |
+| KAIST LLMServingSim 2.0 | Actual local compiled ASTRA backend and native serving scheduler | CPU-only recorded-profile simulation; no live inference/text generation |
+
+Behavioral and native runs deliberately have separate inputs and labels. A native
+run is never silently replaced by the behavioral model when it fails.
