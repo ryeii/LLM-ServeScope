@@ -3,7 +3,7 @@
 `native_runner.py` launches the real KAIST Python serving scheduler, Chakra
 converter, and compiled ASTRA-Sim congestion-unaware analytical backend. It
 uses the upstream measured layer-latency tables; it does not execute an LLM or
-invent a page-level memory trace. The strategy model in MemAnalysis is a
+invent a page-level memory trace. The strategy model in ServeScope is a
 separate behavioral extension.
 
 ## Install and run

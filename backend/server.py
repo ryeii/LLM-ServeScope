@@ -110,7 +110,7 @@ def native_job(identifier, config):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "MemAnalysis/0.1"
+    server_version = "LLM-ServeScope/0.1"
 
     def log_message(self, fmt, *args):
         pass
@@ -266,5 +266,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8788)
     a = parser.parse_args()
-    print(f"LLM MemAnalysis local API + app: http://127.0.0.1:{a.port}/", flush=True)
+    print(f"LLM-ServeScope local API + app: http://127.0.0.1:{a.port}/", flush=True)
     ThreadingHTTPServer(("127.0.0.1", a.port), Handler).serve_forever()

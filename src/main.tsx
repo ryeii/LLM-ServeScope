@@ -32,6 +32,7 @@ import {
   Zap,
 } from "lucide-react";
 import "./styles.css";
+import { api, STATIC_PAGES } from "./api";
 import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
 type Obj = Record<string, any>;
@@ -46,21 +47,6 @@ const fmt = (n: number, d = 1) =>
     ? n.toLocaleString(undefined, { maximumFractionDigits: d })
     : "—";
 const clone = (o: any) => structuredClone(o);
-async function api(path: string, body?: any) {
-  const r = await fetch(
-    "/api/" + path,
-    body
-      ? {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      : {},
-  );
-  const data = await r.json();
-  if (!r.ok) throw Error(data.error || "Request failed");
-  return data;
-}
 function download(name: string, data: any, type = "application/json") {
   const url = URL.createObjectURL(
     new Blob(
@@ -769,6 +755,44 @@ function Native({
     : r?.graphs || {};
   const graph =
     graphs[graphPhase] || (Object.values(graphs)[0] as Obj | undefined);
+  if (STATIC_PAGES)
+    return (
+      <section className="card native-browser-note">
+        <FlaskConical size={28} />
+        <h2>LLMServingSim 2.0 · local reference engine</h2>
+        <p>
+          LLMServingSim 2.0 is developed by CASYS Lab at KAIST: Jaehong Cho,
+          Hyunmin Choi, Guseul Heo and Jongse Park.
+        </p>
+        <p>
+          This GitHub Pages edition runs LLM-ServeScope’s behavioral
+          Python/SimPy model in your browser. Running the native KAIST
+          scheduler, measured operation profiles, Chakra graphs and compiled
+          ASTRA-Sim requires the local installation.
+        </p>
+        <a
+          href="https://github.com/ryeii/LLM-ServeScope#local-installation"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Local installation instructions <ExternalLink size={14} />
+        </a>
+        <a
+          href="https://github.com/casys-kaist/LLMServingSim"
+          target="_blank"
+          rel="noreferrer"
+        >
+          LLMServingSim 2.0 source <ExternalLink size={14} />
+        </a>
+        <a
+          href="https://arxiv.org/abs/2602.23036"
+          target="_blank"
+          rel="noreferrer"
+        >
+          LLMServingSim 2.0 paper <ExternalLink size={14} />
+        </a>
+      </section>
+    );
   return (
     <div className="native-page">
       <div className="native-intro">
@@ -1252,7 +1276,10 @@ function App() {
     return (
       <div className="loading">
         <LoaderCircle className="spin" />
-        {error || "Loading MemAnalysis…"}
+        {error ||
+          (STATIC_PAGES
+            ? "Loading Python + SimPy browser runtime…"
+            : "Loading LLM-ServeScope…")}
       </div>
     );
   const h = config[editPhase].hardware;
@@ -1341,12 +1368,12 @@ function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <a className="brand" href="/">
+        <a className="brand" href={import.meta.env.BASE_URL}>
           <span className="brand-mark">
             <Layers3 size={22} />
           </span>
           <strong>
-            LLM <b>MemAnalysis</b>
+            LLM-<b>ServeScope</b>
           </strong>
           <span className="brand-divider" />
           <span className="brand-context">Architecture exploration</span>
@@ -1354,7 +1381,7 @@ function App() {
         <div className="top-right">
           <span className="local-pill">
             <i />
-            Local workspace
+            {STATIC_PAGES ? "Browser simulation" : "Local workspace"}
           </span>
           <button
             className="icon-button"
@@ -1369,7 +1396,7 @@ function App() {
             target="_blank"
             rel="noreferrer"
           >
-            KAIST engine
+            LLMServingSim 2.0
             <ExternalLink size={13} />
           </a>
         </div>
@@ -1820,7 +1847,7 @@ function App() {
           <div className="sidebar-footer">
             <button
               className="text-button"
-              onClick={() => download("memanalysis-scenario.json", config)}
+              onClick={() => download("servescope-scenario.json", config)}
             >
               <Download size={13} />
               Save scenario
@@ -1901,7 +1928,7 @@ function App() {
               <button
                 className="text-button"
                 disabled={!r}
-                onClick={() => download("memanalysis-result.json", r)}
+                onClick={() => download("servescope-result.json", r)}
               >
                 <Download size={13} />
                 Export run
@@ -1941,7 +1968,7 @@ function App() {
               <div className="result-caption">
                 <span>
                   <FlaskConical size={13} />
-                  MemAnalysis behavioral estimate · SimPy
+                  LLM-ServeScope behavioral estimate · SimPy
                 </span>
                 <button onClick={() => setShowMethods(true)}>
                   Assumptions & provenance
@@ -2073,6 +2100,9 @@ function App() {
                   <div className="method-note">
                     <CircleHelp size={17} />
                     <p>
+                      <strong>
+                        Behavioral simulation, not mechanistic simulation.
+                      </strong>{" "}
                       Hardware presets and engine efficiency are scenario
                       assumptions. Use the native LLMServingSim tab for
                       profile-driven reference runs, then calibrate the
@@ -2333,9 +2363,16 @@ function App() {
           <footer>
             <span>
               <Layers3 size={13} />
-              LLM MemAnalysis
-              <span>Behavioral modeling for architectural decisions</span>
+              LLM-ServeScope
             </span>
+            <a
+              className="footer-credit"
+              href="https://github.com/casys-kaist/LLMServingSim"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Credits: LLMServingSim 2.0 · CASYS Lab, KAIST
+            </a>
             <button onClick={() => setShowMethods(true)}>
               Model notes
               <ArrowRight size={12} />
@@ -2365,6 +2402,17 @@ function App() {
                 <X size={20} />
               </button>
             </div>
+            <h3>Limitations: behavioral, not mechanistic</h3>
+            <p>
+              LLM-ServeScope is a behavioral simulation, not a mechanistic
+              simulation. It estimates aggregate operation costs and
+              serving-resource contention. It does not reproduce individual GPU
+              instructions, cycle-level execution, page-level memory events,
+              cache replacement, memory-controller transactions or network
+              packets. Box graphs show modeled scheduling intervals, not
+              captured hardware events. Calibrate assumptions against
+              measurements before relying on absolute estimates.
+            </p>
             <h3>Behavioral scenario model</h3>
             <p>
               Our closed-form operation model uses max(compute, memory), adds
@@ -2373,7 +2421,14 @@ function App() {
               supplied specification. It is an independently implemented
               extension, not a reimplementation of KAIST’s measured clocks.
             </p>
-            <h3>Native LLMServingSim 2.0</h3>
+            <h3>Credit: LLMServingSim 2.0 · CASYS Lab, KAIST</h3>
+            <p>
+              Jaehong Cho, Hyunmin Choi, Guseul Heo and Jongse Park developed
+              LLMServingSim 2.0. Their MIT-licensed scheduler, measured profiles
+              and ASTRA-Sim integration are used by the local reference path.
+              LLM-ServeScope’s behavioral equations, interface and browser
+              execution layer are independently implemented.
+            </p>
             <p>
               Runs the pristine pinned KAIST scheduler, measured operation
               profiles, Chakra computation DAG and ASTRA-Sim analytical backend.
@@ -2406,9 +2461,9 @@ function App() {
             <div className="method-note">
               <CircleHelp size={16} />
               <p>
-                MemAnalysis explores high-level behavior. MemScope inspects
-                detailed recorded and modeled memory events. Neither turns an
-                uncalibrated architecture assumption into a hardware
+                LLM-ServeScope explores high-level behavior. LLM-MemScope
+                inspects detailed recorded and modeled memory events. Neither
+                turns an uncalibrated architecture assumption into a hardware
                 measurement.
               </p>
             </div>

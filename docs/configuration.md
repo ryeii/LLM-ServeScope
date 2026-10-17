@@ -111,7 +111,7 @@ concurrent transfers as one exclusively reserved resource.
 
 Scenario/result JSON includes the resolved model geometry or preset ID, pool
 policies, all hardware inputs and a SHA-256 fingerprint. Behavioral output uses
-`memanalysis.behavioral.v2`; legacy scenarios without new controls remain valid
+`servescope.behavioral.v2`; legacy scenarios without new controls remain valid
 and receive documented defaults. A legacy top-level `batch_size` initializes
 both pools; explicit per-pool values take precedence. On resolution, that legacy
 field becomes an alias for the prefill batch cap.

@@ -2427,3 +2427,33 @@ td b {
   align-items: center;
   color: #286c60;
 }
+
+.native-browser-note {
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.native-browser-note h2 {
+  font-size: 22px;
+}
+.native-browser-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #286c60;
+}
+footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+footer {
+  flex-wrap: wrap;
+}
+.footer-credit {
+  color: #52697a;
+  line-height: 1.6;
+}

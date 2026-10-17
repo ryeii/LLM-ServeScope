@@ -215,7 +215,7 @@ def execute(args):
     dump(output / 'status.json', {'status': 'running'})
     try:
         source = provenance(args.hardware)
-        run_id = 'memanalysis_' + uuid.uuid4().hex
+        run_id = 'servescope_' + uuid.uuid4().hex
         # Upstream intentionally launches this fixed, gitignored build path.
         # Its symlink targets our isolated binary; no tracked source is changed.
         expected = UPSTREAM / 'astra-sim/build/astra_analytical/build/AnalyticalAstra/bin/AnalyticalAstra'
@@ -318,7 +318,7 @@ def execute(args):
                       'Compute/kernel latency uses upstream measured profiles; changing memory/network specifications does not reprofile kernels.',
                       'Native DAG profile costs are not scheduled node start/end times. Request timeline boundaries come directly from the native request CSV.',
                       'Native total-clock duration/throughput include simulator control/idle intervals; request-span metrics use the CSV completion window.',
-                      'Roofline/SRAM spill/hierarchical strategy outputs in MemAnalysis are a separately labelled behavioral extension, not native KAIST results.'
+                      'Roofline/SRAM spill/hierarchical strategy outputs in ServeScope are a separately labelled behavioral extension, not native KAIST results.'
                   ]}
         dump(output / 'result.json', result)
         dump(output / 'status.json', {'status': 'completed', 'result': str((output/'result.json').relative_to(ROOT))})

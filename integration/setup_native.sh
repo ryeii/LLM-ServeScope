@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 SIM_SOURCE="$ROOT/.vendor/LLMServingSim"
-PYTHON_BIN="${MEMANALYSIS_PYTHON:-/opt/homebrew/bin/python3.10}"
+PYTHON_BIN="${SERVESCOPE_PYTHON:-/opt/homebrew/bin/python3.10}"
 if [[ ! -d "$SIM_SOURCE/.git" ]]; then
   mkdir -p .vendor
   git clone https://github.com/casys-kaist/LLMServingSim.git "$SIM_SOURCE"

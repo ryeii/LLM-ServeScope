@@ -114,7 +114,7 @@ extrapolation as a measured KAIST result. No accuracy percentage is claimed here
 ## Reproducibility
 
 All results include resolved inputs, configuration SHA-256 and source revisions.
-Behavioral results now use `memanalysis.behavioral.v2`. Legacy scenarios with a
+Behavioral results now use `servescope.behavioral.v2`. Legacy scenarios with a
 single top-level `batch_size` and missing server controls are still accepted;
 that batch size initializes both pool caps. Resolved per-pool caps take precedence,
 and the top-level field remains an alias for the prefill cap.

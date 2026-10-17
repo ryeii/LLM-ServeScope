@@ -1013,7 +1013,7 @@ def simulate(config):
         / (elapsed * n_gpus),
     )
     warnings = [
-        "Behavioral estimates, not measured hardware performance or a KAIST validation claim.",
+        "Behavioral simulation, not mechanistic simulation. Estimates do not model GPU instructions, cycles, page-level memory events or physical network packets; not measured hardware performance or a KAIST validation claim.",
         "Fixed prefill microbatches with optional decode splitting; no cross-prefill merge or continuous rebatching. Independent FIFO phase admission limits are per replica and held across all chunks/tokens.",
         "Memory utilization and runtime reservation reduce usable device capacity. No offload, allocator fragmentation or recomputation is modeled.",
         "Uniform decoder layers with RMSNorm, RoPE and SwiGLU; optional QK normalization and routed experts. MLA, hybrid attention, shared experts, encoder-decoder and vision encoders are outside this architecture model.",
@@ -1028,8 +1028,8 @@ def simulate(config):
             "TPOT is zero because no inter-token interval exists for a one-token output."
         )
     return dict(
-        schema_version="memanalysis.behavioral.v2",
-        engine="MemAnalysis behavioral / SimPy",
+        schema_version="servescope.behavioral.v2",
+        engine="LLM-ServeScope behavioral / SimPy",
         config=c,
         model=m,
         metrics=metrics,
