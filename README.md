@@ -10,7 +10,11 @@ performance and tokens per Joule. It is **behavioral, not mechanistic simulation
 The same Python model runs in a Pyodide browser worker. The compiled native
 LLMServingSim/ASTRA-Sim reference engine requires the local installation.
 
-Credit: LLMServingSim 2.0 by CASYS Lab at KAIST — Jaehong Cho, Hyunmin Choi,
+LLM-ServeScope design and implementation: [ryeii (Ryan Z An)](https://github.com/ryeii),
+including the behavioral modeling extension, interface, visualizations, browser
+execution layer and native backend integration.
+
+Reference backend: LLMServingSim 2.0 by CASYS Lab at KAIST — Jaehong Cho, Hyunmin Choi,
 Guseul Heo and Jongse Park. [Upstream source](https://github.com/casys-kaist/LLMServingSim).
 See THIRD_PARTY_NOTICES.md and licenses/ for retained credits and license texts.
 
