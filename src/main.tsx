@@ -1397,6 +1397,15 @@ function App() {
           </button>
           <a
             className="upstream-link"
+            href="https://github.com/ryeii/LLM-ServeScope"
+            target="_blank"
+            rel="noreferrer"
+          >
+            ServeScope
+            <ExternalLink size={13} />
+          </a>
+          <a
+            className="upstream-link"
             href="https://github.com/casys-kaist/LLMServingSim"
             target="_blank"
             rel="noreferrer"
