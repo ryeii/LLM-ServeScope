@@ -1370,7 +1370,12 @@ function App() {
       <header className="topbar">
         <a className="brand" href={import.meta.env.BASE_URL}>
           <span className="brand-mark">
-            <Layers3 size={22} />
+            <img
+              src={`${import.meta.env.BASE_URL}brand/servescope-logo.png`}
+              alt=""
+              width="42"
+              height="42"
+            />
           </span>
           <strong>
             LLM-<b>ServeScope</b>
@@ -2362,7 +2367,13 @@ function App() {
           )}
           <footer>
             <span>
-              <Layers3 size={13} />
+              <img
+                className="footer-logo"
+                src={`${import.meta.env.BASE_URL}brand/servescope-logo.png`}
+                alt=""
+                width="18"
+                height="18"
+              />
               LLM-ServeScope
             </span>
             <a

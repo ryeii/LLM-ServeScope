@@ -47,10 +47,19 @@ test("static Pages runs the same Python SimPy model without an API or external a
     "href",
     "/LLM-ServeScope/",
   );
-  await page.screenshot({
-    path: "docs/screenshots/github-pages.png",
-    fullPage: true,
-  });
+  // The README screenshot is captured from the live deployment after publishing,
+  // not overwritten by a localhost regression test.
+  const logo = page.locator(".brand-mark img");
+  await expect(logo).toBeVisible();
+  expect(
+    await logo.evaluate(
+      (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
+    ),
+  ).toBeTruthy();
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
+    "href",
+    "/LLM-ServeScope/brand/servescope-logo.png",
+  );
   expect(apiRequests).toEqual([]);
   expect(remoteRequests).toEqual([]);
   expect(errors).toEqual([]);
@@ -97,13 +106,11 @@ test("Pages supports scenario changes and six output families and explains the l
     page.getByRole("button", { name: "Run native simulator", exact: true }),
   ).toHaveCount(0);
   await page.getByRole("button", { name: "Overview", exact: true }).click();
-  await page
-    .getByLabel("Import scenario", { exact: true })
-    .setInputFiles({
-      name: "invalid.json",
-      mimeType: "application/json",
-      buffer: Buffer.from("{}"),
-    });
+  await page.getByLabel("Import scenario", { exact: true }).setInputFiles({
+    name: "invalid.json",
+    mimeType: "application/json",
+    buffer: Buffer.from("{}"),
+  });
   await expect(page.getByRole("alert")).toContainText(
     "Choose a supported model",
   );
