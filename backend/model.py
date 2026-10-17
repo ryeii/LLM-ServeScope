@@ -7,112 +7,8 @@ import simpy
 
 ROOT = Path(__file__).resolve().parents[1]
 PIN = "b09c7aaab4b072d73136641841cc2688616c49eb"
-MODELS = {
-    "llama8": dict(
-        name="Llama 3.1 8B",
-        source="meta-llama/Llama-3.1-8B",
-        hidden=4096,
-        intermediate=14336,
-        layers=32,
-        heads=32,
-        kv_heads=8,
-        head_dim=128,
-        vocab=128256,
-        experts=1,
-        top_k=1,
-    ),
-    "llama70": dict(
-        name="Llama 3.1 70B",
-        source="meta-llama/Llama-3.1-70B",
-        hidden=8192,
-        intermediate=28672,
-        layers=80,
-        heads=64,
-        kv_heads=8,
-        head_dim=128,
-        vocab=128256,
-        experts=1,
-        top_k=1,
-    ),
-    "qwen30": dict(
-        name="Qwen3 30B-A3B",
-        source="Qwen/Qwen3-30B-A3B-Instruct-2507",
-        hidden=2048,
-        intermediate=768,
-        layers=48,
-        heads=32,
-        kv_heads=4,
-        head_dim=128,
-        vocab=151936,
-        experts=128,
-        top_k=8,
-    ),
-}
-BASE = dict(
-    fp4_tensor_tflops=0,
-    fp8_tensor_tflops=1979,
-    bf16_tensor_tflops=989,
-    fp16_tensor_tflops=989,
-    tf32_tensor_tflops=494,
-    int8_tensor_tflops=1979,
-    fp32_tflops=67,
-    main_memory_GB=80,
-    dram_bandwidth_TBps=3.35,
-    sram_cache_MB=50,
-    num_sms=132,
-    tensor_width=64,
-    intra_node_bw_GBps=450,
-    chip_cluster_size=8,
-    same_rail_bw_GBps=50,
-    same_rail_gpus=64,
-    scale_out_bw_GBps=50,
-    default_GPUs_per_rack=64,
-    cluster_default_racks=8,
-    tdp_watts=700,
-    idle_watts=120,
-    compute_efficiency=0.65,
-    memory_efficiency=0.8,
-    network_latency_us=2,
-    collective_allreduce_fraction=0.75,
-    collective_alltoall_fraction=0.65,
-    collective_alltoall_offset=3,
-    pj_per_flop=0,
-    pj_per_vop=0,
-    pj_per_mem_byte=0,
-    pj_per_net_byte=0,
-    hourly_cost=3.0,
-)
-HARDWARE = {
-    "h100": dict(
-        BASE,
-        name="H100 SXM · illustrative",
-        provenance="Illustrative strategy preset; peak inputs require calibration. Dense, non-sparse compute convention.",
-    ),
-    "rtx6000": dict(
-        BASE,
-        name="RTX PRO 6000 · profile reference",
-        main_memory_GB=102,
-        dram_bandwidth_TBps=1.5976,
-        sram_cache_MB=134.217728,
-        num_sms=188,
-        bf16_tensor_tflops=503,
-        fp16_tensor_tflops=503,
-        fp8_tensor_tflops=1006,
-        fp4_tensor_tflops=2012,
-        fp32_tflops=125,
-        intra_node_bw_GBps=30.85,
-        chip_cluster_size=2,
-        tdp_watts=600,
-        idle_watts=90,
-        hourly_cost=2.75,
-        provenance="Capacity/BW/L2/SM/TDP from upstream RTXPRO6000 hardware.yaml; compute peaks and efficiency are explicit illustrative inputs. Native mode uses measured operation profiles.",
-    ),
-    "custom": dict(
-        BASE,
-        name="Custom accelerator",
-        provenance="User-supplied architecture assumptions; not measured unless separately calibrated.",
-    ),
-}
+from .catalog import MODELS, HARDWARE, BASE
+
 DEFAULT = dict(
     model_id="llama70",
     precision="bf16",
@@ -161,10 +57,52 @@ def number(value, name, low, high, integer=False):
     return int(value) if integer else float(value)
 
 
-def validate(config):
-    c = copy.deepcopy(config)
+def resolve_model(c):
     if c.get("model_id") not in MODELS:
         raise ValueError("Choose a supported model architecture.")
+    if c["model_id"] != "custom":
+        return copy.deepcopy(MODELS[c["model_id"]])
+    raw = c.get("custom_model")
+    if not isinstance(raw, dict):
+        raise ValueError("Custom decoder geometry is required.")
+    name = raw.get("name", "Custom decoder")
+    if not isinstance(name, str) or not 1 <= len(name.strip()) <= 80:
+        raise ValueError("Custom model name must contain 1–80 characters.")
+    m = dict(
+        name=name.strip(),
+        source="User-defined decoder geometry",
+        source_url="",
+        source_revision="user",
+    )
+    for key, lo, hi in [
+        ("hidden", 128, 65536),
+        ("intermediate", 128, 262144),
+        ("layers", 1, 256),
+        ("heads", 1, 512),
+        ("kv_heads", 1, 512),
+        ("head_dim", 8, 512),
+        ("vocab", 128, 300000),
+        ("experts", 1, 256),
+        ("top_k", 1, 16),
+        ("max_context", 1, 1048576),
+    ]:
+        m[key] = number(raw.get(key), "model." + key, lo, hi, True)
+    if m["heads"] % m["kv_heads"]:
+        raise ValueError("KV heads must divide attention heads (MHA, GQA or MQA).")
+    if m["top_k"] > m["experts"]:
+        raise ValueError("Active experts cannot exceed total experts.")
+    for key in ("tie_embeddings", "qk_norm"):
+        if type(raw.get(key)) is not bool:
+            raise ValueError("model." + key + " must be a boolean.")
+        m[key] = raw[key]
+    return m
+
+
+def validate(config):
+    c = copy.deepcopy(config)
+    m = resolve_model(c)
+    if c["model_id"] == "custom":
+        c["custom_model"] = m
     if c.get("precision") not in BYTES:
         raise ValueError("Unsupported precision.")
     if c.get("inference_engine") not in ("vllm", "trtllm", "eager"):
@@ -178,13 +116,38 @@ def validate(config):
     ]:
         c[name] = number(c.get(name), name, lo, hi, True)
     c["arrival_rate"] = number(c.get("arrival_rate"), "arrival_rate", 0.01, 10000)
+    c["kv_precision"] = c.get("kv_precision", "bf16")
+    if c["kv_precision"] not in ("bf16", "fp16", "fp8"):
+        raise ValueError("Unsupported KV cache precision.")
+    if c["input_tokens"] + c["output_tokens"] - 1 > m["max_context"]:
+        raise ValueError(f'Model context limit is {m["max_context"]} tokens.')
     if type(c.get("separated")) is not bool:
         raise ValueError("separated must be a boolean.")
+    if not c["separated"]:
+        c["decode"] = copy.deepcopy(c["prefill"])
     for phase in ("prefill", "decode"):
         p = c[phase]
+        p["batch_size"] = number(
+            p.get("batch_size", c["batch_size"]), phase + ".batch_size", 1, 32, True
+        )
+        p["max_concurrent_batches"] = number(
+            p.get("max_concurrent_batches", 128),
+            phase + ".max_concurrent_batches",
+            1,
+            128,
+            True,
+        )
+        p["memory_utilization"] = number(
+            p.get("memory_utilization", 1), phase + ".memory_utilization", 0.1, 1
+        )
+        p["runtime_reserved_GB"] = number(
+            p.get("runtime_reserved_GB", 0), phase + ".runtime_reserved_GB", 0, 10000
+        )
+        p["engine"] = p.get("engine", "inherit")
+        if p["engine"] not in ("inherit", "vllm", "trtllm", "eager"):
+            raise ValueError("Unsupported phase engine policy.")
         for name in ("tp", "pp", "ep", "replicas"):
-            p[name] = number(p.get(name), phase + "." + name, 1, 16, True)
-        m = MODELS[c["model_id"]]
+            p[name] = number(p.get(name), phase + "." + name, 1, 64, True)
         if m["heads"] % p["tp"] or m["layers"] % p["pp"]:
             raise ValueError(
                 "TP must divide attention heads and PP must divide transformer layers."
@@ -204,6 +167,7 @@ def validate(config):
                 "idle_watts",
                 "collective_alltoall_offset",
                 "sram_cache_MB",
+                "launch_overhead_us",
             ):
                 lo = 0
             if key in (
@@ -224,7 +188,11 @@ def validate(config):
                 lo = 1
                 hi = 65536
             p["hardware"][key] = number(
-                p["hardware"].get(key),
+                (
+                    p["hardware"].get(key, BASE[key])
+                    if key in ("clock_scale", "launch_overhead_us")
+                    else p["hardware"].get(key)
+                ),
                 phase + "." + key,
                 lo,
                 hi,
@@ -242,6 +210,11 @@ def validate(config):
         if h[PEAK[c["precision"]]] <= 0:
             raise ValueError(
                 f'{phase.capitalize()} hardware has no {c["precision"]} compute profile.'
+            )
+        h["clock_scale"] = number(h["clock_scale"], phase + ".clock_scale", 0.1, 2)
+        if p["runtime_reserved_GB"] >= h["main_memory_GB"] * p["memory_utilization"]:
+            raise ValueError(
+                "Runtime memory reservation leaves no usable device memory."
             )
         if h["idle_watts"] > h["tdp_watts"]:
             raise ValueError("Idle power cannot exceed TDP.")
@@ -266,9 +239,22 @@ def validate(config):
     )
     if not c["separated"]:
         c["decode"] = copy.deepcopy(c["prefill"])
-    budget = math.ceil(c["requests"] / c["batch_size"]) * (
-        math.ceil(c["input_tokens"] / c["prefill_chunk"]) * c["prefill"]["pp"]
-        + c["output_tokens"] * c["decode"]["pp"]
+    c["batch_size"] = c["prefill"]["batch_size"]  # Legacy schema alias.
+    c["network"]["handoff_channels"] = number(
+        c["network"].get("handoff_channels", 1), "KV transfer channels", 1, 16, True
+    )
+    prefill_batches = [
+        min(c["batch_size"], c["requests"] - i)
+        for i in range(0, c["requests"], c["batch_size"])
+    ]
+    decode_batches = sum(
+        math.ceil(n / c["decode"]["batch_size"]) for n in prefill_batches
+    )
+    budget = (
+        len(prefill_batches)
+        * math.ceil(c["input_tokens"] / c["prefill_chunk"])
+        * c["prefill"]["pp"]
+        + decode_batches * c["output_tokens"] * c["decode"]["pp"]
     )
     if budget > 40000:
         raise ValueError(
@@ -281,7 +267,15 @@ def parameters(m):
     h = m["hidden"]
     q = m["heads"] * m["head_dim"]
     kv = m["kv_heads"] * m["head_dim"]
-    shared = m["layers"] * (h * (q + 2 * kv) + q * h + 2 * h) + 2 * h * m["vocab"] + h
+    shared = (
+        m["layers"] * (h * (q + 2 * kv) + q * h + 2 * h)
+        + (1 if m.get("tie_embeddings") else 2) * h * m["vocab"]
+        + h
+    )
+    if m.get("qk_norm"):
+        shared += m["layers"] * 2 * m["head_dim"]
+    if m["experts"] > 1:
+        shared += m["layers"] * h * m["experts"]
     expert = m["layers"] * 3 * h * m["intermediate"] * m["experts"]
     return shared, expert
 
@@ -315,7 +309,7 @@ def fabric(group, h, network):
 
 
 def phase_ops(c, phase, batch, tokens, context):
-    m = MODELS[c["model_id"]]
+    m = resolve_model(c)
     p = c[phase]
     h = p["hardware"]
     tp = p["tp"]
@@ -326,18 +320,23 @@ def phase_ops(c, phase, batch, tokens, context):
     kv = m["kv_heads"] * m["head_dim"]
     inter = m["intermediate"]
     n = batch * tokens
-    peak = h[PEAK[c["precision"]]] * 1e12
+    peak = h[PEAK[c["precision"]]] * 1e12 * h["clock_scale"]
     # Engine knobs are disclosed scenario assumptions, not measured engine deltas.
     engine = {"vllm": (0.97, 2.5), "trtllm": (1, 2), "eager": (0.8, 8)}[
-        c["inference_engine"]
+        c["inference_engine"] if p["engine"] == "inherit" else p["engine"]
     ]
     active_experts = (
         1
         if m["experts"] == 1
         else m["experts"] * (1 - (1 - m["top_k"] / m["experts"]) ** n)
     )
-    kv_layer = 2 * batch * context * max(1, m["kv_heads"] / tp) * m["head_dim"] * 2
-    kv_write = 2 * batch * tokens * max(1, m["kv_heads"] / tp) * m["head_dim"] * 2
+    kv_dtype = BYTES[c["kv_precision"]]
+    kv_layer = (
+        2 * batch * context * max(1, m["kv_heads"] / tp) * m["head_dim"] * kv_dtype
+    )
+    kv_write = (
+        2 * batch * tokens * max(1, m["kv_heads"] / tp) * m["head_dim"] * kv_dtype
+    )
     sram_per_layer = h["sram_cache_MB"] * 1e6 / (m["layers"] / p["pp"])
     spill = max(0, kv_layer - sram_per_layer)
     attention_flops = (
@@ -355,7 +354,7 @@ def phase_ops(c, phase, batch, tokens, context):
         tiles = max(1, math.ceil(n / 64)) * math.ceil(out / (tp * h["tensor_width"]))
         tile_util = min(1, max(0.08, tiles / (h["num_sms"] * 2))) if not vector else 1
         effective = (
-            (h["fp32_tflops"] * 1e12 if vector else peak)
+            (h["fp32_tflops"] * 1e12 * h["clock_scale"] if vector else peak)
             * h["compute_efficiency"]
             * tile_util
             * engine[0]
@@ -364,7 +363,7 @@ def phase_ops(c, phase, batch, tokens, context):
         memory = (
             traffic / (h["dram_bandwidth_TBps"] * 1e12 * h["memory_efficiency"]) * 1000
         )
-        launch = engine[1] / 1000
+        launch = (engine[1] + h["launch_overhead_us"]) / 1000
         ops.append(
             dict(
                 id=name.lower().replace(" ", "_"),
@@ -400,6 +399,14 @@ def phase_ops(c, phase, batch, tokens, context):
         2 * n * hidden * dtype / tp,
         out=q + 2 * kv,
     )
+    if m.get("qk_norm"):
+        op(
+            "QK normalization",
+            5 * n * (q + kv) / tp,
+            2 * m["head_dim"] * dtype,
+            2 * n * (q + kv) * dtype / tp,
+            vector=True,
+        )
     op("Rotary position", 6 * n * q / tp, 0, 2 * n * q * dtype / tp, vector=True)
     op("Attention", attention_flops, 0, 2 * n * q * dtype / tp, spill + kv_write, out=q)
     op(
@@ -415,6 +422,14 @@ def phase_ops(c, phase, batch, tokens, context):
         2 * n * hidden * dtype / tp,
         vector=True,
     )
+    if m["experts"] > 1:
+        op(
+            "Expert router",
+            2 * n * hidden * m["experts"] / tp,
+            hidden * m["experts"] * dtype / tp,
+            n * m["experts"] * dtype / tp,
+            out=m["experts"],
+        )
     mlp_div = tp * ep
     op(
         "Gate + up projection",
@@ -502,11 +517,13 @@ def phase_ops(c, phase, batch, tokens, context):
     order = [
         "Input RMSNorm",
         "QKV projection",
+        "QK normalization",
         "Rotary position",
         "Attention",
         "Output projection",
         "Attention all-reduce",
         "FFN RMSNorm",
+        "Expert router",
         "EP dispatch",
         "Gate + up projection",
         "SwiGLU",
@@ -537,21 +554,31 @@ def percentile(values, p):
 
 def simulate(config):
     c = validate(config)
-    m = MODELS[c["model_id"]]
+    m = resolve_model(c)
     shared, expert = parameters(m)
     dtype = BYTES[c["precision"]]
-    max_batch = min(c["batch_size"], c["requests"])
+    phase_batch = dict(
+        prefill=min(c["prefill"]["batch_size"], c["requests"]),
+        decode=min(
+            c["prefill"]["batch_size"], c["decode"]["batch_size"], c["requests"]
+        ),
+    )
     memory = {}
     warnings = []
     for phase in ("prefill", "decode"):
         p = c[phase]
         h = p["hardware"]
+        max_batch = phase_batch[phase]
         group = p["tp"] * p["pp"] * p["ep"]
         weight = (shared + expert / p["ep"]) * dtype / (p["tp"] * p["pp"])
         # Conservatively reserve max-context KV for every request assigned to one replica, including queued batches.
-        batches_per_replica = math.ceil(
-            math.ceil(c["requests"] / max_batch) / p["replicas"]
-        )
+        phase_batches = math.ceil(c["requests"] / max_batch)
+        if phase == "decode":
+            phase_batches = sum(
+                math.ceil(min(c["batch_size"], c["requests"] - i) / max_batch)
+                for i in range(0, c["requests"], c["batch_size"])
+            )
+        batches_per_replica = math.ceil(phase_batches / p["replicas"])
         concurrent = min(c["requests"], max_batch * batches_per_replica)
         kv = (
             2
@@ -559,7 +586,7 @@ def simulate(config):
             * (c["input_tokens"] + c["output_tokens"] - 1)
             * max(1, m["kv_heads"] / p["tp"])
             * m["head_dim"]
-            * 2
+            * BYTES[c["kv_precision"]]
             * m["layers"]
             / p["pp"]
         )
@@ -574,22 +601,29 @@ def simulate(config):
             else max_batch * m["hidden"] * dtype * 8 / p["tp"]
         )
         used = weight + kv + activation
-        capacity = h["main_memory_GB"] * 1e9
+        usable_GB = (
+            h["main_memory_GB"] * p["memory_utilization"] - p["runtime_reserved_GB"]
+        )
+        capacity = usable_GB * 1e9
         memory[phase] = dict(
             weights_GB=weight / 1e9,
             kv_GB=kv / 1e9,
             activation_GB=activation / 1e9,
             total_GB=used / 1e9,
-            capacity_GB=h["main_memory_GB"],
+            capacity_GB=usable_GB,
+            physical_capacity_GB=h["main_memory_GB"],
+            runtime_reserved_GB=p["runtime_reserved_GB"],
+            memory_utilization=p["memory_utilization"],
             headroom_GB=(capacity - used) / 1e9,
             gpus=group * p["replicas"],
         )
         if used > capacity:
             raise ValueError(
-                f'{phase.capitalize()} requires about {used/1e9:.1f} GB/GPU, above {h["main_memory_GB"]:g} GB. Increase TP/PP/EP or memory capacity, or reduce batch/context.'
+                f"{phase.capitalize()} requires about {used/1e9:.1f} GB/GPU, above {usable_GB:g} GB usable memory. Increase TP/PP/EP or memory capacity, or reduce batch/context."
             )
     env = simpy.Environment()
     resources = {}
+    admissions = {}
     pipeline_links = {}
     busy = {}
     timeline = []
@@ -605,12 +639,19 @@ def simulate(config):
         p = c[phase]
         if phase == "decode" and not c["separated"]:
             resources[phase] = resources["prefill"]
+            admissions[phase] = admissions["prefill"]
             continue
+        admissions[phase] = [
+            simpy.Resource(env, capacity=p["max_concurrent_batches"])
+            for _ in range(p["replicas"])
+        ]
         resources[phase] = [
             [simpy.Resource(env, capacity=1) for _ in range(p["pp"])]
             for _ in range(p["replicas"])
         ]
-    transfer = simpy.Resource(env, capacity=1)
+    transfer = [
+        simpy.Resource(env, capacity=1) for _ in range(c["network"]["handoff_channels"])
+    ]
     for phase in ("prefill", "decode"):
         shared_phase = "prefill" if not c["separated"] else phase
         for replica in range(c[phase]["replicas"]):
@@ -619,7 +660,9 @@ def simulate(config):
                     (shared_phase, replica, stage), simpy.Resource(env, capacity=1)
                 )
 
-    def work(phase, batch, tokens, context, replica, batch_id, chunk_index):
+    def work(
+        phase, batch, tokens, context, replica, batch_id, chunk_index, request_ids
+    ):
         p = c[phase]
         layers = m["layers"] / p["pp"]
         hardware = p["hardware"]
@@ -649,6 +692,7 @@ def simulate(config):
                             hardware[PEAK[c["precision"]]]
                             * 1e12
                             * hardware["compute_efficiency"]
+                            * hardware["clock_scale"]
                         )
                         * 1000
                     )
@@ -679,6 +723,7 @@ def simulate(config):
                         phase=phase,
                         resource=rid,
                         batch_id=batch_id,
+                        request_ids=request_ids,
                         chunk=chunk_index,
                         start_ms=begin,
                         end_ms=env.now,
@@ -697,7 +742,13 @@ def simulate(config):
                     energy_key = (
                         "vector_flops"
                         if o["name"]
-                        in ("Input RMSNorm", "FFN RMSNorm", "Rotary position", "SwiGLU")
+                        in (
+                            "Input RMSNorm",
+                            "FFN RMSNorm",
+                            "QK normalization",
+                            "Rotary position",
+                            "SwiGLU",
+                        )
                         else "tensor_flops"
                     )
                     phase_traffic[phase][energy_key] += (
@@ -730,6 +781,7 @@ def simulate(config):
                             kind="pipeline_transfer",
                             resource=f"{'shared' if not c['separated'] else phase}:{replica}:link{stage}",
                             batch_id=batch_id,
+                            request_ids=request_ids,
                             chunk=chunk_index,
                             start_ms=begin,
                             end_ms=env.now,
@@ -748,20 +800,64 @@ def simulate(config):
                     phase_traffic[phase]["network_bytes"] += payload * p["tp"] * p["ep"]
                     component_work["Network"] += latency * p["tp"] * p["ep"]
 
-    def run_batch(ids, bid):
-        batch = len(ids)
-        arrivals = [i / c["arrival_rate"] * 1000 for i in ids]
-        yield env.timeout(max(0, max(arrivals) - env.now))
-        start = env.now
-        done = 0
-        while done < c["input_tokens"]:
-            n = min(c["prefill_chunk"], c["input_tokens"] - done)
-            done += n
-            yield env.process(
-                work(
-                    "prefill", batch, n, done, bid % c["prefill"]["replicas"], bid, done
+    next_decode_batch = 0
+
+    def finish_decode(ids, prefill_bid, ready_ms, prefill_end, first):
+        nonlocal next_decode_batch
+        bid = next_decode_batch
+        next_decode_batch += 1
+        replica = bid % c["decode"]["replicas"]
+        times = [first]
+        if c["output_tokens"] > 1:
+            with admissions["decode"][replica].request() as ticket:
+                yield ticket
+                for step in range(c["output_tokens"] - 1):
+                    yield env.process(
+                        work(
+                            "decode",
+                            len(ids),
+                            1,
+                            c["input_tokens"] + step + 1,
+                            replica,
+                            bid,
+                            step,
+                            ids,
+                        )
+                    )
+                    times.append(env.now)
+        for identifier in ids:
+            arrival = identifier / c["arrival_rate"] * 1000
+            requests.append(
+                dict(
+                    id=identifier,
+                    arrival_ms=arrival,
+                    batch_ready_ms=ready_ms,
+                    prefill_batch_id=prefill_bid,
+                    decode_batch_id=bid,
+                    prefill_end_ms=prefill_end,
+                    first_token_ms=first,
+                    finish_ms=env.now,
+                    ttft_ms=first - arrival,
+                    tpot_ms=(env.now - first) / max(1, c["output_tokens"] - 1),
+                    latency_ms=env.now - arrival,
+                    token_times_ms=list(times),
                 )
             )
+
+    def run_batch(ids, bid):
+        batch = len(ids)
+        ready_ms = max(ids) / c["arrival_rate"] * 1000
+        yield env.timeout(max(0, ready_ms - env.now))
+        replica = bid % c["prefill"]["replicas"]
+        with admissions["prefill"][replica].request() as ticket:
+            yield ticket
+            done = 0
+            while done < c["input_tokens"]:
+                n = min(c["prefill_chunk"], c["input_tokens"] - done)
+                done += n
+                yield env.process(
+                    work("prefill", batch, n, done, replica, bid, done, ids)
+                )
         prefill_end = env.now
         kv_bytes = (
             2
@@ -769,11 +865,11 @@ def simulate(config):
             * c["input_tokens"]
             * m["kv_heads"]
             * m["head_dim"]
-            * 2
+            * BYTES[c["kv_precision"]]
             * m["layers"]
         )
         if c["separated"]:
-            with transfer.request() as ticket:
+            with transfer[bid % len(transfer)].request() as ticket:
                 yield ticket
                 ts = env.now
                 transfer_ms = (
@@ -784,8 +880,9 @@ def simulate(config):
                 timeline.append(
                     dict(
                         phase="transfer",
-                        resource="spine",
+                        resource=f"spine:channel{bid % len(transfer)}",
                         batch_id=bid,
+                        request_ids=ids,
                         chunk=0,
                         start_ms=ts,
                         end_ms=env.now,
@@ -804,33 +901,15 @@ def simulate(config):
                 component_work["Network"] += transfer_ms
                 phase_traffic["prefill"]["network_bytes"] += kv_bytes
         first = env.now
-        times = [first]
-        for step in range(c["output_tokens"] - 1):
-            yield env.process(
-                work(
-                    "decode",
-                    batch,
-                    1,
-                    c["input_tokens"] + step + 1,
-                    bid % c["decode"]["replicas"],
+        # Fixed groups may split on decode; no cross-prefill merging or continuous rebatching.
+        for offset in range(0, batch, c["decode"]["batch_size"]):
+            env.process(
+                finish_decode(
+                    ids[offset : offset + c["decode"]["batch_size"]],
                     bid,
-                    step,
-                )
-            )
-            times.append(env.now)
-        for identifier, arrival in zip(ids, arrivals):
-            requests.append(
-                dict(
-                    id=identifier,
-                    arrival_ms=arrival,
-                    batch_ready_ms=start,
-                    prefill_end_ms=prefill_end,
-                    first_token_ms=first,
-                    finish_ms=env.now,
-                    ttft_ms=first - arrival,
-                    tpot_ms=(env.now - first) / max(1, c["output_tokens"] - 1),
-                    latency_ms=env.now - arrival,
-                    token_times_ms=times,
+                    ready_ms,
+                    prefill_end,
+                    first,
                 )
             )
 
@@ -870,6 +949,11 @@ def simulate(config):
         )
         if coeffs:
             pt = phase_traffic[phase]
+            if not c["separated"]:
+                pt = {
+                    key: phase_traffic["prefill"][key] + phase_traffic["decode"][key]
+                    for key in pt
+                }
             dynamic = (
                 pt["tensor_flops"] * h["pj_per_flop"]
                 + pt["vector_flops"] * h["pj_per_vop"]
@@ -895,6 +979,7 @@ def simulate(config):
             if phase == "prefill"
             else c["input_tokens"] + (c["output_tokens"] - 1) / 2
         )
+        max_batch = phase_batch[phase]
         ops, detail = phase_ops(c, phase, max_batch, tokens, context)
         sample_phase[phase] = dict(operations=ops, detail=detail)
         for o in ops:
@@ -929,7 +1014,9 @@ def simulate(config):
     )
     warnings = [
         "Behavioral estimates, not measured hardware performance or a KAIST validation claim.",
-        "Fixed microbatches; FIFO phase resources with pipeline overlap. This extension does not implement native vLLM continuous batching.",
+        "Fixed prefill microbatches with optional decode splitting; no cross-prefill merge or continuous rebatching. Independent FIFO phase admission limits are per replica and held across all chunks/tokens.",
+        "Memory utilization and runtime reservation reduce usable device capacity. No offload, allocator fragmentation or recomputation is modeled.",
+        "Uniform decoder layers with RMSNorm, RoPE and SwiGLU; optional QK normalization and routed experts. MLA, hybrid attention, shared experts, encoder-decoder and vision encoders are outside this architecture model.",
         "Ideal KV SRAM read reuse; KV writes still reach HBM. HBM stores the complete KV payload.",
         "Tensor tiling, uniform MoE routing, engine efficiency, activation traffic and activity-based energy are explicit assumptions. Quantization conversion overhead and numerical quality are excluded.",
         "Pipeline activation messages use the limiting fabric tier of the entire pool as a conservative placement approximation.",
@@ -941,7 +1028,7 @@ def simulate(config):
             "TPOT is zero because no inter-token interval exists for a one-token output."
         )
     return dict(
-        schema_version="memanalysis.behavioral.v1",
+        schema_version="memanalysis.behavioral.v2",
         engine="MemAnalysis behavioral / SimPy",
         config=c,
         model=m,
@@ -958,17 +1045,21 @@ def simulate(config):
             kind="behavioral_extension",
             upstream_url="https://github.com/casys-kaist/LLMServingSim",
             upstream_revision=PIN,
-            model_architecture_source="Upstream configs/model; formulas implemented independently in backend/model.py",
+            model_architecture_source=m["source_url"] or m["source"],
+            model_source_revision=m["source_revision"],
             config_sha256=hashlib.sha256(
                 json.dumps(c, sort_keys=True).encode()
             ).hexdigest(),
             timing_source="Closed-form roofline + hierarchical network + SimPy resource contention; not native LLMServingSim clocks",
-            precision_note="Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV is BF16 (2 bytes). GB/TB are decimal.",
+            precision_note="Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal.",
         ),
     )
 
 
 def catalog():
     return dict(
-        models=MODELS, hardware=HARDWARE, default_config=DEFAULT, upstream_revision=PIN
+        models=MODELS,
+        hardware=HARDWARE,
+        default_config=validate(DEFAULT),
+        upstream_revision=PIN,
     )

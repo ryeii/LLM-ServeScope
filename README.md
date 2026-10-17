@@ -23,10 +23,10 @@ For frontend development, run `.venv/bin/python -m backend.server` and
 
 ## Two execution paths
 
-| Path | What runs | What the numbers mean |
-| --- | --- | --- |
-| Behavioral scenario | Our operation equations + hierarchical network model + SimPy resources | Explicit, uncalibrated strategy estimates from hardware facts and efficiency assumptions |
-| Native LLMServingSim 2.0 | Pristine pinned KAIST serving scheduler + measured profile lookup + Chakra DAG + ASTRA-Sim analytical backend | Native simulated serving clocks for the selected profiled accelerator/model combination |
+| Path                     | What runs                                                                                                     | What the numbers mean                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Behavioral scenario      | Our operation equations + hierarchical network model + SimPy resources                                        | Explicit, uncalibrated strategy estimates from hardware facts and efficiency assumptions |
+| Native LLMServingSim 2.0 | Pristine pinned KAIST serving scheduler + measured profile lookup + Chakra DAG + ASTRA-Sim analytical backend | Native simulated serving clocks for the selected profiled accelerator/model combination  |
 
 The native integration is real and CPU-only. It does not execute model kernels
 or generate natural-language output. Request lengths and deterministic token-ID
@@ -59,22 +59,39 @@ Existing result graphs retain their original resolved configuration after an
 invalid run. SVG chart downloads and JSON exports contain the calculated result,
 not a screenshot-derived approximation.
 
-The behavioral architecture catalog covers Llama 3.1 8B and 70B (dense/GQA) and
-Qwen3 30B-A3B (MoE). vLLM-style/TensorRT-LLM-style/eager choices are disclosed
-assumed efficiency policies, not benchmarked implementations of those engines.
+The behavioral catalog has ten model presets: Llama 3.1 8B/70B;
+Qwen3 0.6B/4B/8B/14B/32B and 30B-A3B/235B-A22B; Mixtral 8x7B. A custom
+editor covers uniform dense and routed-MoE decoders with MHA/GQA/MQA, tied
+embeddings and optional QK normalization. Model geometry comes from pinned
+publisher or KAIST configuration files, not from a parameter-count guess.
+
+Eight accelerator presets cover A100 SXM, H100 SXM, H200 SXM, B200 SXM, L40S,
+RTX 4090, RTX PRO 6000 and AMD MI300X. Custom inputs remain available for all
+compute, memory, topology, power and cost fields. Compute clock scaling and
+additional launch overhead are editable. Preset peaks are dense/non-sparse;
+unsupported precision peaks are zero. These are uncalibrated behavioral scenarios.
+
+Each prefill/decode pool has its own hardware, TP/PP/EP/replicas, batch limit,
+active-batch admission limit, engine efficiency policy, memory allocation fraction
+and runtime reservation. Prefill chunk size is configurable; smaller decode caps
+split prefill groups without merging different groups. KV cache precision and
+parallel KV transfer channels are configurable. Engine policies remain disclosed
+assumptions, not measured implementations. See [configuration and preset sources](docs/configuration.md).
+
 Native demo profiles support Llama 3.1 8B BF16 on RTX PRO 6000 (TP1/TP2) and
-RTX4090 (TP1); unsupported combinations are rejected.
+RTX4090 (TP1); unsupported native combinations are rejected. The expanded
+behavioral catalog does not add native measured profiles.
 
 ## Evidence
 
 The native integration was built and executed on this Mac without a GPU.
 Four requests, each with 128 input and 8 output tokens, produced:
 
-| Simulated setup | Native total duration | Output tokens/s |
-| --- | ---: | ---: |
-| RTX PRO 6000, TP1 | 102.459747 ms | 312.317773 |
-| RTX PRO 6000, TP2, 16 GiB/s link | 76.267560 ms | 419.575505 |
-| RTX PRO 6000, TP2, 1 GiB/s link | 330.905562 ms | 96.704328 |
+| Simulated setup                  | Native total duration | Output tokens/s |
+| -------------------------------- | --------------------: | --------------: |
+| RTX PRO 6000, TP1                |         102.459747 ms |      312.317773 |
+| RTX PRO 6000, TP2, 16 GiB/s link |          76.267560 ms |      419.575505 |
+| RTX PRO 6000, TP2, 1 GiB/s link  |         330.905562 ms |       96.704328 |
 
 The last two change only link bandwidth. Raw native CSVs, commands, generated
 configs, text traces, Chakra graphs, process resource observations and SHA-256
@@ -96,7 +113,7 @@ PLAYWRIGHT_BROWSERS_PATH=.cache/playwright npm run test:ui
 Browser checks use full Chromium (`channel: chromium`) because the installed
 headless-shell bundle lacks its ICU data. They exercise all six output families,
 baseline comparison, downloads, capacity errors, a native simulator run with
-actual DAG/CSV results, and responsive mobile controls. Screenshots are in
+actual DAG/CSV results, heterogeneous server policies, custom model replay, and responsive mobile controls. Screenshots are in
 `docs/screenshots/`.
 
 See [methodology and calibration](docs/methodology.md) and

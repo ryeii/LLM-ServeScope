@@ -2349,3 +2349,81 @@ td b {
     font-size: 12px;
   }
 }
+
+.preset-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #f3f7f9;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #52697a;
+}
+.preset-summary a {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  color: #286c60;
+}
+.preset-summary .text-button {
+  margin-top: 4px;
+  color: #286c60;
+}
+.server-policy {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 15px 0;
+  margin: 3px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.server-policy h3 {
+  font-size: 14px;
+  font-weight: 650;
+}
+.server-policy .fine {
+  margin: 0;
+}
+.model-geometry {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.model-geometry summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.model-geometry[open] summary {
+  margin-bottom: 14px;
+}
+.model-geometry .field,
+.model-geometry .toggle-label {
+  margin: 12px 0;
+}
+.model-geometry .field > div {
+  width: 95px;
+  flex-shrink: 0;
+}
+.field.vertical > input {
+  width: 100%;
+  font-size: 14px;
+  min-height: 36px;
+  padding: 8px;
+}
+.provenance-list a {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  color: #286c60;
+}

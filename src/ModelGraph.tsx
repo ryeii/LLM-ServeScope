@@ -27,6 +27,7 @@ export default function ModelGraph({
     ]),
   );
   const height = Math.max(boundary, ops.length - boundary) * 85 + 80;
+  const cacheY = positions.get("attention")!.y + 32;
   const found = ops.find((o) => o.id === selected) || ops[0];
   const edges = ops
     .slice(1)
@@ -95,7 +96,7 @@ export default function ModelGraph({
             </text>
             <rect
               x="275"
-              y="285"
+              y={cacheY - 25}
               width="90"
               height="50"
               rx="7"
@@ -104,7 +105,7 @@ export default function ModelGraph({
             />
             <text
               x="320"
-              y="306"
+              y={cacheY - 4}
               textAnchor="middle"
               fontSize="10"
               fill="#6b9c8e"
@@ -113,7 +114,7 @@ export default function ModelGraph({
             </text>
             <text
               x="320"
-              y="322"
+              y={cacheY + 12}
               textAnchor="middle"
               fontSize="8"
               fill="#9ab4a9"
@@ -121,7 +122,7 @@ export default function ModelGraph({
               SRAM / HBM
             </text>
             <path
-              d="M275,310 L260,310"
+              d={`M275,${cacheY} L260,${cacheY}`}
               stroke="#8fb9aa"
               markerEnd="url(#behavioral-arrow)"
             />

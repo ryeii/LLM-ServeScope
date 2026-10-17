@@ -241,10 +241,18 @@ function Pipeline({ r }: { r: Obj }) {
           </span>
           <div>
             <h4>Prefill pool</h4>
-            <p>{c.prefill.hardware.name}</p>
+            <p>
+              {c.prefill.hardware.name}
+              {c.prefill.hardware_modified ? " · edited" : ""}
+            </p>
             <span>
               {c.prefill.tp} TP · {c.prefill.pp} PP · {c.prefill.ep} EP ·{" "}
               {c.prefill.replicas} replica{c.prefill.replicas > 1 ? "s" : ""}
+              <br />
+              Batch {c.prefill.batch_size} ·{" "}
+              {c.prefill.engine === "inherit"
+                ? c.inference_engine
+                : c.prefill.engine}
             </span>
           </div>
           <b>
@@ -257,7 +265,7 @@ function Pipeline({ r }: { r: Obj }) {
           <span>{c.separated ? "KV handoff" : "Shared KV"}</span>
           <small>
             {c.separated
-              ? `${fmt(c.network.spine_bw_GBps)} GB/s spine`
+              ? `${fmt(c.network.spine_bw_GBps)} GB/s × ${c.network.handoff_channels} link${c.network.handoff_channels > 1 ? "s" : ""}`
               : "No inter-pool copy"}
           </small>
         </div>
@@ -267,10 +275,18 @@ function Pipeline({ r }: { r: Obj }) {
           </span>
           <div>
             <h4>Decode pool</h4>
-            <p>{c.decode.hardware.name}</p>
+            <p>
+              {c.decode.hardware.name}
+              {c.decode.hardware_modified ? " · edited" : ""}
+            </p>
             <span>
               {c.decode.tp} TP · {c.decode.pp} PP · {c.decode.ep} EP ·{" "}
               {c.decode.replicas} replica{c.decode.replicas > 1 ? "s" : ""}
+              <br />
+              Batch cap {c.decode.batch_size} ·{" "}
+              {c.decode.engine === "inherit"
+                ? c.inference_engine
+                : c.decode.engine}
             </span>
           </div>
           <b>
@@ -287,7 +303,7 @@ function MemoryChart({ r }: { r: Obj }) {
     <Chart
       id="memory-chart"
       title="Memory budget"
-      note="Conservative resident payload per GPU, at peak context"
+      note="Resident payload vs usable capacity per GPU, at peak context"
     >
       <svg
         viewBox="0 0 560 200"
@@ -361,7 +377,8 @@ function MemoryChart({ r }: { r: Obj }) {
       </svg>
       <div className="subnote">
         KV remains resident in HBM; SRAM reduces modeled read traffic. Runtime
-        allocator overhead is excluded.
+        reservations reduce usable capacity; allocator fragmentation is
+        excluded.
       </div>
     </Chart>
   );
@@ -1164,7 +1181,45 @@ function App() {
     update(editPhase, { ...config![editPhase], [k]: v });
   }
   function hw(k: string, v: any) {
-    pool("hardware", { ...config![editPhase].hardware, [k]: v });
+    update(editPhase, {
+      ...config![editPhase],
+      hardware_modified: true,
+      hardware: { ...config![editPhase].hardware, [k]: v },
+    });
+  }
+  function selectModel(id: string) {
+    const model =
+      id === "custom"
+        ? {
+            ...clone(
+              config!.model_id === "custom"
+                ? config!.custom_model
+                : catalog!.models[config!.model_id],
+            ),
+            name: "Custom decoder",
+          }
+        : catalog!.models[id];
+    const fit = (n: number, total: number) => {
+      while (n > 1 && total % n) n--;
+      return n;
+    };
+    setConfig((c: Obj | null) => ({
+      ...c,
+      model_id: id,
+      ...(id === "custom" ? { custom_model: model } : {}),
+      ...Object.fromEntries(
+        ["prefill", "decode"].map((ph) => [
+          ph,
+          {
+            ...c![ph],
+            tp: fit(c![ph].tp, model.heads),
+            pp: fit(c![ph].pp, model.layers),
+            ep: fit(c![ph].ep, model.experts),
+          },
+        ]),
+      ),
+    }));
+    setDirty(true);
   }
   async function run() {
     if (!config) return;
@@ -1201,6 +1256,11 @@ function App() {
       </div>
     );
   const h = config[editPhase].hardware;
+  const selectedPool = config[editPhase];
+  const selectedModel =
+    config.model_id === "custom"
+      ? config.custom_model
+      : catalog.models[config.model_id];
   const metric = r?.metrics;
   const phaseButton = (
     <div className="segmented">
@@ -1230,6 +1290,8 @@ function App() {
         ["int8_tensor_tflops", "INT8 tensor", "TFLOPS"],
         ["fp32_tflops", "FP32 vector", "TFLOPS"],
         ["compute_efficiency", "Compute efficiency", "fraction"],
+        ["clock_scale", "Compute clock scale", "×"],
+        ["launch_overhead_us", "Extra launch overhead", "µs"],
       ],
     ],
     [
@@ -1239,7 +1301,7 @@ function App() {
         ["dram_bandwidth_TBps", "Memory bandwidth", "TB/s"],
         ["sram_cache_MB", "KV SRAM budget", "MB"],
         ["memory_efficiency", "Memory efficiency", "fraction"],
-        ["num_sms", "SM count", ""],
+        ["num_sms", "SM / CU count", ""],
         ["tensor_width", "Tensor tile width", ""],
       ],
     ],
@@ -1339,17 +1401,55 @@ function App() {
               <select
                 aria-label="Model architecture"
                 value={config.model_id}
-                onChange={(e) => update("model_id", e.target.value)}
+                onChange={(e) => selectModel(e.target.value)}
               >
-                {Object.entries(catalog.models).map(
-                  ([id, m]: [string, any]) => (
-                    <option key={id} value={id}>
-                      {m.name}
-                    </option>
-                  ),
-                )}
+                <optgroup label="Dense decoders">
+                  {Object.entries(catalog.models)
+                    .filter(
+                      ([id, m]: [string, any]) =>
+                        id !== "custom" && m.experts === 1,
+                    )
+                    .map(([id, m]: [string, any]) => (
+                      <option key={id} value={id}>
+                        {m.name}
+                      </option>
+                    ))}
+                </optgroup>
+                <optgroup label="Mixture of experts">
+                  {Object.entries(catalog.models)
+                    .filter(
+                      ([id, m]: [string, any]) =>
+                        id !== "custom" && m.experts > 1,
+                    )
+                    .map(([id, m]: [string, any]) => (
+                      <option key={id} value={id}>
+                        {m.name}
+                      </option>
+                    ))}
+                </optgroup>
+                <option value="custom">Custom decoder architecture</option>
               </select>
             </label>
+            <div className="preset-summary">
+              <span>
+                {selectedModel.layers} layers · {selectedModel.hidden} hidden
+              </span>
+              <span>
+                {selectedModel.heads} attention / {selectedModel.kv_heads} KV
+                heads
+                {selectedModel.experts > 1
+                  ? ` · ${selectedModel.top_k}/${selectedModel.experts} experts`
+                  : " · dense"}
+              </span>
+              {config.model_id !== "custom" && (
+                <button
+                  className="text-button"
+                  onClick={() => selectModel("custom")}
+                >
+                  <Settings2 size={13} /> Customize architecture
+                </button>
+              )}
+            </div>
             <label className="field">
               <span>Weight precision</span>
               <select
@@ -1378,6 +1478,92 @@ function App() {
                   TensorRT-LLM-style · assumed efficiency
                 </option>
                 <option value="eager">Eager execution · conservative</option>
+              </select>
+            </label>
+            {config.model_id === "custom" && (
+              <details className="model-geometry" open>
+                <summary>
+                  Decoder architecture <ChevronDown size={14} />
+                </summary>
+                <label className="field vertical">
+                  <span>Model name</span>
+                  <input
+                    aria-label="Model name"
+                    value={config.custom_model.name}
+                    maxLength={80}
+                    onChange={(e) =>
+                      update("custom_model", {
+                        ...config.custom_model,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+                </label>
+                {(
+                  [
+                    ["layers", "Transformer layers", 1, 256],
+                    ["hidden", "Hidden width", 128, 65536],
+                    ["intermediate", "FFN / expert width", 128, 262144],
+                    ["heads", "Attention heads", 1, 512],
+                    ["kv_heads", "KV heads", 1, 512],
+                    ["head_dim", "Head dimension", 8, 512],
+                    ["vocab", "Vocabulary size", 128, 300000],
+                    ["experts", "Total experts", 1, 256],
+                    ["top_k", "Active experts / token", 1, 16],
+                    ["max_context", "Model context limit", 1, 1048576],
+                  ] as [string, string, number, number][]
+                ).map(([key, label, min, max]) => (
+                  <Field
+                    key={key}
+                    label={label}
+                    value={config.custom_model[key]}
+                    min={min}
+                    max={max}
+                    onChange={(n) =>
+                      update("custom_model", {
+                        ...config.custom_model,
+                        [key]: n,
+                      })
+                    }
+                  />
+                ))}
+                {[
+                  ["tie_embeddings", "Tied embeddings"],
+                  ["qk_norm", "QK normalization"],
+                ].map(([key, label]) => (
+                  <label className="toggle-label" key={key}>
+                    <span>{label}</span>
+                    <input
+                      type="checkbox"
+                      aria-label={label}
+                      checked={config.custom_model[key]}
+                      onChange={(e) =>
+                        update("custom_model", {
+                          ...config.custom_model,
+                          [key]: e.target.checked,
+                        })
+                      }
+                    />
+                  </label>
+                ))}
+                <p className="fine">
+                  Uniform decoder blocks with RMSNorm, RoPE and SwiGLU. Set
+                  experts to 1 for dense; KV heads equal attention heads for
+                  MHA, or 1 for MQA. MLA, hybrid attention and vision encoders
+                  need a different operation model.
+                </p>
+              </details>
+            )}
+            <label className="field">
+              <span>KV cache precision</span>
+              <select
+                aria-label="KV cache precision"
+                value={config.kv_precision}
+                onChange={(e) => update("kv_precision", e.target.value)}
+              >
+                {["bf16", "fp16", "fp8"].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
               </select>
             </label>
             <Field
@@ -1411,22 +1597,6 @@ function App() {
               step={0.5}
               min={0.01}
               onChange={(n) => update("arrival_rate", n)}
-            />
-            <Field
-              label="Microbatch size"
-              value={config.batch_size}
-              min={1}
-              max={32}
-              onChange={(n) => update("batch_size", n)}
-            />
-            <Field
-              label="Prefill chunk"
-              value={config.prefill_chunk}
-              unit="tokens"
-              min={1}
-              max={8192}
-              step={128}
-              onChange={(n) => update("prefill_chunk", n)}
             />
           </Section>
           <Section title="Serving topology" initial>
@@ -1467,6 +1637,7 @@ function App() {
                     ...config[editPhase],
                     hardware_id: e.target.value,
                     hardware: clone(catalog.hardware[e.target.value]),
+                    hardware_modified: false,
                   })
                 }
               >
@@ -1479,6 +1650,22 @@ function App() {
                 )}
               </select>
             </label>
+            <div className="preset-summary">
+              <span>
+                {fmt(h.main_memory_GB)} GB · {fmt(h.dram_bandwidth_TBps, 3)}{" "}
+                TB/s
+              </span>
+              <span>
+                {selectedPool.hardware_modified
+                  ? "Edited scenario inputs"
+                  : "Peak-spec scenario · uncalibrated"}
+              </span>
+              {h.source_url && (
+                <a href={h.source_url} target="_blank" rel="noreferrer">
+                  Preset source <ExternalLink size={12} />
+                </a>
+              )}
+            </div>
             <div className="parallel-fields">
               {[
                 ["tp", "TP"],
@@ -1491,10 +1678,91 @@ function App() {
                   label={label}
                   value={config[editPhase][key]}
                   min={1}
-                  max={16}
+                  max={64}
                   onChange={(n) => pool(key, n)}
                 />
               ))}
+            </div>
+            <div className="server-policy">
+              <h3>
+                {editPhase === "prefill" ? "Prefill" : "Decode"} server policy
+              </h3>
+              <label className="field vertical">
+                <span>Server engine policy</span>
+                <select
+                  aria-label="Server engine policy"
+                  value={selectedPool.engine}
+                  onChange={(e) => pool("engine", e.target.value)}
+                >
+                  <option value="inherit">Use workload engine policy</option>
+                  <option value="vllm">vLLM-style efficiency</option>
+                  <option value="trtllm">TensorRT-LLM-style efficiency</option>
+                  <option value="eager">Eager execution efficiency</option>
+                </select>
+              </label>
+              <Field
+                label={
+                  editPhase === "prefill"
+                    ? "Prefill microbatch"
+                    : "Decode batch cap"
+                }
+                value={selectedPool.batch_size}
+                min={1}
+                max={32}
+                onChange={(n) => pool("batch_size", n)}
+                tip="Decode may split a prefill group. Groups from different prefill batches are not merged."
+              />
+              {editPhase === "prefill" && (
+                <Field
+                  label="Prefill chunk"
+                  value={config.prefill_chunk}
+                  min={1}
+                  max={8192}
+                  unit="tokens"
+                  step={128}
+                  onChange={(n) => update("prefill_chunk", n)}
+                />
+              )}
+              <Field
+                label="Active batches / replica"
+                value={selectedPool.max_concurrent_batches}
+                min={1}
+                max={128}
+                onChange={(n) => pool("max_concurrent_batches", n)}
+                tip="Admission slots held for the whole phase, including all prefill chunks or decode tokens."
+              />
+              <Field
+                label="Memory allocation limit"
+                value={selectedPool.memory_utilization}
+                min={0.1}
+                max={1}
+                step={0.05}
+                unit="fraction"
+                onChange={(n) => pool("memory_utilization", n)}
+              />
+              <Field
+                label="Runtime reservation"
+                value={selectedPool.runtime_reserved_GB}
+                min={0}
+                max={10000}
+                step={0.5}
+                unit="GB"
+                onChange={(n) => pool("runtime_reserved_GB", n)}
+              />
+              <p className="fine">
+                {fmt(
+                  Math.max(
+                    0,
+                    h.main_memory_GB * selectedPool.memory_utilization -
+                      selectedPool.runtime_reserved_GB,
+                  ),
+                )}{" "}
+                GB usable per GPU.{" "}
+                {editPhase === "prefill"
+                  ? "Fixed prefill groups; round-robin replicas."
+                  : "Prefill groups split to this cap; no cross-group merging."}{" "}
+                Engine policies are assumed efficiencies.
+              </p>
             </div>
             <Field
               label="Spine bandwidth"
@@ -1512,6 +1780,18 @@ function App() {
                 update("network", { ...config.network, spine_latency_us: n })
               }
             />
+            {config.separated && (
+              <Field
+                label="KV transfer channels"
+                value={config.network.handoff_channels}
+                min={1}
+                max={16}
+                onChange={(n) =>
+                  update("network", { ...config.network, handoff_channels: n })
+                }
+                tip="Independent parallel links, each with the spine bandwidth above."
+              />
+            )}
           </Section>
           <div className="hardware-editing">
             <Cpu size={13} />
@@ -1524,7 +1804,13 @@ function App() {
                   key={key}
                   label={label}
                   value={h[key]}
-                  step={unit === "fraction" ? 0.05 : unit === "TB/s" ? 0.1 : 1}
+                  step={
+                    unit === "fraction" || unit === "×"
+                      ? 0.05
+                      : unit === "TB/s"
+                        ? 0.1
+                        : 1
+                  }
                   unit={unit}
                   onChange={(n) => hw(key, n)}
                 />
@@ -1600,7 +1886,7 @@ function App() {
           {tab !== "native" && (
             <div className="scenario-bar">
               <span className="scenario-name">
-                {catalog.models[config.model_id]?.name || "Imported scenario"}
+                {selectedModel.name}
                 <ChevronRight size={13} />
                 {config.precision.toUpperCase()}
                 <ChevronRight size={13} />
@@ -1983,8 +2269,28 @@ function App() {
                         </div>
                         <div>
                           <dt>Architecture source</dt>
-                          <dd>KAIST model configs</dd>
+                          <dd>{r.model.source}</dd>
                         </div>
+                        <div>
+                          <dt>Model config revision</dt>
+                          <dd>
+                            <code>{r.model.source_revision.slice(0, 12)}</code>
+                          </dd>
+                        </div>
+                        {r.model.source_url && (
+                          <div>
+                            <dt>Model configuration</dt>
+                            <dd>
+                              <a
+                                href={r.model.source_url}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Source <ExternalLink size={12} />
+                              </a>
+                            </dd>
+                          </div>
+                        )}
                         <div>
                           <dt>LLMServingSim revision</dt>
                           <dd>

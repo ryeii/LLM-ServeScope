@@ -7,15 +7,18 @@ facts from equations, scenario assumptions and native profile-derived results.
 
 ## Operation model
 
-Model geometry is taken from the pinned KAIST model configuration: hidden and
+Model geometry is taken from pinned KAIST or publisher configuration files (or
+explicitly user-defined decoder inputs): hidden and
 intermediate widths, layers, attention/KV heads, head dimension, vocabulary, and
 expert count/top-k. Dense and MoE linear work uses matrix multiplication FLOP
 counts; prefill attention includes the causal triangular sequence length.
-BF16 KV occupies two bytes per element independently of weight precision.
+KV precision is independent of weights: BF16/FP16 occupies two bytes and FP8 one byte per element. Conversion overhead and quality changes are excluded.
 
 For each operation and GPU:
 
-- Compute time = FLOPs / (selected dense peak × assumed efficiency × tile utilization).
+- Compute time = FLOPs / (selected dense peak × compute clock scale × assumed efficiency × tile utilization × engine factor).
+- Per-phase engine overrides select the same disclosed efficiency/launch policy as the workload default. Extra hardware launch overhead is added per operation. Clock scaling does not change TDP automatically.
+- Tied embedding/head storage is counted once. Qwen3 QK normalization and routed-MoE router projections are included in the layer cost and DAG; router selection/softmax overhead remains abstracted.
 - Tile utilization estimates available 64-token-by-tensor-width tiles relative
   to two resident waves across the configured SM count, with an explicit 8% floor.
 - Vector operations use FP32 throughput. Norm/rotary/activation traffic is
@@ -39,7 +42,10 @@ inputs, not assertions about a vendor product. Ring phases, collective efficienc
 and latency are added. The method does not simulate switch ports or packets.
 Pipeline activation transfers use the fabric tier of the entire pool as a
 conservative placement approximation. Prefill/decode KV handoff uses a serialized
-spine resource, its payload bytes, bandwidth and fixed latency.
+spine links, their payload bytes, per-link bandwidth and fixed latency. Parallel
+handoff channels are independent links assigned round-robin to prefill groups;
+the configured spine bandwidth applies to each link. This is an aggregate link
+model, not a physical switch placement model.
 
 The SRAM budget is reserved exclusively for ideal reusable KV read data. KV reads
 beyond the budget hit HBM. KV append writes still hit HBM; the full KV payload
@@ -49,14 +55,23 @@ line replacement, bandwidth, fill latency or competition with weights.
 Per-GPU capacity includes sharded weights, conservative max-context KV payload for every request assigned to a replica, including queued batches
 and approximate activation workspace. EP shards experts and replicates shared
 parameters/KV across EP ranks. KV heads replicate when TP exceeds KV-head count.
-Temporary allocator fragmentation, runtime reservations and framework workspaces
-are excluded. A capacity violation is rejected instead of producing optimistic
+Usable capacity is physical capacity × memory allocation fraction − runtime reservation
+in GB. These server controls affect capacity rejection and headroom. The activation
+workspace above is still included. Extra allocator fragmentation and unreserved
+framework overhead are excluded. A capacity violation is rejected instead of producing optimistic
 throughput from an impossible fit.
 
 ## Serving and metrics
 
 SimPy models FIFO resource contention for fixed microbatches, per-PP-stage
-resources, replicas, pipeline messages and the KV-handoff resource. Batches form
+resources, replicas, pipeline messages and KV-handoff links. Each pool has an
+independent batch cap and active-batch admission limit per replica. Admission
+slots are held across all prefill chunks or decode iterations, then released.
+Prefill groups split into smaller decode groups when the decode cap is lower;
+groups from different prefill batches are never merged. Larger decode caps do not
+combine requests across prefill groups. Both phases route groups round-robin to
+replicas. Every interval retains its request IDs, and request rows retain both
+phase batch IDs. Batches form
 when their last request arrives at the configured deterministic arrival rate.
 Separate prefill chunks traverse the prefill stages; each decode iteration
 traverses the decode stages. PP stages can overlap across batches. Colocation
@@ -98,7 +113,11 @@ extrapolation as a measured KAIST result. No accuracy percentage is claimed here
 
 ## Reproducibility
 
-All results include resolved inputs, configuration SHA-256 and source revision.
+All results include resolved inputs, configuration SHA-256 and source revisions.
+Behavioral results now use `memanalysis.behavioral.v2`. Legacy scenarios with a
+single top-level `batch_size` and missing server controls are still accepted;
+that batch size initializes both pool caps. Resolved per-pool caps take precedence,
+and the top-level field remains an alias for the prefill cap.
 The native adapter additionally records three source pins, clean tracked-source
 checks, binary/profile/runner hashes, exact command/config/workload, raw CSV/logs,
 actual Chakra DAGs, and wall/RSS watchdog measurements. Its build adaptation is
