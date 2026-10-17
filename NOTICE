@@ -1,0 +1,15 @@
+LLM-ServeScope
+Copyright 2026 Ryan Z An (ryeii)
+https://github.com/ryeii
+https://github.com/ryeii/LLM-ServeScope
+
+LLM-ServeScope design and implementation: ryeii (Ryan Z An), including
+its behavioral modeling extension, serving scenario controls, visualizations,
+user interface, browser execution layer and native backend integration.
+
+Original LLM-ServeScope contributions are licensed under the Apache License,
+Version 2.0. Third-party components retain their original copyrights and
+licenses. In particular, LLMServingSim 2.0 is by CASYS Lab at KAIST (Jaehong Cho,
+Hyunmin Choi, Guseul Heo and Jongse Park), with its MIT license retained in
+licenses/LLMServingSim-MIT.txt. See THIRD_PARTY_NOTICES.md and licenses/ for
+additional third-party credits and license texts.
