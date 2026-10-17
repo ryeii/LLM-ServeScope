@@ -423,38 +423,14 @@ main {
   gap: 20px;
   margin-bottom: 26px;
 }
-.eyebrow {
-  font-size: 9px;
-  font-weight: 650;
-  letter-spacing: 1.5px;
-  color: #708a97;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin: 2px 0 12px;
-}
-.eyebrow i {
-  width: 4px;
-  height: 4px;
-  box-shadow: 0 0 0 3px #37a68812;
-}
+
 h1 {
-  font-size: 27px;
-  font-weight: 650;
-  letter-spacing: -1.1px;
-  line-height: 1.25;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.6px;
+  line-height: 1.3;
 }
-h1 > span {
-  color: #8094a0;
-  font-weight: 400;
-  display: block;
-  margin-top: 4px;
-}
-.page-heading p {
-  font-size: 11px;
-  color: #8295a1;
-  margin-top: 12px;
-}
+
 .run-actions {
   display: flex;
   gap: 9px;
@@ -1499,12 +1475,9 @@ td b {
     margin-bottom: 30px;
   }
   h1 {
-    font-size: 32px;
+    font-size: 26px;
   }
-  h1 > span {
-    display: inline;
-    margin: 0;
-  }
+
   .kpi-value {
     font-size: 36px;
   }
@@ -1538,10 +1511,10 @@ td b {
     padding: 27px 24px 0;
   }
   .page-heading {
-    align-items: flex-end;
+    align-items: center;
   }
   h1 {
-    font-size: 25px;
+    font-size: 24px;
   }
   .run-actions {
     flex-direction: column;
@@ -1723,14 +1696,12 @@ td b {
     flex-wrap: wrap;
     gap: 20px;
   }
-  .page-heading p {
-    font-size: 12px;
-  }
+
   .run-actions .pin-button {
     display: none;
   }
   .page-heading h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
   .run-actions .primary {
     padding: 11px 16px;
@@ -1904,14 +1875,9 @@ td b {
     margin-bottom: 22px;
   }
   .page-heading h1 {
-    font-size: 26px;
+    font-size: 23px;
   }
-  .page-heading p {
-    font-size: 11px;
-  }
-  .eyebrow {
-    font-size: 8px;
-  }
+
   .run-actions {
     justify-content: space-between;
     width: 100%;

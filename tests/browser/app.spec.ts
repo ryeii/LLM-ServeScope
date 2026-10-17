@@ -21,11 +21,11 @@ test("six outputs, scenario fingerprint, reproducible exports and capacity error
   await expect(page.getByText("Results match scenario")).toBeVisible();
   await expect(page.getByText("vs pinned").first()).toBeVisible();
   for (const [name, file, check] of [
-    ["Roofline", "roofline", "Compute or bandwidth?"],
+    ["Roofline", "roofline", "Performance roofline"],
     ["Layer / chunk", "layers", "Layer and chunk detail"],
-    ["Box graph", "boxes", "Behavior over time"],
-    ["Model graph", "computation-graph", "From architecture to operations"],
-    ["Configuration", "configuration", "A reproducible scenario"],
+    ["Box graph", "boxes", "Execution timeline"],
+    ["Model graph", "computation-graph", "Computation graph"],
+    ["Configuration", "configuration", "Run configuration"],
   ]) {
     await page.getByRole("button", { name, exact: true }).click();
     await expect(

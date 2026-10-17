@@ -760,7 +760,7 @@ function Native({
         </div>
         <div>
           <div className="label">PROFILE-DRIVEN REFERENCE ENGINE</div>
-          <h2>Run KAIST’s LLMServingSim 2.0</h2>
+          <h2>LLMServingSim 2.0</h2>
           <p>
             Execute its native scheduler, Chakra graph generator and ASTRA-Sim
             analytical backend on this machine. Uses published operation
@@ -896,7 +896,7 @@ function Native({
           {!job ? (
             <div className="empty-native">
               <GitBranch size={44} />
-              <h3>A real simulator run, end to end.</h3>
+              <h3>No simulation results</h3>
               <p>
                 Run the small reference experiment to inspect native request
                 metrics and its actual computation DAG. Behavioral hardware
@@ -1331,7 +1331,7 @@ function App() {
             </button>
           </div>
           <div className="sidebar-intro">
-            A few hardware facts. A system-level view.
+            Model, workload, hardware and topology.
           </div>
           <Section title="Model & workload" initial>
             <label className="field vertical">
@@ -1556,18 +1556,9 @@ function App() {
         </aside>
         <main>
           <div className="page-heading">
-            <div>
-              <div className="eyebrow">
-                <i />
-                BEHAVIORAL SYSTEM MODELING
-              </div>
-              <h1>
-                See the system.<span> Shape the strategy.</span>
-              </h1>
-              <p>
-                Explore the trade-offs between compute, memory and movement.
-              </p>
-            </div>
+            <h1>
+              {tab === "native" ? "Native simulation" : "Serving analysis"}
+            </h1>
             <div className="run-actions">
               {tab === "native" ? (
                 <button
@@ -1713,7 +1704,7 @@ function App() {
                     <section className="card insight-card">
                       <div className="card-head">
                         <div>
-                          <h3>Where the time goes</h3>
+                          <h3>Resource service demand</h3>
                           <p>
                             Accumulated resource work · compute and memory
                             overlap
@@ -1808,7 +1799,7 @@ function App() {
                 <>
                   <div className="section-toolbar">
                     <div>
-                      <h2>Compute or bandwidth?</h2>
+                      <h2>Performance roofline</h2>
                       <p>
                         See which resource limits each transformer operation.
                       </p>
@@ -1938,7 +1929,7 @@ function App() {
                 <>
                   <div className="section-toolbar">
                     <div>
-                      <h2>Behavior over time</h2>
+                      <h2>Execution timeline</h2>
                       <p>
                         Pipeline overlap, resource occupancy and request-level
                         distributions.
@@ -1953,7 +1944,7 @@ function App() {
                 <>
                   <div className="section-toolbar">
                     <div>
-                      <h2>From architecture to operations</h2>
+                      <h2>Computation graph</h2>
                       <p>
                         Click an operation to inspect its workload and limiting
                         resource.
@@ -1968,7 +1959,7 @@ function App() {
                 <>
                   <div className="section-toolbar">
                     <div>
-                      <h2>A reproducible scenario</h2>
+                      <h2>Run configuration</h2>
                       <p>
                         Every estimate carries its inputs, formulas, units and
                         source revision.
@@ -2058,7 +2049,7 @@ function App() {
             <div className="card-head">
               <div>
                 <div className="label">SCOPE & PROVENANCE</div>
-                <h2>Two engines. Clear boundaries.</h2>
+                <h2>Simulation methods and provenance</h2>
               </div>
               <button
                 aria-label="Close methodology"
