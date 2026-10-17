@@ -2,8 +2,9 @@
 
 Asset: `public/brand/servescope-serving-telescope.png`, a transparent PNG generated with the
 built-in image generation tool. The source PNG is preserved without background
-replacement or destructive editing. The header, footer, favicon and README use
-this same asset; interface dimensions are set in CSS.
+replacement or destructive editing. The header, footer and favicon use
+this asset; interface dimensions are set in CSS. The README uses a centered
+white-background variant so the navy logo remains legible in GitHub dark mode.
 
 The emblem combines an astronomical telescope with a two-tray server stack and
 three incoming token streams in the dashboard's navy/teal palette. The server
@@ -29,3 +30,12 @@ The README embeds the logo and desktop screenshot using absolute GitHub Pages
 URLs. The Pages build copies `docs/screenshots/github-pages.png` into the same
 path in its output; Vite copies the logo from `public/brand`. This keeps both
 README images available without relying on GitHub raw-image delivery.
+
+## README white-background variant
+
+Asset: `public/brand/servescope-serving-telescope-white.png`. Created with the
+built-in image generation tool using the transparent logo as the edit target.
+
+Final edit prompt:
+
+Use case: background-extraction. Edit target: the provided LLM-ServeScope telescope-and-server logo. Change ONLY the transparent background and transparent negative space to solid pure white (#FFFFFF), so it is readable in a GitHub README in dark mode. Preserve the entire existing navy and teal telescope, server stack, three incoming token-stream bars, shapes, proportions, positions and colors exactly. Do not redesign or add anything. Keep the same square canvas and framing. Output one logo on a fully opaque white background, without text, borders, shadows or other new elements.

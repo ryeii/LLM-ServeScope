@@ -1,6 +1,8 @@
 # LLM-ServeScope
 
-<img src="https://ryeii.github.io/LLM-ServeScope/brand/servescope-serving-telescope.png" alt="LLM-ServeScope logo" width="96" height="96" />
+<p align="center">
+  <img src="https://ryeii.github.io/LLM-ServeScope/brand/servescope-serving-telescope-white.png" alt="LLM-ServeScope logo" width="96" height="96" />
+</p>
 
 **Behavioral modeling of LLM serving, backed by a SimPy discrete-event simulation.**
 
