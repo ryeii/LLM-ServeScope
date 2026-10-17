@@ -58,7 +58,7 @@ test("static Pages runs the same Python SimPy model without an API or external a
   ).toBeTruthy();
   await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
     "href",
-    "/LLM-ServeScope/brand/servescope-logo.png",
+    "/LLM-ServeScope/brand/servescope-serving-telescope.png",
   );
   expect(apiRequests).toEqual([]);
   expect(remoteRequests).toEqual([]);

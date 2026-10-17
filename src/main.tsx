@@ -1371,7 +1371,7 @@ function App() {
         <a className="brand" href={import.meta.env.BASE_URL}>
           <span className="brand-mark">
             <img
-              src={`${import.meta.env.BASE_URL}brand/servescope-logo.png`}
+              src={`${import.meta.env.BASE_URL}brand/servescope-serving-telescope.png`}
               alt=""
               width="42"
               height="42"
@@ -2369,7 +2369,7 @@ function App() {
             <span>
               <img
                 className="footer-logo"
-                src={`${import.meta.env.BASE_URL}brand/servescope-logo.png`}
+                src={`${import.meta.env.BASE_URL}brand/servescope-serving-telescope.png`}
                 alt=""
                 width="18"
                 height="18"
