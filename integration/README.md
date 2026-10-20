@@ -98,3 +98,7 @@ verified together by real end-to-end runs. Full dependency versions are in
 Sources: [KAIST repository](https://github.com/casys-kaist/LLMServingSim),
 [upstream installation guide](https://llmservingsim.ai/docs/getting-started/installation/simulator),
 [trace format](https://llmservingsim.ai/docs/reference/trace-format).
+
+## Analytical versus profile-backed comparison
+
+See the [nine-scenario comparison and reproduction instructions](../docs/benchmarks/roofline-vs-profiles-2026-10-19/README.md) for measured-profile versus analytical timing differences.

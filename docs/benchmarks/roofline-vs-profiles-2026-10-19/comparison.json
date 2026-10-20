@@ -1,0 +1,2454 @@
+{
+  "kind": "analytical_vs_native_profile_simulation",
+  "source_revision": "cf626870d056cf3d7a67cef8a4db5942badb4854",
+  "script_sha256": "9f2a0f09823618ed4218f1dd1f836582e2231f23026170adfb8e77fb30232ffe",
+  "methodology": {
+    "comparison": "Uncalibrated existing analytical model vs freshly executed pinned KAIST/ASTRA backend; not comparison against measured end-to-end inference.",
+    "workload": "Llama 3.1 8B BF16 weights/activations and BF16 KV; colocated; one replica; PP1/EP1; one prefill chunk; max batched tokens 2048; no prefix sharing/offload.",
+    "throughput": "Output tokens / earliest-arrival-to-last-completion window for both. Native total-clock throughput retained separately; includes control tail.",
+    "arrivals": "Native requests arrive simultaneously. Analytical public schema requires positive rate; use maximum 10000 requests/s (0.1 ms spacing). Batch-four initial wait is 0.3 ms and mean formation delay 0.15 ms. Single-request cases match exactly. No production code patched.",
+    "hardware": "Capacity and memory/link bandwidth units aligned. Link =16 GiB/s, latency=1000 ns. Compute efficiency=.65, memory efficiency=.8, generic vLLM factor/launch/tiling and cache assumptions retained without fitting.",
+    "software": "RTXPRO6000 upstream profiles report vLLM0.28.0/CUDA13.0; RTX4090 vLLM0.19.0/CUDA12.8. Analytical vLLM factor is not version- or kernel-calibrated.",
+    "operator_comparison": "First transformer block COMP_NODE costs in native prefill and first decode graphs vs matching nine analytical operators. COMP_NODE cost is whole profiled kernel elapsed time, including its internal memory effects; not arithmetic-only time. Embedding/final norm/head/communications excluded from matched block comparison, retained in end-to-end simulations.",
+    "scope": "End-to-end differences include operator coverage, traffic/cache assumptions, scheduling and communication, not just max() overlap. This small suite is not a universal accuracy assessment. No energy comparison because accounting scopes differ. No model weights or hardware inference executed."
+  },
+  "statistics": {
+    "throughput_tps": {
+      "min_signed_delta_pct": -19.7958009773481,
+      "max_signed_delta_pct": -10.002004404090126,
+      "mean_absolute_relative_difference_pct": 13.542850007935124
+    },
+    "ttft_ms": {
+      "min_signed_delta_pct": 6.206367011399294,
+      "max_signed_delta_pct": 53.223682199096615,
+      "mean_absolute_relative_difference_pct": 29.97955741840694
+    },
+    "tpot_ms": {
+      "min_signed_delta_pct": 5.003013609064744,
+      "max_signed_delta_pct": 15.551514026522483,
+      "mean_absolute_relative_difference_pct": 10.822949750030151
+    }
+  },
+  "verified_native_artifact_count": 456,
+  "results": [
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "hardware": "RTXPRO6000",
+      "tp": 1,
+      "batch": 1,
+      "input_tokens": 128,
+      "output_tokens": 8,
+      "analytical_throughput_tps": 78.01542652357564,
+      "native_throughput_tps": 88.21748715840093,
+      "delta_throughput_tps_pct": -11.564669277539885,
+      "analytical_ttft_ms": 15.23908640172414,
+      "native_ttft_ms": 12.602489,
+      "delta_ttft_ms_pct": 20.92124342837467,
+      "analytical_tpot_ms": 12.472105065897457,
+      "native_tpot_ms": 11.154639,
+      "delta_tpot_ms_pct": 11.81092517559248,
+      "analytical_elapsed_ms": 102.54382186300634,
+      "native_elapsed_ms": 90.684968,
+      "delta_elapsed_ms_pct": 13.076978604663946,
+      "native_total_clock_throughput_tps": 88.21748715840093,
+      "native_control_tail_ms": 0.0,
+      "analytical_batch_ready_ms": 0.0
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "hardware": "RTXPRO6000",
+      "tp": 1,
+      "batch": 4,
+      "input_tokens": 128,
+      "output_tokens": 8,
+      "analytical_throughput_tps": 281.0797355442539,
+      "native_throughput_tps": 312.3177729494101,
+      "delta_throughput_tps_pct": -10.002004404090126,
+      "analytical_ttft_ms": 26.222901102031933,
+      "native_ttft_ms": 24.690517,
+      "delta_ttft_ms_pct": 6.206367011399294,
+      "analytical_tpot_ms": 12.496256818422081,
+      "native_tpot_ms": 11.10989,
+      "delta_tpot_ms_pct": 12.478672771936372,
+      "analytical_elapsed_ms": 113.8466988309865,
+      "native_elapsed_ms": 102.459747,
+      "delta_elapsed_ms_pct": 11.113585739174736,
+      "native_total_clock_throughput_tps": 312.3177729494101,
+      "native_control_tail_ms": 0.0,
+      "analytical_batch_ready_ms": 0.3
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "hardware": "RTXPRO6000",
+      "tp": 1,
+      "batch": 4,
+      "input_tokens": 512,
+      "output_tokens": 32,
+      "analytical_throughput_tps": 260.78983147653423,
+      "native_throughput_tps": 294.55732191686224,
+      "delta_throughput_tps_pct": -11.463809563647088,
+      "analytical_ttft_ms": 99.91917436306011,
+      "native_ttft_ms": 84.329563,
+      "delta_ttft_ms_pct": 18.486531660385943,
+      "analytical_tpot_ms": 12.604758337506262,
+      "native_tpot_ms": 11.297446,
+      "delta_tpot_ms_pct": 11.571751150713716,
+      "analytical_elapsed_ms": 490.8166828257542,
+      "native_elapsed_ms": 434.550393,
+      "delta_elapsed_ms_pct": 12.948162222868875,
+      "native_total_clock_throughput_tps": 294.55732191686224,
+      "native_control_tail_ms": 0.0,
+      "analytical_batch_ready_ms": 0.3
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "hardware": "RTXPRO6000",
+      "tp": 2,
+      "batch": 1,
+      "input_tokens": 128,
+      "output_tokens": 8,
+      "analytical_throughput_tps": 124.68477666763671,
+      "native_throughput_tps": 145.11212305856304,
+      "delta_throughput_tps_pct": -14.07693992781185,
+      "analytical_ttft_ms": 16.80411680772885,
+      "native_ttft_ms": 11.377495,
+      "delta_ttft_ms_pct": 47.69610364784911,
+      "analytical_tpot_ms": 6.76538365278821,
+      "native_tpot_ms": 6.250327,
+      "delta_tpot_ms_pct": 8.240475302943494,
+      "analytical_elapsed_ms": 64.16180237724632,
+      "native_elapsed_ms": 55.129784,
+      "delta_elapsed_ms_pct": 16.38319202782712,
+      "native_total_clock_throughput_tps": 142.526826755649,
+      "native_control_tail_ms": 1.0,
+      "analytical_batch_ready_ms": 0.0
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "hardware": "RTXPRO6000",
+      "tp": 2,
+      "batch": 4,
+      "input_tokens": 128,
+      "output_tokens": 8,
+      "analytical_throughput_tps": 377.3752898465228,
+      "native_throughput_tps": 425.149958361876,
+      "delta_throughput_tps_pct": -11.2371335279983,
+      "analytical_ttft_ms": 36.33605481376093,
+      "native_ttft_ms": 29.956251,
+      "delta_ttft_ms_pct": 21.297070230052917,
+      "analytical_tpot_ms": 6.9014528885689685,
+      "native_tpot_ms": 6.473044,
+      "delta_tpot_ms_pct": 6.618352796133764,
+      "analytical_elapsed_ms": 84.79622503374371,
+      "native_elapsed_ms": 75.26756,
+      "delta_elapsed_ms_pct": 12.659723569813753,
+      "native_total_clock_throughput_tps": 419.57550497223195,
+      "native_control_tail_ms": 1.0,
+      "analytical_batch_ready_ms": 0.3
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "hardware": "RTXPRO6000",
+      "tp": 2,
+      "batch": 4,
+      "input_tokens": 512,
+      "output_tokens": 32,
+      "analytical_throughput_tps": 367.4197767659358,
+      "native_throughput_tps": 409.370854500445,
+      "delta_throughput_tps_pct": -10.247695280041869,
+      "analytical_ttft_ms": 133.8034129535214,
+      "native_ttft_ms": 108.469397,
+      "delta_ttft_ms_pct": 23.355911117973104,
+      "analytical_tpot_ms": 6.91683726471652,
+      "native_tpot_ms": 6.587275,
+      "delta_tpot_ms_pct": 5.003013609064744,
+      "analytical_elapsed_ms": 348.3753681597335,
+      "native_elapsed_ms": 312.674922,
+      "delta_elapsed_ms_pct": 11.41775168004473,
+      "native_total_clock_throughput_tps": 408.0657745409433,
+      "native_control_tail_ms": 1.0,
+      "analytical_batch_ready_ms": 0.3
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "hardware": "RTX4090",
+      "tp": 1,
+      "batch": 1,
+      "input_tokens": 128,
+      "output_tokens": 8,
+      "analytical_throughput_tps": 49.178729067286184,
+      "native_throughput_tps": 57.779913291273076,
+      "delta_throughput_tps_pct": -14.886114800186089,
+      "analytical_ttft_ms": 27.107226074697625,
+      "native_ttft_ms": 21.136683,
+      "delta_ttft_ms_pct": 28.247303868339337,
+      "analytical_tpot_ms": 19.36638984126984,
+      "native_tpot_ms": 16.759962,
+      "delta_tpot_ms_pct": 15.551514026522483,
+      "analytical_elapsed_ms": 162.6719549635865,
+      "native_elapsed_ms": 138.456421,
+      "delta_elapsed_ms_pct": 17.489643158973813,
+      "native_total_clock_throughput_tps": 57.779913291273076,
+      "native_control_tail_ms": 0.0,
+      "analytical_batch_ready_ms": 0.0
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "hardware": "RTX4090",
+      "tp": 1,
+      "batch": 4,
+      "input_tokens": 128,
+      "output_tokens": 8,
+      "analytical_throughput_tps": 152.06116391778804,
+      "native_throughput_tps": 189.59252230028721,
+      "delta_throughput_tps_pct": -19.7958009773481,
+      "analytical_ttft_ms": 74.03399974128342,
+      "native_ttft_ms": 48.317596,
+      "delta_ttft_ms_pct": 53.223682199096615,
+      "analytical_tpot_ms": 19.465376507936504,
+      "native_tpot_ms": 17.209347,
+      "delta_tpot_ms_pct": 13.10932662312232,
+      "analytical_elapsed_ms": 210.44163529683897,
+      "native_elapsed_ms": 168.783028,
+      "delta_elapsed_ms_pct": 24.681751352890146,
+      "native_total_clock_throughput_tps": 189.59252230028721,
+      "native_control_tail_ms": 0.0,
+      "analytical_batch_ready_ms": 0.3
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "hardware": "RTX4090",
+      "tp": 1,
+      "batch": 4,
+      "input_tokens": 512,
+      "output_tokens": 32,
+      "analytical_throughput_tps": 141.9351641035826,
+      "native_throughput_tps": 174.39212328328531,
+      "delta_throughput_tps_pct": -18.611482312752813,
+      "analytical_ttft_ms": 290.2621932174119,
+      "native_ttft_ms": 193.016832,
+      "delta_ttft_ms_pct": 50.38180360219149,
+      "analytical_tpot_ms": 19.722839365079373,
+      "native_tpot_ms": 17.450363,
+      "delta_tpot_ms_pct": 13.022516294241981,
+      "analytical_elapsed_ms": 901.8202135348724,
+      "native_elapsed_ms": 733.978104,
+      "delta_elapsed_ms_pct": 22.867454576665747,
+      "native_total_clock_throughput_tps": 174.39212328328531,
+      "native_control_tail_ms": 0.0,
+      "analytical_batch_ready_ms": 0.3
+    }
+  ],
+  "operators": [
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 4.147270906359539,
+      "native_profile_us": 3.067,
+      "delta_pct": 35.22239668599736,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 43.521532298447674,
+      "native_profile_us": 43.915,
+      "delta_pct": -0.8959756382837858,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 4.140861291937907,
+      "native_profile_us": 2.88,
+      "delta_pct": 43.779905970066224,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 4.551076614922383,
+      "native_profile_us": 9.534,
+      "delta_pct": -52.264772237021376,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 42.28182114923465,
+      "native_profile_us": 31.19,
+      "delta_pct": 35.56210692284274,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 4.147270906359539,
+      "native_profile_us": 3.067,
+      "delta_pct": 35.22239668599736,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 194.89098647971957,
+      "native_profile_us": 180.726,
+      "delta_pct": 7.837824374865576,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 11.11452178267401,
+      "native_profile_us": 3.84,
+      "delta_pct": 189.4406714238024,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 141.7363740223213,
+      "native_profile_us": 92.427,
+      "delta_pct": 53.34953425116176,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.519228843264897,
+      "native_profile_us": 2.378,
+      "delta_pct": 5.938975747052022,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 41.893490235353035,
+      "native_profile_us": 35.808,
+      "delta_pct": 16.99477836057035,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.512819228843265,
+      "native_profile_us": 2.646,
+      "delta_pct": -5.033286891788913,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 2.5391529459247684,
+      "native_profile_us": 9.137,
+      "delta_pct": -72.21021182089561,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 28.766599899849776,
+      "native_profile_us": 25.846,
+      "delta_pct": 11.300007350652997,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.519228843264897,
+      "native_profile_us": 2.378,
+      "delta_pct": 5.938975747052022,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 186.34376564847273,
+      "native_profile_us": 159.04,
+      "delta_pct": 17.167860694462235,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.567300951427141,
+      "native_profile_us": 3.03,
+      "delta_pct": -15.270595662470587,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 94.40105157736606,
+      "native_profile_us": 85.014,
+      "delta_pct": 11.04177144631009,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 9.06985478217326,
+      "native_profile_us": 4.336,
+      "delta_pct": 109.17561767004753,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 83.75648575162822,
+      "native_profile_us": 96.609,
+      "delta_pct": -13.30364070466703,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 9.063445167751627,
+      "native_profile_us": 4.214,
+      "delta_pct": 115.07938224375005,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 10.704306459689535,
+      "native_profile_us": 18.652,
+      "delta_pct": -42.61040928753198,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 56.670990501085484,
+      "native_profile_us": 71.189,
+      "delta_pct": -20.393613478085815,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 9.06985478217326,
+      "native_profile_us": 4.336,
+      "delta_pct": 109.17561767004753,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 381.6969335075984,
+      "native_profile_us": 349.548,
+      "delta_pct": 9.197287213086147,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 36.95808713069604,
+      "native_profile_us": 11.178,
+      "delta_pct": 230.6323772651283,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 192.0984667537992,
+      "native_profile_us": 189.057,
+      "delta_pct": 1.6087564881486438,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.557686529794692,
+      "native_profile_us": 2.368,
+      "delta_pct": 8.010410886600173,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 41.93194792188282,
+      "native_profile_us": 35.638,
+      "delta_pct": 17.660777602230283,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.5512769153730597,
+      "native_profile_us": 2.699,
+      "delta_pct": -5.473252487104119,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 2.6566117836990744,
+      "native_profile_us": 14.035,
+      "delta_pct": -81.0715227381612,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 28.80505758637957,
+      "native_profile_us": 25.653,
+      "delta_pct": 12.28728642412027,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.557686529794692,
+      "native_profile_us": 2.368,
+      "delta_pct": 8.010410886600173,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 186.54566850275415,
+      "native_profile_us": 157.527,
+      "delta_pct": 18.42139347715259,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.7692038057085626,
+      "native_profile_us": 3.456,
+      "delta_pct": -19.872575066303167,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 94.43950926389584,
+      "native_profile_us": 81.024,
+      "delta_pct": 16.5574512044528,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 28.76019028542814,
+      "native_profile_us": 15.286,
+      "delta_pct": 88.14726079699165,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 327.5259430065129,
+      "native_profile_us": 321.249,
+      "delta_pct": 1.9539183021621387,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 28.753780671006506,
+      "native_profile_us": 12.182,
+      "delta_pct": 136.03497513549914,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 38.59894842263396,
+      "native_profile_us": 75.277,
+      "delta_pct": -48.72411437406651,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 219.18396200434194,
+      "native_profile_us": 204.662,
+      "delta_pct": 7.095582963296532,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 28.76019028542814,
+      "native_profile_us": 15.286,
+      "delta_pct": 88.14726079699165,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 1519.2877340303935,
+      "native_profile_us": 1226.98,
+      "delta_pct": 23.82334952732672,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 140.33234852278417,
+      "native_profile_us": 94.838,
+      "delta_pct": 47.970590399190385,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 760.8938670151966,
+      "native_profile_us": 646.552,
+      "delta_pct": 17.684867886140122,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.557686529794692,
+      "native_profile_us": 2.368,
+      "delta_pct": 8.010410886600173,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 41.93194792188282,
+      "native_profile_us": 35.638,
+      "delta_pct": 17.660777602230283,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.5512769153730597,
+      "native_profile_us": 2.699,
+      "delta_pct": -5.473252487104119,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 5.858637956935403,
+      "native_profile_us": 19.823,
+      "delta_pct": -70.44525068387529,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 28.80505758637957,
+      "native_profile_us": 25.653,
+      "delta_pct": 12.28728642412027,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.557686529794692,
+      "native_profile_us": 2.368,
+      "delta_pct": 8.010410886600173,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 186.54566850275415,
+      "native_profile_us": 157.527,
+      "delta_pct": 18.42139347715259,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.7692038057085626,
+      "native_profile_us": 3.456,
+      "delta_pct": -19.872575066303167,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 94.43950926389584,
+      "native_profile_us": 81.024,
+      "delta_pct": 16.5574512044528,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 3.32363545317977,
+      "native_profile_us": 3.067,
+      "delta_pct": 8.367637860442457,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 42.28182114923466,
+      "native_profile_us": 24.704,
+      "delta_pct": 71.15374493699262,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 3.3204306459689534,
+      "native_profile_us": 2.229,
+      "delta_pct": 48.96503570968835,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 3.7528942695925953,
+      "native_profile_us": 9.622,
+      "delta_pct": -60.99673384335278,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 42.28182114923465,
+      "native_profile_us": 14.87,
+      "delta_pct": 184.34311465524314,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 3.32363545317977,
+      "native_profile_us": 3.067,
+      "delta_pct": 8.367637860442457,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 98.6954932398598,
+      "native_profile_us": 102.592,
+      "delta_pct": -3.7980610185396557,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 6.8072608913370045,
+      "native_profile_us": 2.325,
+      "delta_pct": 192.78541468116148,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 141.7363740223213,
+      "native_profile_us": 50.688,
+      "delta_pct": 179.62510657812754,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.509614421632449,
+      "native_profile_us": 2.378,
+      "delta_pct": 5.5346686977480575,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 22.196745117676514,
+      "native_profile_us": 22.197,
+      "delta_pct": -0.0011482737463874848,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.5064096144216323,
+      "native_profile_us": 2.112,
+      "delta_pct": 18.674697652539397,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 2.5391529459247684,
+      "native_profile_us": 9.217,
+      "delta_pct": -72.45141644868428,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 15.633299949924888,
+      "native_profile_us": 13.942,
+      "delta_pct": 12.130970807092867,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.509614421632449,
+      "native_profile_us": 2.378,
+      "delta_pct": 5.5346686977480575,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 94.42188282423636,
+      "native_profile_us": 80.128,
+      "delta_pct": 17.838811432004253,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.53365047571357,
+      "native_profile_us": 2.037,
+      "delta_pct": 24.381466652605297,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 48.45052578868303,
+      "native_profile_us": 43.424,
+      "delta_pct": 11.575455482413034,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 5.78492739108663,
+      "native_profile_us": 4.336,
+      "delta_pct": 33.4162221191566,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 43.12824287581411,
+      "native_profile_us": 56.725,
+      "delta_pct": -23.9696026869738,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 5.781722583875814,
+      "native_profile_us": 2.912,
+      "delta_pct": 98.54816565507602,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 6.602153229844768,
+      "native_profile_us": 12.945,
+      "delta_pct": -48.99843005141161,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 42.28182114923465,
+      "native_profile_us": 34.517,
+      "delta_pct": 22.495643159123468,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 5.78492739108663,
+      "native_profile_us": 4.336,
+      "delta_pct": 33.4162221191566,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 192.0984667537992,
+      "native_profile_us": 189.569,
+      "delta_pct": 1.3343251026271208,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 19.72904356534802,
+      "native_profile_us": 5.035,
+      "delta_pct": 291.8380052700699,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 141.7363740223213,
+      "native_profile_us": 104.854,
+      "delta_pct": 35.174980470293264,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.528843264897346,
+      "native_profile_us": 2.368,
+      "delta_pct": 6.792367605462246,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 22.215973960941408,
+      "native_profile_us": 20.502,
+      "delta_pct": 8.360032976984733,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.52563845768653,
+      "native_profile_us": 2.133,
+      "delta_pct": 18.40780392341912,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 2.6566117836990744,
+      "native_profile_us": 13.584,
+      "delta_pct": -80.44308168654982,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 15.652528793189784,
+      "native_profile_us": 14.784,
+      "delta_pct": 5.874788914974194,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.528843264897346,
+      "native_profile_us": 2.368,
+      "delta_pct": 6.792367605462246,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 94.52283425137708,
+      "native_profile_us": 80.917,
+      "delta_pct": 16.814555966455845,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.6346019028542815,
+      "native_profile_us": 2.059,
+      "delta_pct": 27.955410532019485,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 48.46975463194792,
+      "native_profile_us": 42.688,
+      "delta_pct": 13.54421531097245,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 15.63009514271407,
+      "native_profile_us": 15.286,
+      "delta_pct": 2.2510476430332993,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 165.01297150325644,
+      "native_profile_us": 181.632,
+      "delta_pct": -9.14983510435582,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 15.626890335503255,
+      "native_profile_us": 8.384,
+      "delta_pct": 86.38943625361706,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 18.908612919379067,
+      "native_profile_us": 46.72,
+      "delta_pct": -59.527797689685215,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 110.84198100217097,
+      "native_profile_us": 113.451,
+      "delta_pct": -2.2996879691047467,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 15.63009514271407,
+      "native_profile_us": 15.286,
+      "delta_pct": 2.2510476430332993,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 760.8938670151966,
+      "native_profile_us": 616.963,
+      "delta_pct": 23.328930100378244,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 71.41617426139209,
+      "native_profile_us": 28.533,
+      "delta_pct": 150.2932543419622,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 381.6969335075984,
+      "native_profile_us": 330.241,
+      "delta_pct": 15.581328032436437,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.528843264897346,
+      "native_profile_us": 2.368,
+      "delta_pct": 6.792367605462246,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 22.215973960941408,
+      "native_profile_us": 20.502,
+      "delta_pct": 8.360032976984733,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.52563845768653,
+      "native_profile_us": 2.133,
+      "delta_pct": 18.40780392341912,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 3.122805000291668,
+      "native_profile_us": 17.164,
+      "delta_pct": -81.8060766704051,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 15.652528793189784,
+      "native_profile_us": 14.784,
+      "delta_pct": 5.874788914974194,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.528843264897346,
+      "native_profile_us": 2.368,
+      "delta_pct": 6.792367605462246,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 94.52283425137708,
+      "native_profile_us": 80.917,
+      "delta_pct": 16.814555966455845,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.6346019028542815,
+      "native_profile_us": 2.059,
+      "delta_pct": 27.955410532019485,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 48.46975463194792,
+      "native_profile_us": 42.688,
+      "delta_pct": 13.54421531097245,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 5.11079365079365,
+      "native_profile_us": 3.088,
+      "delta_pct": 65.50497573813634,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 84.96975854130145,
+      "native_profile_us": 76.924,
+      "delta_pct": 10.459360591364764,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 5.100634920634921,
+      "native_profile_us": 2.475,
+      "delta_pct": 106.08625941959274,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 6.40095238095238,
+      "native_profile_us": 10.484,
+      "delta_pct": -38.94551334459767,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 84.96975854130145,
+      "native_profile_us": 44.2,
+      "delta_pct": 92.23927271787656,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 5.11079365079365,
+      "native_profile_us": 3.088,
+      "delta_pct": 65.50497573813634,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 307.4244444444444,
+      "native_profile_us": 314.081,
+      "delta_pct": -2.119375433584203,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 16.153333333333332,
+      "native_profile_us": 4.181,
+      "delta_pct": 286.35095272263413,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 291.144154894555,
+      "native_profile_us": 166.731,
+      "delta_pct": 74.61908996800537,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.5304761904761905,
+      "native_profile_us": 1.851,
+      "delta_pct": 36.708600241825536,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 64.93555555555557,
+      "native_profile_us": 54.898,
+      "delta_pct": 18.2840095368785,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.5203174603174605,
+      "native_profile_us": 2.176,
+      "delta_pct": 15.823412698412698,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 3.1806349206349207,
+      "native_profile_us": 12.98,
+      "delta_pct": -75.49587888570939,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 44.130476190476195,
+      "native_profile_us": 38.131,
+      "delta_pct": 15.733854843765416,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.5304761904761905,
+      "native_profile_us": 1.851,
+      "delta_pct": 36.708600241825536,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 293.8777777777778,
+      "native_profile_us": 247.292,
+      "delta_pct": 18.838368316717812,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.606666666666667,
+      "native_profile_us": 2.592,
+      "delta_pct": 0.5658436213991758,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 148.15587301587303,
+      "native_profile_us": 126.766,
+      "delta_pct": 16.873509470893634,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 12.912698412698413,
+      "native_profile_us": 6.41,
+      "delta_pct": 101.44615308421861,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 249.90927562390434,
+      "native_profile_us": 166.444,
+      "delta_pct": 50.14616064496429,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 12.902539682539684,
+      "native_profile_us": 5.525,
+      "delta_pct": 133.53013000071826,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 18.103809523809524,
+      "native_profile_us": 41.075,
+      "delta_pct": -55.92499202967858,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 167.4395170826029,
+      "native_profile_us": 107.951,
+      "delta_pct": 55.10696249465303,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 12.912698412698413,
+      "native_profile_us": 6.41,
+      "delta_pct": 101.44615308421861,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 1157.07661957822,
+      "native_profile_us": 736.703,
+      "delta_pct": 57.061477906051714,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 57.11333333333334,
+      "native_profile_us": 27.54,
+      "delta_pct": 107.38320019365774,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 579.78830978911,
+      "native_profile_us": 376.009,
+      "delta_pct": 54.195327715323316,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.591428571428571,
+      "native_profile_us": 1.978,
+      "delta_pct": 31.012566806297848,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 64.99650793650794,
+      "native_profile_us": 56.348,
+      "delta_pct": 15.348384923170189,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.581269841269841,
+      "native_profile_us": 2.357,
+      "delta_pct": 9.515054784465038,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 5.222539682539683,
+      "native_profile_us": 16.81,
+      "delta_pct": -68.93194715919284,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 44.191428571428574,
+      "native_profile_us": 40.904,
+      "delta_pct": 8.036936660054206,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.591428571428571,
+      "native_profile_us": 1.978,
+      "delta_pct": 31.012566806297848,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 294.1977777777778,
+      "native_profile_us": 249.85,
+      "delta_pct": 17.749760967691742,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.9266666666666667,
+      "native_profile_us": 3.179,
+      "delta_pct": -7.937506553423502,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 148.2168253968254,
+      "native_profile_us": 128.727,
+      "delta_pct": 15.140433162293387,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Input RMSNorm",
+      "analytical_us": 44.120317460317466,
+      "native_profile_us": 28.484,
+      "delta_pct": 54.89509008677666,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "QKV projection",
+      "analytical_us": 992.1371024956172,
+      "native_profile_us": 631.069,
+      "delta_pct": 57.2153128256367,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Rotary position",
+      "analytical_us": 44.11015873015874,
+      "native_profile_us": 26.228,
+      "delta_pct": 68.17965048863329,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Attention",
+      "analytical_us": 85.13083228845242,
+      "native_profile_us": 336.126,
+      "delta_pct": -74.67294041863693,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Output projection",
+      "analytical_us": 662.2580683304114,
+      "native_profile_us": 419.483,
+      "delta_pct": 57.87482885609463,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 44.120317460317466,
+      "native_profile_us": 28.484,
+      "delta_pct": 54.89509008677666,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Gate + up projection",
+      "analytical_us": 4620.806478312881,
+      "native_profile_us": 2896.81,
+      "delta_pct": 59.51361940592863,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "SwiGLU",
+      "analytical_us": 220.95333333333335,
+      "native_profile_us": 168.943,
+      "delta_pct": 30.785728519875533,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "prefill",
+      "operator": "Down projection",
+      "analytical_us": 2311.65323915644,
+      "native_profile_us": 1459.55,
+      "delta_pct": 58.381229773316456,
+      "analytical_bound": "Compute",
+      "native_node": "COMP_NODE_down_proj_9"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Input RMSNorm",
+      "analytical_us": 2.591428571428571,
+      "native_profile_us": 1.978,
+      "delta_pct": 31.012566806297848,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_1"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "QKV projection",
+      "analytical_us": 64.99650793650794,
+      "native_profile_us": 56.348,
+      "delta_pct": 15.348384923170189,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_qkv_proj_2"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Rotary position",
+      "analytical_us": 2.581269841269841,
+      "native_profile_us": 2.357,
+      "delta_pct": 9.515054784465038,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_rotary_emb_3"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Attention",
+      "analytical_us": 13.024444444444445,
+      "native_profile_us": 24.02,
+      "delta_pct": -45.77666759182163,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_attention_4"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Output projection",
+      "analytical_us": 44.191428571428574,
+      "native_profile_us": 40.904,
+      "delta_pct": 8.036936660054206,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_o_proj_5"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "FFN RMSNorm",
+      "analytical_us": 2.591428571428571,
+      "native_profile_us": 1.978,
+      "delta_pct": 31.012566806297848,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_layernorm_6"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Gate + up projection",
+      "analytical_us": 294.1977777777778,
+      "native_profile_us": 249.85,
+      "delta_pct": 17.749760967691742,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_gate_up_proj_7"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "SwiGLU",
+      "analytical_us": 2.9266666666666667,
+      "native_profile_us": 3.179,
+      "delta_pct": -7.937506553423502,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_act_fn_8"
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "phase": "decode",
+      "operator": "Down projection",
+      "analytical_us": 148.2168253968254,
+      "native_profile_us": 128.727,
+      "delta_pct": 15.140433162293387,
+      "analytical_bound": "Memory",
+      "native_node": "COMP_NODE_down_proj_9"
+    }
+  ],
+  "evidence": [
+    {
+      "case": "rtxpro6000-tp1-b1-p128-o8",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTXPRO6000",
+        "--tp",
+        "1",
+        "--requests",
+        "1",
+        "--input-tokens",
+        "128",
+        "--output-tokens",
+        "8",
+        "--memory-gib",
+        "96",
+        "--memory-bandwidth-gbps",
+        "1597.6",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp1-b1-p128-o8"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp1-b1-p128-o8/result.json",
+      "native_result_sha256": "f6226785ca951233a77f0f9f9693214a2f6e7ca3f847f26c96287dcd42155b76",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "6f1dfd561532c782550cf04e17e4adf37021d5bd8b01dccff2b548c3d814428f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "815583562ce5361ab63cc0b3faf10a3318be70d0fe9e3562e4d8d15ccc9d2193",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "f413575d6af9577ac2ac88d8d1779fb5951580661c374f237af74543c699ec3b",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "a0b2a68fd3154c375c48b7e0f2749ff292a7eeef1c975c1b6218b5fef5d380d5",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "4deaf397b8755cdcf7fe922bf937fa9b4abf76f11478f8de182d3ff6e63a79a6",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "ee45638785cac22a54614a208e1127e96cf7e41b13f9d98a58e289119c320285",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/attention.csv": "6f6a3d862c4d3ce2c82d427bc47113e8e4a207086eb633f363db928470bf4d4f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/dense.csv": "2d134490b42296aa67221b4ee596243d11fb5e16d2876ae5f40fbc6db4b2ed26",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/per_sequence.csv": "51211f5f4521723d7f595fc01e27af52321b913ebdd4d23eef3c9a1af0776b46",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew.csv": "8b04ec1de6f7e25dbb482335ade5dad50037395ac7ad95c00eec6e80b0dfa835",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew_fit.csv": "a815ed9c58d5afa49c6eacc867a399dcaa4fc01b62a369ff568fdcf884db41e6"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p128-o8",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTXPRO6000",
+        "--tp",
+        "1",
+        "--requests",
+        "4",
+        "--input-tokens",
+        "128",
+        "--output-tokens",
+        "8",
+        "--memory-gib",
+        "96",
+        "--memory-bandwidth-gbps",
+        "1597.6",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp1-b4-p128-o8"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp1-b4-p128-o8/result.json",
+      "native_result_sha256": "f288f53f98977af1a026228179c5c522f613d9c37662b2a6bf3b96e0336e2c27",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "6f1dfd561532c782550cf04e17e4adf37021d5bd8b01dccff2b548c3d814428f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "815583562ce5361ab63cc0b3faf10a3318be70d0fe9e3562e4d8d15ccc9d2193",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "f413575d6af9577ac2ac88d8d1779fb5951580661c374f237af74543c699ec3b",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "a0b2a68fd3154c375c48b7e0f2749ff292a7eeef1c975c1b6218b5fef5d380d5",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "4deaf397b8755cdcf7fe922bf937fa9b4abf76f11478f8de182d3ff6e63a79a6",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "ee45638785cac22a54614a208e1127e96cf7e41b13f9d98a58e289119c320285",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/attention.csv": "6f6a3d862c4d3ce2c82d427bc47113e8e4a207086eb633f363db928470bf4d4f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/dense.csv": "2d134490b42296aa67221b4ee596243d11fb5e16d2876ae5f40fbc6db4b2ed26",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/per_sequence.csv": "51211f5f4521723d7f595fc01e27af52321b913ebdd4d23eef3c9a1af0776b46",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew.csv": "8b04ec1de6f7e25dbb482335ade5dad50037395ac7ad95c00eec6e80b0dfa835",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew_fit.csv": "a815ed9c58d5afa49c6eacc867a399dcaa4fc01b62a369ff568fdcf884db41e6"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtxpro6000-tp1-b4-p512-o32",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTXPRO6000",
+        "--tp",
+        "1",
+        "--requests",
+        "4",
+        "--input-tokens",
+        "512",
+        "--output-tokens",
+        "32",
+        "--memory-gib",
+        "96",
+        "--memory-bandwidth-gbps",
+        "1597.6",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp1-b4-p512-o32"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp1-b4-p512-o32/result.json",
+      "native_result_sha256": "daded1cea5894b4c5f42fc82576d16b3b301f1cc08b8c1270853a8ac04187839",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "6f1dfd561532c782550cf04e17e4adf37021d5bd8b01dccff2b548c3d814428f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "815583562ce5361ab63cc0b3faf10a3318be70d0fe9e3562e4d8d15ccc9d2193",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "f413575d6af9577ac2ac88d8d1779fb5951580661c374f237af74543c699ec3b",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "a0b2a68fd3154c375c48b7e0f2749ff292a7eeef1c975c1b6218b5fef5d380d5",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "4deaf397b8755cdcf7fe922bf937fa9b4abf76f11478f8de182d3ff6e63a79a6",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "ee45638785cac22a54614a208e1127e96cf7e41b13f9d98a58e289119c320285",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/attention.csv": "6f6a3d862c4d3ce2c82d427bc47113e8e4a207086eb633f363db928470bf4d4f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/dense.csv": "2d134490b42296aa67221b4ee596243d11fb5e16d2876ae5f40fbc6db4b2ed26",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/per_sequence.csv": "51211f5f4521723d7f595fc01e27af52321b913ebdd4d23eef3c9a1af0776b46",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew.csv": "8b04ec1de6f7e25dbb482335ade5dad50037395ac7ad95c00eec6e80b0dfa835",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew_fit.csv": "a815ed9c58d5afa49c6eacc867a399dcaa4fc01b62a369ff568fdcf884db41e6"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtxpro6000-tp2-b1-p128-o8",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTXPRO6000",
+        "--tp",
+        "2",
+        "--requests",
+        "1",
+        "--input-tokens",
+        "128",
+        "--output-tokens",
+        "8",
+        "--memory-gib",
+        "96",
+        "--memory-bandwidth-gbps",
+        "1597.6",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp2-b1-p128-o8"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp2-b1-p128-o8/result.json",
+      "native_result_sha256": "69686107b86f6f88265bfd6a9362da26667c197ed153ce65dc69ac712159ce21",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "6f1dfd561532c782550cf04e17e4adf37021d5bd8b01dccff2b548c3d814428f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "815583562ce5361ab63cc0b3faf10a3318be70d0fe9e3562e4d8d15ccc9d2193",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "f413575d6af9577ac2ac88d8d1779fb5951580661c374f237af74543c699ec3b",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "a0b2a68fd3154c375c48b7e0f2749ff292a7eeef1c975c1b6218b5fef5d380d5",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "4deaf397b8755cdcf7fe922bf937fa9b4abf76f11478f8de182d3ff6e63a79a6",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "ee45638785cac22a54614a208e1127e96cf7e41b13f9d98a58e289119c320285",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/attention.csv": "6f6a3d862c4d3ce2c82d427bc47113e8e4a207086eb633f363db928470bf4d4f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/dense.csv": "2d134490b42296aa67221b4ee596243d11fb5e16d2876ae5f40fbc6db4b2ed26",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/per_sequence.csv": "51211f5f4521723d7f595fc01e27af52321b913ebdd4d23eef3c9a1af0776b46",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew.csv": "8b04ec1de6f7e25dbb482335ade5dad50037395ac7ad95c00eec6e80b0dfa835",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew_fit.csv": "a815ed9c58d5afa49c6eacc867a399dcaa4fc01b62a369ff568fdcf884db41e6"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p128-o8",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTXPRO6000",
+        "--tp",
+        "2",
+        "--requests",
+        "4",
+        "--input-tokens",
+        "128",
+        "--output-tokens",
+        "8",
+        "--memory-gib",
+        "96",
+        "--memory-bandwidth-gbps",
+        "1597.6",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp2-b4-p128-o8"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp2-b4-p128-o8/result.json",
+      "native_result_sha256": "cf7262595d9ffebcfc0f2a37472b48f0728a8a3d3e406148213b0bf1ab3b3b17",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "6f1dfd561532c782550cf04e17e4adf37021d5bd8b01dccff2b548c3d814428f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "815583562ce5361ab63cc0b3faf10a3318be70d0fe9e3562e4d8d15ccc9d2193",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "f413575d6af9577ac2ac88d8d1779fb5951580661c374f237af74543c699ec3b",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "a0b2a68fd3154c375c48b7e0f2749ff292a7eeef1c975c1b6218b5fef5d380d5",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "4deaf397b8755cdcf7fe922bf937fa9b4abf76f11478f8de182d3ff6e63a79a6",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "ee45638785cac22a54614a208e1127e96cf7e41b13f9d98a58e289119c320285",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/attention.csv": "6f6a3d862c4d3ce2c82d427bc47113e8e4a207086eb633f363db928470bf4d4f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/dense.csv": "2d134490b42296aa67221b4ee596243d11fb5e16d2876ae5f40fbc6db4b2ed26",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/per_sequence.csv": "51211f5f4521723d7f595fc01e27af52321b913ebdd4d23eef3c9a1af0776b46",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew.csv": "8b04ec1de6f7e25dbb482335ade5dad50037395ac7ad95c00eec6e80b0dfa835",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew_fit.csv": "a815ed9c58d5afa49c6eacc867a399dcaa4fc01b62a369ff568fdcf884db41e6"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtxpro6000-tp2-b4-p512-o32",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTXPRO6000",
+        "--tp",
+        "2",
+        "--requests",
+        "4",
+        "--input-tokens",
+        "512",
+        "--output-tokens",
+        "32",
+        "--memory-gib",
+        "96",
+        "--memory-bandwidth-gbps",
+        "1597.6",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp2-b4-p512-o32"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtxpro6000-tp2-b4-p512-o32/result.json",
+      "native_result_sha256": "b2264e3e82148cf9a5585f57341dafbb9f881c81faef9b848759517fe6d35602",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "6f1dfd561532c782550cf04e17e4adf37021d5bd8b01dccff2b548c3d814428f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "815583562ce5361ab63cc0b3faf10a3318be70d0fe9e3562e4d8d15ccc9d2193",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "f413575d6af9577ac2ac88d8d1779fb5951580661c374f237af74543c699ec3b",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "a0b2a68fd3154c375c48b7e0f2749ff292a7eeef1c975c1b6218b5fef5d380d5",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "4deaf397b8755cdcf7fe922bf937fa9b4abf76f11478f8de182d3ff6e63a79a6",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "ee45638785cac22a54614a208e1127e96cf7e41b13f9d98a58e289119c320285",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/attention.csv": "6f6a3d862c4d3ce2c82d427bc47113e8e4a207086eb633f363db928470bf4d4f",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/dense.csv": "2d134490b42296aa67221b4ee596243d11fb5e16d2876ae5f40fbc6db4b2ed26",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/per_sequence.csv": "51211f5f4521723d7f595fc01e27af52321b913ebdd4d23eef3c9a1af0776b46",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew.csv": "8b04ec1de6f7e25dbb482335ade5dad50037395ac7ad95c00eec6e80b0dfa835",
+          "profiler/perf/RTXPRO6000/meta-llama/Llama-3.1-8B/bf16/tp2/skew_fit.csv": "a815ed9c58d5afa49c6eacc867a399dcaa4fc01b62a369ff568fdcf884db41e6"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtx4090-tp1-b1-p128-o8",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTX4090",
+        "--tp",
+        "1",
+        "--requests",
+        "1",
+        "--input-tokens",
+        "128",
+        "--output-tokens",
+        "8",
+        "--memory-gib",
+        "24",
+        "--memory-bandwidth-gbps",
+        "1008.0",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtx4090-tp1-b1-p128-o8"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtx4090-tp1-b1-p128-o8/result.json",
+      "native_result_sha256": "e0636fc3f6bb4158da147d95f33592ed694230656d24b5278d8245142e15c6ea",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "9c99dc484f44f965e7cdb95767706973588b1462a20332ee6430767433732deb",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "60f0669b5e85467b18d0ca241a826c4376c530b22b74b7b20748a1955cf61949",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "4f5b0623f1fa27033752cc54807a4089c39205c7132a0bb196520249d9d9140a",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "acbc8294d6749cb3ed8eaccb9ab561e62cacf9fbc06e6901c89646d750d94647",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "28decae95c7eb60f94f930ca0e691122357c5dfd7018a9a41d00b6b45d6d3c1f",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "eaaed81e2308133c78fa344a760a86ccb12596d6e69c69a1bf3df9ab5abe3fef"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtx4090-tp1-b4-p128-o8",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTX4090",
+        "--tp",
+        "1",
+        "--requests",
+        "4",
+        "--input-tokens",
+        "128",
+        "--output-tokens",
+        "8",
+        "--memory-gib",
+        "24",
+        "--memory-bandwidth-gbps",
+        "1008.0",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtx4090-tp1-b4-p128-o8"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtx4090-tp1-b4-p128-o8/result.json",
+      "native_result_sha256": "30e2068eee496896c5e76792d46467152ba8788a370ae7f7572b25aba933930b",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "9c99dc484f44f965e7cdb95767706973588b1462a20332ee6430767433732deb",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "60f0669b5e85467b18d0ca241a826c4376c530b22b74b7b20748a1955cf61949",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "4f5b0623f1fa27033752cc54807a4089c39205c7132a0bb196520249d9d9140a",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "acbc8294d6749cb3ed8eaccb9ab561e62cacf9fbc06e6901c89646d750d94647",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "28decae95c7eb60f94f930ca0e691122357c5dfd7018a9a41d00b6b45d6d3c1f",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "eaaed81e2308133c78fa344a760a86ccb12596d6e69c69a1bf3df9ab5abe3fef"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    },
+    {
+      "case": "rtx4090-tp1-b4-p512-o32",
+      "native_command": [
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/.venv-sim/bin/python",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/integration/native_runner.py",
+        "--hardware",
+        "RTX4090",
+        "--tp",
+        "1",
+        "--requests",
+        "4",
+        "--input-tokens",
+        "512",
+        "--output-tokens",
+        "32",
+        "--memory-gib",
+        "24",
+        "--memory-bandwidth-gbps",
+        "1008.0",
+        "--link-bandwidth-gibps",
+        "16",
+        "--link-latency-ns",
+        "1000",
+        "--arrival-interval-ms",
+        "0",
+        "--output",
+        "/Users/anzhiyu/Desktop/LLM-ServeScope/runs/roofline-profile-comparison-2026-10-19/rtx4090-tp1-b4-p512-o32"
+      ],
+      "native_result": "runs/roofline-profile-comparison-2026-10-19/rtx4090-tp1-b4-p512-o32/result.json",
+      "native_result_sha256": "27b704e6443a5a4410b0a45454180f57a37c79754cbb10ee1e54ee2a7cc14d26",
+      "provenance": {
+        "sources": {
+          "LLMServingSim": {
+            "commit": "b09c7aaab4b072d73136641841cc2688616c49eb",
+            "tracked_source_clean": true
+          },
+          "ASTRA-Sim": {
+            "commit": "d3d068f4050a2fb9a7538cc671a982152c2ba9b7",
+            "tracked_source_clean": true
+          },
+          "Chakra": {
+            "commit": "5e6e9b28438bc1899105dbdd68eed4cf61bee6fd",
+            "tracked_source_clean": true
+          }
+        },
+        "profile_files": {
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/meta.yaml": "9c99dc484f44f965e7cdb95767706973588b1462a20332ee6430767433732deb",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/attention.csv": "60f0669b5e85467b18d0ca241a826c4376c530b22b74b7b20748a1955cf61949",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/dense.csv": "4f5b0623f1fa27033752cc54807a4089c39205c7132a0bb196520249d9d9140a",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/per_sequence.csv": "acbc8294d6749cb3ed8eaccb9ab561e62cacf9fbc06e6901c89646d750d94647",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/skew.csv": "28decae95c7eb60f94f930ca0e691122357c5dfd7018a9a41d00b6b45d6d3c1f",
+          "profiler/perf/RTX4090/meta-llama/Llama-3.1-8B/bf16/tp1/skew_fit.csv": "eaaed81e2308133c78fa344a760a86ccb12596d6e69c69a1bf3df9ab5abe3fef"
+        },
+        "binary_sha256": "753e463fc79c8a3dd480aee3b6b616f98b6530ce2e7847da78e17bd33ce8087c",
+        "runner_sha256": "e66b6e089dd11f9534f2f7885f78e50166755e1462d3783e526c78bb30d6f8c7",
+        "cmake_wrapper_sha256": "78f1a5906edcc8167a423bf9f0aa937b6c4d186270794fe382a8211d2861036c",
+        "protobuf_cpp_source_commit": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+        "protobuf_schema_sha256": "3eb062b4085f32a9d8730986447cf0676cebdd02aac82def5ad2cb3cf9ba595b",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim",
+        "build_adaptation": "Isolated CMake wrapper adds generated protobuf3.21.12 bindings and enables libc++ legacy binary_function declaration; upstream sources unmodified."
+      }
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+case,phase,operator,analytical_us,native_profile_us,delta_pct,analytical_bound,native_node
+rtxpro6000-tp1-b1-p128-o8,prefill,Input RMSNorm,4.147270906359539,3.067,35.22239668599736,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp1-b1-p128-o8,prefill,QKV projection,43.521532298447674,43.915,-0.8959756382837858,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp1-b1-p128-o8,prefill,Rotary position,4.140861291937907,2.88,43.779905970066224,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp1-b1-p128-o8,prefill,Attention,4.551076614922383,9.534,-52.264772237021376,Memory,COMP_NODE_attention_4
+rtxpro6000-tp1-b1-p128-o8,prefill,Output projection,42.28182114923465,31.19,35.56210692284274,Compute,COMP_NODE_o_proj_5
+rtxpro6000-tp1-b1-p128-o8,prefill,FFN RMSNorm,4.147270906359539,3.067,35.22239668599736,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp1-b1-p128-o8,prefill,Gate + up projection,194.89098647971957,180.726,7.837824374865576,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp1-b1-p128-o8,prefill,SwiGLU,11.11452178267401,3.84,189.4406714238024,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp1-b1-p128-o8,prefill,Down projection,141.7363740223213,92.427,53.34953425116176,Compute,COMP_NODE_down_proj_9
+rtxpro6000-tp1-b1-p128-o8,decode,Input RMSNorm,2.519228843264897,2.378,5.938975747052022,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp1-b1-p128-o8,decode,QKV projection,41.893490235353035,35.808,16.99477836057035,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp1-b1-p128-o8,decode,Rotary position,2.512819228843265,2.646,-5.033286891788913,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp1-b1-p128-o8,decode,Attention,2.5391529459247684,9.137,-72.21021182089561,Compute,COMP_NODE_attention_4
+rtxpro6000-tp1-b1-p128-o8,decode,Output projection,28.766599899849776,25.846,11.300007350652997,Memory,COMP_NODE_o_proj_5
+rtxpro6000-tp1-b1-p128-o8,decode,FFN RMSNorm,2.519228843264897,2.378,5.938975747052022,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp1-b1-p128-o8,decode,Gate + up projection,186.34376564847273,159.04,17.167860694462235,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp1-b1-p128-o8,decode,SwiGLU,2.567300951427141,3.03,-15.270595662470587,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp1-b1-p128-o8,decode,Down projection,94.40105157736606,85.014,11.04177144631009,Memory,COMP_NODE_down_proj_9
+rtxpro6000-tp1-b4-p128-o8,prefill,Input RMSNorm,9.06985478217326,4.336,109.17561767004753,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp1-b4-p128-o8,prefill,QKV projection,83.75648575162822,96.609,-13.30364070466703,Compute,COMP_NODE_qkv_proj_2
+rtxpro6000-tp1-b4-p128-o8,prefill,Rotary position,9.063445167751627,4.214,115.07938224375005,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp1-b4-p128-o8,prefill,Attention,10.704306459689535,18.652,-42.61040928753198,Memory,COMP_NODE_attention_4
+rtxpro6000-tp1-b4-p128-o8,prefill,Output projection,56.670990501085484,71.189,-20.393613478085815,Compute,COMP_NODE_o_proj_5
+rtxpro6000-tp1-b4-p128-o8,prefill,FFN RMSNorm,9.06985478217326,4.336,109.17561767004753,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp1-b4-p128-o8,prefill,Gate + up projection,381.6969335075984,349.548,9.197287213086147,Compute,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp1-b4-p128-o8,prefill,SwiGLU,36.95808713069604,11.178,230.6323772651283,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp1-b4-p128-o8,prefill,Down projection,192.0984667537992,189.057,1.6087564881486438,Compute,COMP_NODE_down_proj_9
+rtxpro6000-tp1-b4-p128-o8,decode,Input RMSNorm,2.557686529794692,2.368,8.010410886600173,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp1-b4-p128-o8,decode,QKV projection,41.93194792188282,35.638,17.660777602230283,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp1-b4-p128-o8,decode,Rotary position,2.5512769153730597,2.699,-5.473252487104119,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp1-b4-p128-o8,decode,Attention,2.6566117836990744,14.035,-81.0715227381612,Compute,COMP_NODE_attention_4
+rtxpro6000-tp1-b4-p128-o8,decode,Output projection,28.80505758637957,25.653,12.28728642412027,Memory,COMP_NODE_o_proj_5
+rtxpro6000-tp1-b4-p128-o8,decode,FFN RMSNorm,2.557686529794692,2.368,8.010410886600173,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp1-b4-p128-o8,decode,Gate + up projection,186.54566850275415,157.527,18.42139347715259,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp1-b4-p128-o8,decode,SwiGLU,2.7692038057085626,3.456,-19.872575066303167,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp1-b4-p128-o8,decode,Down projection,94.43950926389584,81.024,16.5574512044528,Memory,COMP_NODE_down_proj_9
+rtxpro6000-tp1-b4-p512-o32,prefill,Input RMSNorm,28.76019028542814,15.286,88.14726079699165,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp1-b4-p512-o32,prefill,QKV projection,327.5259430065129,321.249,1.9539183021621387,Compute,COMP_NODE_qkv_proj_2
+rtxpro6000-tp1-b4-p512-o32,prefill,Rotary position,28.753780671006506,12.182,136.03497513549914,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp1-b4-p512-o32,prefill,Attention,38.59894842263396,75.277,-48.72411437406651,Memory,COMP_NODE_attention_4
+rtxpro6000-tp1-b4-p512-o32,prefill,Output projection,219.18396200434194,204.662,7.095582963296532,Compute,COMP_NODE_o_proj_5
+rtxpro6000-tp1-b4-p512-o32,prefill,FFN RMSNorm,28.76019028542814,15.286,88.14726079699165,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp1-b4-p512-o32,prefill,Gate + up projection,1519.2877340303935,1226.98,23.82334952732672,Compute,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp1-b4-p512-o32,prefill,SwiGLU,140.33234852278417,94.838,47.970590399190385,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp1-b4-p512-o32,prefill,Down projection,760.8938670151966,646.552,17.684867886140122,Compute,COMP_NODE_down_proj_9
+rtxpro6000-tp1-b4-p512-o32,decode,Input RMSNorm,2.557686529794692,2.368,8.010410886600173,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp1-b4-p512-o32,decode,QKV projection,41.93194792188282,35.638,17.660777602230283,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp1-b4-p512-o32,decode,Rotary position,2.5512769153730597,2.699,-5.473252487104119,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp1-b4-p512-o32,decode,Attention,5.858637956935403,19.823,-70.44525068387529,Memory,COMP_NODE_attention_4
+rtxpro6000-tp1-b4-p512-o32,decode,Output projection,28.80505758637957,25.653,12.28728642412027,Memory,COMP_NODE_o_proj_5
+rtxpro6000-tp1-b4-p512-o32,decode,FFN RMSNorm,2.557686529794692,2.368,8.010410886600173,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp1-b4-p512-o32,decode,Gate + up projection,186.54566850275415,157.527,18.42139347715259,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp1-b4-p512-o32,decode,SwiGLU,2.7692038057085626,3.456,-19.872575066303167,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp1-b4-p512-o32,decode,Down projection,94.43950926389584,81.024,16.5574512044528,Memory,COMP_NODE_down_proj_9
+rtxpro6000-tp2-b1-p128-o8,prefill,Input RMSNorm,3.32363545317977,3.067,8.367637860442457,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp2-b1-p128-o8,prefill,QKV projection,42.28182114923466,24.704,71.15374493699262,Compute,COMP_NODE_qkv_proj_2
+rtxpro6000-tp2-b1-p128-o8,prefill,Rotary position,3.3204306459689534,2.229,48.96503570968835,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp2-b1-p128-o8,prefill,Attention,3.7528942695925953,9.622,-60.99673384335278,Compute,COMP_NODE_attention_4
+rtxpro6000-tp2-b1-p128-o8,prefill,Output projection,42.28182114923465,14.87,184.34311465524314,Compute,COMP_NODE_o_proj_5
+rtxpro6000-tp2-b1-p128-o8,prefill,FFN RMSNorm,3.32363545317977,3.067,8.367637860442457,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp2-b1-p128-o8,prefill,Gate + up projection,98.6954932398598,102.592,-3.7980610185396557,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp2-b1-p128-o8,prefill,SwiGLU,6.8072608913370045,2.325,192.78541468116148,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp2-b1-p128-o8,prefill,Down projection,141.7363740223213,50.688,179.62510657812754,Compute,COMP_NODE_down_proj_9
+rtxpro6000-tp2-b1-p128-o8,decode,Input RMSNorm,2.509614421632449,2.378,5.5346686977480575,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp2-b1-p128-o8,decode,QKV projection,22.196745117676514,22.197,-0.0011482737463874848,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp2-b1-p128-o8,decode,Rotary position,2.5064096144216323,2.112,18.674697652539397,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp2-b1-p128-o8,decode,Attention,2.5391529459247684,9.217,-72.45141644868428,Compute,COMP_NODE_attention_4
+rtxpro6000-tp2-b1-p128-o8,decode,Output projection,15.633299949924888,13.942,12.130970807092867,Memory,COMP_NODE_o_proj_5
+rtxpro6000-tp2-b1-p128-o8,decode,FFN RMSNorm,2.509614421632449,2.378,5.5346686977480575,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp2-b1-p128-o8,decode,Gate + up projection,94.42188282423636,80.128,17.838811432004253,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp2-b1-p128-o8,decode,SwiGLU,2.53365047571357,2.037,24.381466652605297,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp2-b1-p128-o8,decode,Down projection,48.45052578868303,43.424,11.575455482413034,Memory,COMP_NODE_down_proj_9
+rtxpro6000-tp2-b4-p128-o8,prefill,Input RMSNorm,5.78492739108663,4.336,33.4162221191566,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp2-b4-p128-o8,prefill,QKV projection,43.12824287581411,56.725,-23.9696026869738,Compute,COMP_NODE_qkv_proj_2
+rtxpro6000-tp2-b4-p128-o8,prefill,Rotary position,5.781722583875814,2.912,98.54816565507602,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp2-b4-p128-o8,prefill,Attention,6.602153229844768,12.945,-48.99843005141161,Memory,COMP_NODE_attention_4
+rtxpro6000-tp2-b4-p128-o8,prefill,Output projection,42.28182114923465,34.517,22.495643159123468,Compute,COMP_NODE_o_proj_5
+rtxpro6000-tp2-b4-p128-o8,prefill,FFN RMSNorm,5.78492739108663,4.336,33.4162221191566,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp2-b4-p128-o8,prefill,Gate + up projection,192.0984667537992,189.569,1.3343251026271208,Compute,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp2-b4-p128-o8,prefill,SwiGLU,19.72904356534802,5.035,291.8380052700699,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp2-b4-p128-o8,prefill,Down projection,141.7363740223213,104.854,35.174980470293264,Compute,COMP_NODE_down_proj_9
+rtxpro6000-tp2-b4-p128-o8,decode,Input RMSNorm,2.528843264897346,2.368,6.792367605462246,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp2-b4-p128-o8,decode,QKV projection,22.215973960941408,20.502,8.360032976984733,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp2-b4-p128-o8,decode,Rotary position,2.52563845768653,2.133,18.40780392341912,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp2-b4-p128-o8,decode,Attention,2.6566117836990744,13.584,-80.44308168654982,Compute,COMP_NODE_attention_4
+rtxpro6000-tp2-b4-p128-o8,decode,Output projection,15.652528793189784,14.784,5.874788914974194,Memory,COMP_NODE_o_proj_5
+rtxpro6000-tp2-b4-p128-o8,decode,FFN RMSNorm,2.528843264897346,2.368,6.792367605462246,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp2-b4-p128-o8,decode,Gate + up projection,94.52283425137708,80.917,16.814555966455845,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp2-b4-p128-o8,decode,SwiGLU,2.6346019028542815,2.059,27.955410532019485,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp2-b4-p128-o8,decode,Down projection,48.46975463194792,42.688,13.54421531097245,Memory,COMP_NODE_down_proj_9
+rtxpro6000-tp2-b4-p512-o32,prefill,Input RMSNorm,15.63009514271407,15.286,2.2510476430332993,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp2-b4-p512-o32,prefill,QKV projection,165.01297150325644,181.632,-9.14983510435582,Compute,COMP_NODE_qkv_proj_2
+rtxpro6000-tp2-b4-p512-o32,prefill,Rotary position,15.626890335503255,8.384,86.38943625361706,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp2-b4-p512-o32,prefill,Attention,18.908612919379067,46.72,-59.527797689685215,Memory,COMP_NODE_attention_4
+rtxpro6000-tp2-b4-p512-o32,prefill,Output projection,110.84198100217097,113.451,-2.2996879691047467,Compute,COMP_NODE_o_proj_5
+rtxpro6000-tp2-b4-p512-o32,prefill,FFN RMSNorm,15.63009514271407,15.286,2.2510476430332993,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp2-b4-p512-o32,prefill,Gate + up projection,760.8938670151966,616.963,23.328930100378244,Compute,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp2-b4-p512-o32,prefill,SwiGLU,71.41617426139209,28.533,150.2932543419622,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp2-b4-p512-o32,prefill,Down projection,381.6969335075984,330.241,15.581328032436437,Compute,COMP_NODE_down_proj_9
+rtxpro6000-tp2-b4-p512-o32,decode,Input RMSNorm,2.528843264897346,2.368,6.792367605462246,Memory,COMP_NODE_layernorm_1
+rtxpro6000-tp2-b4-p512-o32,decode,QKV projection,22.215973960941408,20.502,8.360032976984733,Memory,COMP_NODE_qkv_proj_2
+rtxpro6000-tp2-b4-p512-o32,decode,Rotary position,2.52563845768653,2.133,18.40780392341912,Memory,COMP_NODE_rotary_emb_3
+rtxpro6000-tp2-b4-p512-o32,decode,Attention,3.122805000291668,17.164,-81.8060766704051,Compute,COMP_NODE_attention_4
+rtxpro6000-tp2-b4-p512-o32,decode,Output projection,15.652528793189784,14.784,5.874788914974194,Memory,COMP_NODE_o_proj_5
+rtxpro6000-tp2-b4-p512-o32,decode,FFN RMSNorm,2.528843264897346,2.368,6.792367605462246,Memory,COMP_NODE_layernorm_6
+rtxpro6000-tp2-b4-p512-o32,decode,Gate + up projection,94.52283425137708,80.917,16.814555966455845,Memory,COMP_NODE_gate_up_proj_7
+rtxpro6000-tp2-b4-p512-o32,decode,SwiGLU,2.6346019028542815,2.059,27.955410532019485,Memory,COMP_NODE_act_fn_8
+rtxpro6000-tp2-b4-p512-o32,decode,Down projection,48.46975463194792,42.688,13.54421531097245,Memory,COMP_NODE_down_proj_9
+rtx4090-tp1-b1-p128-o8,prefill,Input RMSNorm,5.11079365079365,3.088,65.50497573813634,Memory,COMP_NODE_layernorm_1
+rtx4090-tp1-b1-p128-o8,prefill,QKV projection,84.96975854130145,76.924,10.459360591364764,Compute,COMP_NODE_qkv_proj_2
+rtx4090-tp1-b1-p128-o8,prefill,Rotary position,5.100634920634921,2.475,106.08625941959274,Memory,COMP_NODE_rotary_emb_3
+rtx4090-tp1-b1-p128-o8,prefill,Attention,6.40095238095238,10.484,-38.94551334459767,Memory,COMP_NODE_attention_4
+rtx4090-tp1-b1-p128-o8,prefill,Output projection,84.96975854130145,44.2,92.23927271787656,Compute,COMP_NODE_o_proj_5
+rtx4090-tp1-b1-p128-o8,prefill,FFN RMSNorm,5.11079365079365,3.088,65.50497573813634,Memory,COMP_NODE_layernorm_6
+rtx4090-tp1-b1-p128-o8,prefill,Gate + up projection,307.4244444444444,314.081,-2.119375433584203,Memory,COMP_NODE_gate_up_proj_7
+rtx4090-tp1-b1-p128-o8,prefill,SwiGLU,16.153333333333332,4.181,286.35095272263413,Memory,COMP_NODE_act_fn_8
+rtx4090-tp1-b1-p128-o8,prefill,Down projection,291.144154894555,166.731,74.61908996800537,Compute,COMP_NODE_down_proj_9
+rtx4090-tp1-b1-p128-o8,decode,Input RMSNorm,2.5304761904761905,1.851,36.708600241825536,Memory,COMP_NODE_layernorm_1
+rtx4090-tp1-b1-p128-o8,decode,QKV projection,64.93555555555557,54.898,18.2840095368785,Memory,COMP_NODE_qkv_proj_2
+rtx4090-tp1-b1-p128-o8,decode,Rotary position,2.5203174603174605,2.176,15.823412698412698,Memory,COMP_NODE_rotary_emb_3
+rtx4090-tp1-b1-p128-o8,decode,Attention,3.1806349206349207,12.98,-75.49587888570939,Memory,COMP_NODE_attention_4
+rtx4090-tp1-b1-p128-o8,decode,Output projection,44.130476190476195,38.131,15.733854843765416,Memory,COMP_NODE_o_proj_5
+rtx4090-tp1-b1-p128-o8,decode,FFN RMSNorm,2.5304761904761905,1.851,36.708600241825536,Memory,COMP_NODE_layernorm_6
+rtx4090-tp1-b1-p128-o8,decode,Gate + up projection,293.8777777777778,247.292,18.838368316717812,Memory,COMP_NODE_gate_up_proj_7
+rtx4090-tp1-b1-p128-o8,decode,SwiGLU,2.606666666666667,2.592,0.5658436213991758,Memory,COMP_NODE_act_fn_8
+rtx4090-tp1-b1-p128-o8,decode,Down projection,148.15587301587303,126.766,16.873509470893634,Memory,COMP_NODE_down_proj_9
+rtx4090-tp1-b4-p128-o8,prefill,Input RMSNorm,12.912698412698413,6.41,101.44615308421861,Memory,COMP_NODE_layernorm_1
+rtx4090-tp1-b4-p128-o8,prefill,QKV projection,249.90927562390434,166.444,50.14616064496429,Compute,COMP_NODE_qkv_proj_2
+rtx4090-tp1-b4-p128-o8,prefill,Rotary position,12.902539682539684,5.525,133.53013000071826,Memory,COMP_NODE_rotary_emb_3
+rtx4090-tp1-b4-p128-o8,prefill,Attention,18.103809523809524,41.075,-55.92499202967858,Memory,COMP_NODE_attention_4
+rtx4090-tp1-b4-p128-o8,prefill,Output projection,167.4395170826029,107.951,55.10696249465303,Compute,COMP_NODE_o_proj_5
+rtx4090-tp1-b4-p128-o8,prefill,FFN RMSNorm,12.912698412698413,6.41,101.44615308421861,Memory,COMP_NODE_layernorm_6
+rtx4090-tp1-b4-p128-o8,prefill,Gate + up projection,1157.07661957822,736.703,57.061477906051714,Compute,COMP_NODE_gate_up_proj_7
+rtx4090-tp1-b4-p128-o8,prefill,SwiGLU,57.11333333333334,27.54,107.38320019365774,Memory,COMP_NODE_act_fn_8
+rtx4090-tp1-b4-p128-o8,prefill,Down projection,579.78830978911,376.009,54.195327715323316,Compute,COMP_NODE_down_proj_9
+rtx4090-tp1-b4-p128-o8,decode,Input RMSNorm,2.591428571428571,1.978,31.012566806297848,Memory,COMP_NODE_layernorm_1
+rtx4090-tp1-b4-p128-o8,decode,QKV projection,64.99650793650794,56.348,15.348384923170189,Memory,COMP_NODE_qkv_proj_2
+rtx4090-tp1-b4-p128-o8,decode,Rotary position,2.581269841269841,2.357,9.515054784465038,Memory,COMP_NODE_rotary_emb_3
+rtx4090-tp1-b4-p128-o8,decode,Attention,5.222539682539683,16.81,-68.93194715919284,Memory,COMP_NODE_attention_4
+rtx4090-tp1-b4-p128-o8,decode,Output projection,44.191428571428574,40.904,8.036936660054206,Memory,COMP_NODE_o_proj_5
+rtx4090-tp1-b4-p128-o8,decode,FFN RMSNorm,2.591428571428571,1.978,31.012566806297848,Memory,COMP_NODE_layernorm_6
+rtx4090-tp1-b4-p128-o8,decode,Gate + up projection,294.1977777777778,249.85,17.749760967691742,Memory,COMP_NODE_gate_up_proj_7
+rtx4090-tp1-b4-p128-o8,decode,SwiGLU,2.9266666666666667,3.179,-7.937506553423502,Memory,COMP_NODE_act_fn_8
+rtx4090-tp1-b4-p128-o8,decode,Down projection,148.2168253968254,128.727,15.140433162293387,Memory,COMP_NODE_down_proj_9
+rtx4090-tp1-b4-p512-o32,prefill,Input RMSNorm,44.120317460317466,28.484,54.89509008677666,Memory,COMP_NODE_layernorm_1
+rtx4090-tp1-b4-p512-o32,prefill,QKV projection,992.1371024956172,631.069,57.2153128256367,Compute,COMP_NODE_qkv_proj_2
+rtx4090-tp1-b4-p512-o32,prefill,Rotary position,44.11015873015874,26.228,68.17965048863329,Memory,COMP_NODE_rotary_emb_3
+rtx4090-tp1-b4-p512-o32,prefill,Attention,85.13083228845242,336.126,-74.67294041863693,Compute,COMP_NODE_attention_4
+rtx4090-tp1-b4-p512-o32,prefill,Output projection,662.2580683304114,419.483,57.87482885609463,Compute,COMP_NODE_o_proj_5
+rtx4090-tp1-b4-p512-o32,prefill,FFN RMSNorm,44.120317460317466,28.484,54.89509008677666,Memory,COMP_NODE_layernorm_6
+rtx4090-tp1-b4-p512-o32,prefill,Gate + up projection,4620.806478312881,2896.81,59.51361940592863,Compute,COMP_NODE_gate_up_proj_7
+rtx4090-tp1-b4-p512-o32,prefill,SwiGLU,220.95333333333335,168.943,30.785728519875533,Memory,COMP_NODE_act_fn_8
+rtx4090-tp1-b4-p512-o32,prefill,Down projection,2311.65323915644,1459.55,58.381229773316456,Compute,COMP_NODE_down_proj_9
+rtx4090-tp1-b4-p512-o32,decode,Input RMSNorm,2.591428571428571,1.978,31.012566806297848,Memory,COMP_NODE_layernorm_1
+rtx4090-tp1-b4-p512-o32,decode,QKV projection,64.99650793650794,56.348,15.348384923170189,Memory,COMP_NODE_qkv_proj_2
+rtx4090-tp1-b4-p512-o32,decode,Rotary position,2.581269841269841,2.357,9.515054784465038,Memory,COMP_NODE_rotary_emb_3
+rtx4090-tp1-b4-p512-o32,decode,Attention,13.024444444444445,24.02,-45.77666759182163,Memory,COMP_NODE_attention_4
+rtx4090-tp1-b4-p512-o32,decode,Output projection,44.191428571428574,40.904,8.036936660054206,Memory,COMP_NODE_o_proj_5
+rtx4090-tp1-b4-p512-o32,decode,FFN RMSNorm,2.591428571428571,1.978,31.012566806297848,Memory,COMP_NODE_layernorm_6
+rtx4090-tp1-b4-p512-o32,decode,Gate + up projection,294.1977777777778,249.85,17.749760967691742,Memory,COMP_NODE_gate_up_proj_7
+rtx4090-tp1-b4-p512-o32,decode,SwiGLU,2.9266666666666667,3.179,-7.937506553423502,Memory,COMP_NODE_act_fn_8
+rtx4090-tp1-b4-p512-o32,decode,Down projection,148.2168253968254,128.727,15.140433162293387,Memory,COMP_NODE_down_proj_9
