@@ -58,3 +58,7 @@ fig.tight_layout(rect=(0,.085,1,.91),w_pad=2.5)
 args.output.parent.mkdir(parents=True,exist_ok=True)
 fig.savefig(args.output,dpi=160,facecolor="white",bbox_inches="tight")
 fig.savefig(args.output.with_suffix('.svg'),facecolor="white",bbox_inches="tight")
+
+# Keep generated SVG text canonical for review and version control.
+svg = args.output.with_suffix(".svg")
+svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")

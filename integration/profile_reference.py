@@ -56,5 +56,3 @@ def lookup(profile, name, n, phase="decode", pc=0, kp=0, nd=1, kv=0):
         inside = outer_inside and all(inner_inside[k] for k in active)
         exact = outer_exact and inner_exact[x]
     return value, "profile-grid" if exact else "profile-interpolated" if inside else "profile-shape-extrapolated"
-
-

@@ -161,7 +161,7 @@ def main():
     dump(output / "comparison.json", result)
     for filename, data in [("comparison.csv", rows), ("operators.csv", operators)]:
         with (output / filename).open("w", newline="") as stream:
-            writer = csv.DictWriter(stream, fieldnames=list(data[0]))
+            writer = csv.DictWriter(stream, fieldnames=list(data[0]), lineterminator="\n")
             writer.writeheader()
             writer.writerows(data)
     print(f"Saved {output / 'comparison.json'}", flush=True)
