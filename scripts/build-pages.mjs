@@ -77,6 +77,20 @@ copy(
   "docs/screenshots/github-pages.png",
   `${output}/docs/screenshots/github-pages.png`,
 );
+// Accuracy Markdown embeds these Pages URLs, so publish every listed PNG/SVG.
+const accuracyPath = "docs/accuracy-2026-10-19";
+const accuracyFigures = JSON.parse(
+  readFileSync(`${accuracyPath}/figure-summary.json`, "utf8"),
+).figures;
+for (const figure of accuracyFigures) {
+  if (!/^[a-z0-9_-]+$/.test(figure))
+    throw new Error("Invalid accuracy figure name.");
+  for (const extension of ["png", "svg"])
+    copy(
+      `${accuracyPath}/${figure}.${extension}`,
+      `${output}/${accuracyPath}/${figure}.${extension}`,
+    );
+}
 writeFileSync(
   `${output}/README.md`,
   `# LLM-ServeScope production deployment
