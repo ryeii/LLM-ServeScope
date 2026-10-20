@@ -82,7 +82,9 @@ A subsequent [GPU function-search report](docs/fit-study-2026-10-19/README.md)
 compares nine simple functions, documents additional published Vidur profiles,
 and includes a diagram and validation fit for every trial. The deployed function
 is retained as the baseline: improved shape fit has not yet established reliable
-hardware extrapolation.
+hardware extrapolation. A [two-regime embedding follow-up](docs/fit-study-2026-10-19/embedding-piecewise/README.md)
+fits separate functions around the source-defined 16-token kernel switch and
+reports both local curve validation and hardware-transfer limits.
 
 ## Limitations: behavioral, not mechanistic simulation
 

@@ -302,9 +302,19 @@ a sharp 16-to-20-token timing drop that a single smooth fit does not represent.
 A subsequent [embedding dispatch diagnosis](embedding-dispatch.md) links it to
 PyTorch's source-defined small-index/gather boundary at 16 indices. F8 corrects
 vocabulary-sharding geometry but **does not model that software dispatch change**.
-The updated plot distinguishes the two regimes; no scores or fitted parameters
-were changed after this diagnosis. A dispatch-aware piecewise function is a
-well-motivated next candidate, not an evaluated tenth trial in this report.
+The updated plot distinguishes the two regimes; the original nine-trial scores
+and parameters remain unchanged. A separate [F9 follow-up](embedding-piecewise/README.md)
+now fits two independent nonnegative affine functions, switched at the source-defined
+boundary: **≤16 versus >16 tokens**. For this plotted configuration, grouped
+five-fold errors are **0.97%** and **4.57%**, respectively. Sharing four coefficients
+across all five KAIST bundles reduces embedding-only cross-validation error from
+**10.49% (F8) to 8.42% (F9)** under identical stricter folds. Hardware-transfer
+limitations and the post-hoc nature of this candidate are disclosed in the follow-up.
+
+![F9: two fitted embedding functions and shared-function validation](embedding-piecewise/two-function-fit.png)
+
+F9 is an executable research predictor with exported coefficients and held-out
+predictions; it has not replaced the application's deployed baseline.
 
 ## 6. Transfer audits and the deployment decision
 

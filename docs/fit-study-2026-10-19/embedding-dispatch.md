@@ -53,11 +53,12 @@ kernel dispatch. A single smooth increasing line necessarily compromises between
 the two regimes. The previous panel title, “vocabulary sharding,” failed to
 identify the visible discontinuity and was misleading for this TP1 slice.
 
-A defensible next candidate is a piecewise function selected by the documented
-software dispatch predicate, with separate small-index and gather cost functions.
-The threshold should come from the software implementation/version, not be chosen
-to match these timing points. Its coefficients still need grouped validation and
-hardware-transfer tests. No new fit has been claimed or deployed in this follow-up.
+The subsequent [F9 experiment](embedding-piecewise/README.md) implements two
+independent affine functions selected by this documented software dispatch
+predicate. Its fixed threshold is 16, with separate small-index and gather
+coefficients. Grouped validation gives 0.97% and 4.57% error for the originally
+plotted configuration. The shared hardware-normalized fit and hardware-transfer
+audits are reported separately; the deployed application baseline is unchanged.
 
 The plot is now titled “Embedding: kernel-dispatch regimes,” with the two groups
 marked separately and the source-defined boundary annotated. The earlier study's
