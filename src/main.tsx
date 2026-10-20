@@ -1333,6 +1333,7 @@ function App() {
       [
         ["main_memory_GB", "Main memory", "GB"],
         ["dram_bandwidth_TBps", "Memory bandwidth", "TB/s"],
+        ["l2_cache_MiB", "Physical L2 cache", "MiB"],
         ["sram_cache_MB", "KV SRAM budget", "MB"],
         ["memory_efficiency", "Memory efficiency", "fraction"],
         ["num_sms", "SM / CU count", ""],
@@ -1402,6 +1403,14 @@ function App() {
           >
             <CircleHelp size={19} />
           </button>
+          <a
+            className="upstream-link"
+            href="https://github.com/ryeii/LLM-ServeScope/blob/main/docs/accuracy-2026-10-19/README.md"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Accuracy <ExternalLink size={13} />
+          </a>
           <a
             className="upstream-link"
             href="https://github.com/ryeii/LLM-ServeScope"
@@ -1536,7 +1545,7 @@ function App() {
                 onChange={(e) => update("timing_mode", e.target.value)}
               >
                 <option value="calibrated">
-                  Fitted GPU function · KAIST training data
+                  Fitted GPU functions · KAIST + Vidur
                 </option>
                 <option value="roofline">
                   Original roofline · uncalibrated
@@ -2155,8 +2164,8 @@ function App() {
                       <strong>
                         Behavioral simulation, not mechanistic simulation.
                       </strong>{" "}
-                      One fitted GPU function predicts all configurations. KAIST
-                      profiles are offline training and validation data.
+                      Shape-informed GPU functions use KAIST BF16 and Vidur FP16
+                      profiles for offline training and validation.
                       Extrapolation errors are reported separately; energy
                       remains an estimate.
                     </p>
@@ -2458,6 +2467,14 @@ function App() {
             >
               Reference backend: LLMServingSim 2.0 · CASYS Lab, KAIST
             </a>
+            <a
+              className="footer-credit"
+              href="https://github.com/microsoft/vidur"
+              target="_blank"
+              rel="noreferrer"
+            >
+              FP16 profiles: Microsoft Vidur
+            </a>
             <button onClick={() => setShowMethods(true)}>
               Model notes
               <ArrowRight size={12} />
@@ -2500,13 +2517,22 @@ function App() {
             </p>
             <h3>Behavioral scenario model</h3>
             <p>
-              A single nonnegative GPU service-time function is fitted offline
-              to KAIST's operator profiles. It takes hardware rates, operation
-              and tensor geometry and predicts execution time for all
-              configurations. It has no runtime timing-table lookup or
-              exact-match override. Held-out hardware, model and shape
-              experiments assess generalization. SimPy schedules those
-              predictions; network and energy remain separate behavioral models.
+              Shape-informed GPU service-time functions are selected with nested
+              cross-validation on KAIST BF16 and Vidur FP16 operator profiles.
+              Separate precision cohorts take hardware rates, operation and
+              tensor geometry and predict execution time for all configurations.
+              There is no runtime timing-table lookup or exact-match override.
+              Held-out hardware, model and shape experiments assess
+              generalization. SimPy schedules those predictions; network and
+              energy remain separate behavioral models.{" "}
+              <a
+                href="https://github.com/ryeii/LLM-ServeScope/blob/main/docs/accuracy-2026-10-19/README.md"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Cross-validated accuracy: overall and by operator
+              </a>
+              .
             </p>
             <h3>LLM-ServeScope design and implementation</h3>
             <p>

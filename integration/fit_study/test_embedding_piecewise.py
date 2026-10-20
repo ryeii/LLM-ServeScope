@@ -86,7 +86,9 @@ class PiecewiseEmbeddingTests(unittest.TestCase):
                          self.result['provenance']['implementation_sha256'])
         self.assertEqual(hashfile(ROOT/'integration/fit_study/data.py'),
                          self.result['provenance']['adapter_sha256'])
-        self.assertEqual((ROOT/'backend/gpu-fit.json').read_bytes(),
-                         (ROOT/'docs/fit-study-2026-10-19/baseline-gpu-fit.json').read_bytes())
+        # The original deployed baseline remains archived after the later production promotion.
+        provenance=json.loads((ROOT/'docs/fit-study-2026-10-19/provenance.json').read_text())
+        self.assertEqual(hashfile(ROOT/'docs/fit-study-2026-10-19/baseline-gpu-fit.json'),
+                         provenance['baseline_gpu_fit_sha256'])
 
 if __name__=='__main__':unittest.main()

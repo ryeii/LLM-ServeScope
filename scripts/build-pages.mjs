@@ -46,6 +46,7 @@ for (const name of [
   "model.py",
   "catalog.py",
   "calibration.py",
+  "gpu_functions.py",
   "gpu-fit.json",
 ])
   copy(`backend/${name}`, `${output}/python/backend/${name}`);
@@ -61,6 +62,7 @@ if (
 copy(`third_party/${wheel}`, `${output}/python/${wheel}`);
 for (const name of [
   "LLMServingSim-MIT.txt",
+  "Vidur-MIT.txt",
   "SimPy-MIT.txt",
   "Pyodide-MPL-2.0.txt",
   "CPython-3.14-PSF.txt",
@@ -86,6 +88,11 @@ LLM-ServeScope is a behavioral simulation of LLM serving backed by SimPy. It
 estimates throughput, latency, memory, energy and utilization, with per-GPU
 performance and tokens per Joule. It is **behavioral, not mechanistic simulation**.
 
+GPU timing uses separately fitted KAIST BF16 and Microsoft Vidur FP16 profiles.
+See the [cross-validated accuracy report](https://github.com/ryeii/LLM-ServeScope/blob/main/docs/accuracy-2026-10-19/README.md)
+for overall, per-operator and unseen-GPU residuals. Operator accuracy does not
+calibrate serving throughput, energy or network behavior.
+
 The same Python model runs in a Pyodide browser worker. The compiled native
 LLMServingSim/ASTRA-Sim reference engine requires the local installation.
 
@@ -106,6 +113,15 @@ writeFileSync(
   JSON.stringify(
     {
       project: "LLM-ServeScope",
+      gpu_fit_payload_sha256: JSON.parse(
+        readFileSync("backend/gpu-fit.json", "utf8"),
+      ).payload_sha256,
+      gpu_fit_schema_version: JSON.parse(
+        readFileSync("backend/gpu-fit.json", "utf8"),
+      ).schema_version,
+      training_observations: JSON.parse(
+        readFileSync("backend/gpu-fit.json", "utf8"),
+      ).training_observations,
       source_commit: execFileSync("git", ["rev-parse", "HEAD"], {
         encoding: "utf8",
       }).trim(),

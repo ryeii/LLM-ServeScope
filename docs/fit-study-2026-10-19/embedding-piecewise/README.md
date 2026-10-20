@@ -1,5 +1,7 @@
 # F9: two embedding functions with a fixed dispatch switch
 
+> Historical experiment. The subsequent [production promotion and all-data nested validation](../../accuracy-2026-10-19/README.md) supersede statements below about the deployed baseline. Original experiment scores are preserved.
+
 Follow-up to the [original nine-function study](../README.md) and
 [embedding-dispatch diagnosis](../embedding-dispatch.md).
 

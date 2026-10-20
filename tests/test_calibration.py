@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.calibration import dataset, decode_dataset, prediction, timing, work_features
+from backend.gpu_functions import evaluate
 from backend.catalog import HARDWARE, MODELS
 from backend.model import DEFAULT, phase_ops, simulate, validate
 
@@ -24,11 +25,14 @@ class FittedGpuTests(unittest.TestCase):
     def test_coefficient_integrity_and_source_digests(self):
         raw=(ROOT/"backend/gpu-fit.json").read_bytes()
         d=decode_dataset(raw)
-        for coefficients in d["fits"].values():
-            self.assertEqual(len(coefficients),3)
-            self.assertTrue(all(x>=0 for x in coefficients))
+        self.assertEqual(d["schema_version"],"servescope.gpu-fit.v2")
+        self.assertEqual(d["training_observations"],599451)
+        for cohort in d["cohorts"].values():
+            for model in cohort["models"].values():
+                numbers=model["coefficients"] if model["family"]!="F9" else sum(model["branches"].values(),[])
+                self.assertTrue(all(x>=0 for x in numbers))
         self.assertEqual(d["runtime_sha256"],hashlib.sha256((ROOT/"backend/calibration.py").read_bytes()).hexdigest())
-        changed=json.loads(raw);changed["fits"]["qkv_proj"][0]+=1
+        changed=json.loads(raw);changed["cohorts"]["kaist"]["models"]["qkv_proj"]["coefficients"][0]+=1
         with self.assertRaisesRegex(ValueError,"checksum"):
             decode_dataset(json.dumps(changed).encode())
         # Runtime coefficients/coverage carry no timing observations or table grids.
@@ -53,7 +57,7 @@ class FittedGpuTests(unittest.TestCase):
         byte_count=2*(4096*(4096+2*1024)+4*4096+4*(4096+2*1024))
         compute_ns=flops/(h["bf16_tensor_tflops"]*1e12)*1e9
         memory_ns=byte_count/(h["dram_bandwidth_TBps"]*1e12)*1e9
-        a,b,d=dataset()["fits"]["qkv_proj"]
+        a,b,d=dataset()["cohorts"]["kaist"]["models"]["qkv_proj"]["coefficients"]
         expected=max(compute_ns,a+b*compute_ns+d*memory_ns)/1e6
         self.assertAlmostEqual(timing("qkv_proj",c,"decode",4,1,129)["duration_ms"],expected,places=12)
 
@@ -106,13 +110,29 @@ class FittedGpuTests(unittest.TestCase):
 
     def test_independent_validation_splits_are_recorded_separately(self):
         d=dataset();v=d["validation"]
-        self.assertEqual(v["training_fit"]["count"],9411)
-        self.assertTrue(v["held_out_gpu"]["excluded_from_fit"])
-        self.assertTrue(v["held_out_model"]["excluded_from_fit"])
-        self.assertGreater(v["held_out_shapes"]["tested_rows"],1000)
-        paired=v["held_out_gpu"]["same_block_samples"]
-        self.assertLess(paired["fitted_function"]["mean_abs_relative_difference_pct"],paired["roofline"]["mean_abs_relative_difference_pct"])
-        self.assertIn("qk_norm",v["held_out_model"]["unsupported_operator_groups"])
+        self.assertEqual(v["overall"]["count"],599451)
+        self.assertEqual(v["by_source"]["kaist"]["count"],9411)
+        self.assertEqual(v["by_source"]["vidur"]["count"],590040)
+        self.assertEqual(v["protocol"]["outer_folds"],5)
+        self.assertEqual(v["protocol"]["inner_folds"],3)
+        self.assertLess(v["overall"]["mape_pct"],v["baseline"]["mape_pct"])
+        self.assertEqual(dataset()["cohorts"]["kaist"]["models"]["embedding"]["family"],"F9")
+
+    def test_precision_cohorts_and_missing_cache_fallback_are_explicit(self):
+        c=self.config();c["precision"]=c["kv_precision"]="fp16"
+        fp16=timing("qkv_proj",c,"decode",4,1,129)
+        self.assertEqual(fp16["fit_cohort"],"vidur")
+        c=self.config();c["decode"]["hardware"]["l2_cache_MiB"]=0
+        fallback=timing("act_fn",c,"decode",4,1,129)
+        self.assertEqual(fallback["fit_family"],"F0")
+        self.assertIn("L2",fallback["fit_fallback_reason"])
+
+    def test_embedding_dispatch_boundary_is_used_by_runtime(self):
+        c=self.config()
+        before=timing("embedding",c,"decode",16,1,129)
+        after=timing("embedding",c,"decode",17,1,129)
+        self.assertEqual(before["fit_family"],"F9")
+        self.assertLess(after["duration_ms"],before["duration_ms"])
 
     def test_legacy_roofline_reproducible_and_new_outputs_are_predictions(self):
         c=copy.deepcopy(DEFAULT);c["timing_mode"]="roofline"
@@ -120,7 +140,7 @@ class FittedGpuTests(unittest.TestCase):
         r=simulate(DEFAULT)
         self.assertIn("Fitted GPU function",r["calibration"]["summary"])
         self.assertIn("extrapolation",r["calibration"]["summary"])
-        self.assertEqual(len(r["calibration"]["dataset"]["profiles"]),5)
+        self.assertEqual(len(r["calibration"]["dataset"]["profiles"]),41)
         c["timing_mode"]="invalid"
         with self.assertRaisesRegex(ValueError,"Timing model"):
             validate(c)

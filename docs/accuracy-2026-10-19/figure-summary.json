@@ -1,0 +1,20 @@
+{
+  "overall": {
+    "count": 599451,
+    "mape_pct": 14.85875209271657,
+    "median_ape_pct": 9.544697637240862,
+    "p95_ape_pct": 49.522086100437605,
+    "within_10_pct": 51.74000877469551,
+    "within_20_pct": 74.83797674872508
+  },
+  "transfer": {
+    "count": 599147,
+    "mape_pct": 20.20150971114186,
+    "median_ape_pct": 11.657337227136711,
+    "p95_ape_pct": 64.64546568295064,
+    "within_10_pct": 44.077163033445885,
+    "within_20_pct": 68.06626754369128
+  },
+  "figure_count": 17,
+  "point_subsampling": false
+}

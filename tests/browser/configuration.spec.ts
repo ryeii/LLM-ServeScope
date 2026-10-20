@@ -13,10 +13,10 @@ test("heterogeneous MoE servers preserve separate hardware, batching, engine and
   await page.goto("/");
   await expect(
     page.getByLabel("Model architecture", { exact: true }).locator("option"),
-  ).toHaveCount(11);
+  ).toHaveCount(14);
   await expect(
     page.getByLabel("Hardware preset", { exact: true }).locator("option"),
-  ).toHaveCount(9);
+  ).toHaveCount(10);
   await page
     .getByLabel("Model architecture", { exact: true })
     .selectOption("qwen30");

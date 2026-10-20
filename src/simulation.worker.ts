@@ -21,7 +21,13 @@ function loadRuntime(): Promise<PyodideAPI> {
     const py: PyodideAPI = await loadPyodide({ indexURL: assets.href });
     py.FS.mkdirTree("/servescope/backend");
     py.FS.mkdirTree("/servescope/site-packages");
-    const modules = ["__init__.py", "catalog.py", "calibration.py", "model.py"];
+    const modules = [
+      "__init__.py",
+      "catalog.py",
+      "calibration.py",
+      "gpu_functions.py",
+      "model.py",
+    ];
     const files = await Promise.all(
       modules.map(async (name) => [
         name,

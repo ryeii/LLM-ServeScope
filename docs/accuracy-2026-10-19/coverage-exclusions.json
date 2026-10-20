@@ -1,0 +1,265 @@
+[
+  {
+    "bundle": "RTXPRO6000/MiniMaxAI/MiniMax-M3/bf16/tp1",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/MiniMaxAI/MiniMax-M3/bf16/tp1/attention.csv",
+        "rows": 25929,
+        "sha256": "a2ae29d29ae3dbc5c6bf9d6476fe4993c32ecf048de22a2a30c6bb4d1095f4ff"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/MiniMaxAI/MiniMax-M3/bf16/tp1/dense.csv",
+        "rows": 1824,
+        "sha256": "603eb0acb72bd56ec548b2b1170e57c956932c2c47b9f1a295c0db6b1dae5e1b"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/MiniMaxAI/MiniMax-M3/bf16/tp1/moe.csv",
+        "rows": 296,
+        "sha256": "af116488c76935bfeadbb9fcae239289c013d57b496b2d5ffa2d9066b85c2d8f"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/MiniMaxAI/MiniMax-M3/bf16/tp1/mtp.csv",
+        "rows": 160,
+        "sha256": "cb629726754c7e8dbeb02f24d7c70bcaf1512c771aa397140cace8b313002b0a"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/MiniMaxAI/MiniMax-M3/bf16/tp1/per_sequence.csv",
+        "rows": 80,
+        "sha256": "3df904ad947ca4e702fa587be584822fe88939fcedd3f19e0e1001aeef20d31d"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1/attention.csv",
+        "rows": 37962,
+        "sha256": "d62ea19809d848ced8e5a12b623c0a94491d69409284a13a5ff91975a42ccb30"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1/dense.csv",
+        "rows": 1064,
+        "sha256": "b876a54dd1e05c0454295cb92469b07a47700e0db4768846b0722d630dcc574b"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1/moe.csv",
+        "rows": 200,
+        "sha256": "7f17d3a7a600c66428f78aa41ae455ae7fce61299c2d61440f0c6f8fd7411408"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1/per_sequence.csv",
+        "rows": 80,
+        "sha256": "69d06a1477725513690e50681b60f96cfa26efff740dd08972a7c5cb0ddc40bd"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1/skew.csv",
+        "rows": 13496,
+        "sha256": "559bb1032c184a7e282dcd8ee660438a2c617a5164b0cf170b5a564edd657b28"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp1/skew_fit.csv",
+        "rows": 75,
+        "sha256": "eb15c3d8a07da98b0615304ebbd1da8bd4ecf8353d7e058495a64592656a8d64"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp2",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp2/attention.csv",
+        "rows": 37962,
+        "sha256": "2e9fdd5d8d5e16968c1eead59bf40ba98e177527507c506a365436d509dc214c"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp2/dense.csv",
+        "rows": 1064,
+        "sha256": "766c60d166ec9f12e95171feb789ad665b67ee2b5a8b12aa56f294b237bc7925"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp2/per_sequence.csv",
+        "rows": 80,
+        "sha256": "a6f3f828ab7803f23663a5be04680cd1a6249b911bf2d5242bb2f471b67e08e2"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp2/skew.csv",
+        "rows": 13496,
+        "sha256": "bd00eec109ce5d1950f0549e7a15bb81e27e77d33df26b4e5e42e7ad6f7d168a"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3-30B-A3B-Instruct-2507/bf16/tp2/skew_fit.csv",
+        "rows": 76,
+        "sha256": "d2e07dbc593c22d2ccf202ae1b30d4e16a9d2607fe3e89629e48601c57069558"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp1",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp1/attention.csv",
+        "rows": 8643,
+        "sha256": "3295d7a6c8a4885e04d70df0c00cd20d7f64fb9994b2aff2d42ba9e4317361db"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp1/dense.csv",
+        "rows": 2128,
+        "sha256": "49e18ef29f57c129f9b73df25b12aa8b45ff8faa4571ef2444ea75f1ddd9c728"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp1/linear_attention.csv",
+        "rows": 473,
+        "sha256": "a8561150bc5b373dca7957364c6211a4e43e2577334b6ee5c4c9bb6632f6119c"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp1/mtp.csv",
+        "rows": 120,
+        "sha256": "507e1628650362249db272a3ad1d2f6a174920c23c7f7e1e462c404901de2b74"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp1/per_sequence.csv",
+        "rows": 80,
+        "sha256": "777ee9841964212d7d19a581961ad22a10b17687ac9061bbb6448a93c1563c9b"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp2",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp2/attention.csv",
+        "rows": 8643,
+        "sha256": "30c68a1fca95049c68a198e297b7de1c629227ff0be017656059428a89f9bb9a"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp2/dense.csv",
+        "rows": 2128,
+        "sha256": "47aefcfdcc19aed961d59f1f697f1f0a0a0e56f833d5084717a597e10b26731a"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp2/linear_attention.csv",
+        "rows": 473,
+        "sha256": "e4318ed1169b20f412f63f3dc9a6a2d607266ae3670c16a1a7e76aa7c2ca3102"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp2/mtp.csv",
+        "rows": 120,
+        "sha256": "589b8108370100fb61c2f2204784511098f0b4f9b004c5ef9b554f43570c7ff8"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/Qwen/Qwen3.8-27B/bf16/tp2/per_sequence.csv",
+        "rows": 80,
+        "sha256": "cb760c6ef9d66787945d5db17e84aa1f4a0c667214b33149b9998bc819c9c451"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/attention.csv",
+        "rows": 133454,
+        "sha256": "1b4d542b16c67ae808d3636c96d193121b46fa46d5de074655a54b23adf4da0d"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/dense.csv",
+        "rows": 2584,
+        "sha256": "888a6de21ab3ef916f99d7598cc782baa2ff17cded00110acde2c81f51d0a6c6"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/moe.csv",
+        "rows": 320,
+        "sha256": "bbbff07e390bb7b137e100a510e69f24d2311646d6a61323760428f7c68093f8"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/mtp.csv",
+        "rows": 200,
+        "sha256": "6ca7a4f090311d907ee964194a2f3e704a3a3aa9317561770885d18314cb39ef"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/per_sequence.csv",
+        "rows": 80,
+        "sha256": "ef4b417492129a1f3992f24a36fbb5170e3702e6ca01a15d4181317cf12a0ac0"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/skew.csv",
+        "rows": 65722,
+        "sha256": "4c779c5e978e1fc8edce26519a4719728029045270eebe83563003f24f760f98"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp/fp8/tp1/skew_fit.csv",
+        "rows": 106,
+        "sha256": "43e16ad66c78e9185fa6008749381b2449d0546252020018f7ded1cf22724436"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp-16L64E/fp8/tp1",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp-16L64E/fp8/tp1/attention.csv",
+        "rows": 142890,
+        "sha256": "49ac044ba0b8ce2abf2e9d4fba01a6124e4e35c75d5956987b850ce90a300f87"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp-16L64E/fp8/tp1/dense.csv",
+        "rows": 2584,
+        "sha256": "131ee1c656fb5e4e21a817496cbbe273845c594dbce4d2c541b487c21aa1f5c7"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp-16L64E/fp8/tp1/moe.csv",
+        "rows": 42,
+        "sha256": "d79276376b6b733baaaed4d8efd0c9c5997f745147d965530478c2b8c3598e45"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp-16L64E/fp8/tp1/mtp.csv",
+        "rows": 200,
+        "sha256": "c9c3ee049a14b906813a6f36f48a873e4901e9b3d0d194e5405f76bb2e698536"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/deepseek-ai/DeepSeek-V3.2-Exp-16L64E/fp8/tp1/per_sequence.csv",
+        "rows": 80,
+        "sha256": "35d4cc8667da0545351589cc88134803e78d084f6a6d03477a2ad6d5ca983887"
+      }
+    ]
+  },
+  {
+    "bundle": "RTXPRO6000/zai-org/GLM-5/bf16/tp1",
+    "reason": "Specialized MoE/MLA/hybrid/MTP operators lack a compatible runtime cost contract; not scored or counted as accurate.",
+    "files": [
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/zai-org/GLM-5/bf16/tp1/attention.csv",
+        "rows": 17286,
+        "sha256": "99ecef584b29c7ae2f4c387e7328e9004bd3a4aacd0ad4f9f174590b6839aa40"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/zai-org/GLM-5/bf16/tp1/dense.csv",
+        "rows": 2584,
+        "sha256": "dc8bbff329f927b565dfcdcd83518949f34cfc4f79667b2e8a84fca1583a9968"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/zai-org/GLM-5/bf16/tp1/moe.csv",
+        "rows": 320,
+        "sha256": "9b456f7c5b824f8f9b1a99425025e43ec976f10801437ce4e1684727d965f316"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/zai-org/GLM-5/bf16/tp1/mtp.csv",
+        "rows": 200,
+        "sha256": "5fbb4aa6d8614c9d2045db5b5f3b83734db2d33956c7366c9c1b4f4bd23d96cd"
+      },
+      {
+        "path": ".vendor/LLMServingSim/profiler/perf/RTXPRO6000/zai-org/GLM-5/bf16/tp1/per_sequence.csv",
+        "rows": 80,
+        "sha256": "95143756e768eca8c9e8e519efc292bf9ecbbb70b6d5fbfd10f36df62554b230"
+      }
+    ]
+  }
+]

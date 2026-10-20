@@ -140,7 +140,7 @@ def main():
 
     result = dict(kind="analytical_vs_native_profile_simulation", source_revision=revision,
                   working_tree_source_sha256={str(p): hashlib.sha256((ROOT/p).read_bytes()).hexdigest()
-                                              for p in [Path("backend/model.py"),Path("backend/catalog.py"),Path("backend/calibration.py"),Path("backend/gpu-fit.json")]},
+                                              for p in [Path("backend/model.py"),Path("backend/catalog.py"),Path("backend/calibration.py"),Path("backend/gpu_functions.py"),Path("backend/gpu-fit.json")]},
                   script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                   methodology={
                       "comparison": f"ServeScope {args.timing_mode} timing vs executed pinned KAIST/ASTRA backend; not measured end-to-end inference.",

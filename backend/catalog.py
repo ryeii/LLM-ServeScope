@@ -381,3 +381,27 @@ MODELS["custom"] = dict(
     source_url="",
     source_revision="user",
 )
+
+# Physical L2 for shape-informed timing; independent of the editable KV SRAM reservation.
+for _gpu, _mib in {"rtx6000":128,"rtx4090":72,"a100":40,"h100":50}.items():
+    HARDWARE[_gpu]["l2_cache_MiB"]=_mib
+HARDWARE["a40"]=dict(BASE,name="A40 48 GB · Vidur reference",main_memory_GB=48,
+    dram_bandwidth_TBps=.696,bf16_tensor_tflops=149.7,fp16_tensor_tflops=149.7,
+    fp32_tflops=37.4,fp8_tensor_tflops=0,fp4_tensor_tflops=0,num_sms=84,
+    l2_cache_MiB=6,sram_cache_MB=0,intra_node_bw_GBps=56.25,tdp_watts=300,
+    idle_watts=50,hourly_cost=1.0,chip_cluster_size=2,
+    source_url="https://images.nvidia.com/content/Solutions/data-center/a40/nvidia-a40-datasheet.pdf",
+    provenance="Vidur FP16 profile reference: peak/BW/cache inputs are nominal, not measured run clocks. Fabric, idle power and cost are scenario assumptions.")
+
+# Match the published profiler geometry, including its padded 32768 vocabulary.
+# These entries are explicitly profile references rather than new inference measurements.
+for _id,_source,_hidden,_inter,_heads,_kv,_layers,_context in [
+    ("vidur_llama7","meta-llama/Llama-2-7b-hf",4096,11008,32,32,32,4096),
+    ("vidur_llama70","meta-llama/Llama-2-70b-hf",8192,28672,64,8,80,4096),
+    ("vidur_codellama34","codellama/CodeLlama-34b-Instruct-hf",8192,22016,64,8,48,16384),
+]:
+    MODELS[_id]=dict(name={"vidur_llama7":"Llama 2 7B","vidur_llama70":"Llama 2 70B","vidur_codellama34":"CodeLlama 34B"}[_id]+" · Vidur geometry",
+        source=_source,source_revision="abae7f63aa857300f5cdc6f5e0d27860cd24721b",
+        source_url="https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/config/model_config.py",
+        hidden=_hidden,intermediate=_inter,heads=_heads,kv_heads=_kv,head_dim=_hidden//_heads,
+        layers=_layers,vocab=32768,experts=1,top_k=1,max_context=_context,qk_norm=False,tie_embeddings=False)

@@ -35,6 +35,18 @@ The upstream source checkouts and native dependencies are fetched separately,
 with their own retained licenses; they are not shipped as native binaries in the
 GitHub Pages branch.
 
+## Microsoft Vidur — published profiling corpus
+
+- Repository: https://github.com/microsoft/vidur
+- Pinned revision: `abae7f63aa857300f5cdc6f5e0d27860cd24721b`.
+- MIT license: `licenses/Vidur-MIT.txt` (also included in GitHub Pages).
+- Published FP16 operator profiles are retained with exact paths and hashes in
+  `third_party/vidur-profiles/manifest.json`. They train a separate FP16 cohort;
+  KAIST BF16 and Vidur FP16 measurements are not pooled. Runtime receives only
+  fitted coefficients and descriptive coverage metadata, not timing tables.
+- Historical CUDA/driver/clock details are incomplete. Profile-reference model
+  presets preserve the profiler's padded vocabulary and documented geometry.
+
 ## SimPy 4.1.1
 
 SimPy provides the discrete-event scheduling engine in local and browser editions.

@@ -1,5 +1,7 @@
 # LLM-ServeScope GPU timing: a simple-function search
 
+> Historical experiment. The subsequent [production promotion and all-data nested validation](../accuracy-2026-10-19/README.md) supersede statements below about the deployed baseline. Original experiment scores are preserved.
+
 Research report · 2026-10-19 · ryeii (Ryan Z An) / LLM-ServeScope
 
 ## Decision

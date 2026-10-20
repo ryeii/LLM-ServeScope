@@ -8,6 +8,9 @@
         "operator": "Input RMSNorm",
         "source": "fitted-profiled-configuration",
         "fit_key": "layernorm",
+        "fit_family": "F4",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -15,6 +18,9 @@
         "operator": "QKV projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "qkv_proj",
+        "fit_family": "F1",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -22,6 +28,9 @@
         "operator": "Rotary position",
         "source": "fitted-profiled-configuration",
         "fit_key": "rotary_emb",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -29,6 +38,9 @@
         "operator": "Attention",
         "source": "fitted-profiled-configuration",
         "fit_key": "attention:prefill",
+        "fit_family": "F4",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -36,6 +48,9 @@
         "operator": "Output projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "o_proj",
+        "fit_family": "F5",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -43,6 +58,9 @@
         "operator": "FFN RMSNorm",
         "source": "fitted-profiled-configuration",
         "fit_key": "layernorm",
+        "fit_family": "F4",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -50,6 +68,9 @@
         "operator": "Gate + up projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "gate_up_proj",
+        "fit_family": "F3",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -57,6 +78,9 @@
         "operator": "SwiGLU",
         "source": "fitted-profiled-configuration",
         "fit_key": "act_fn",
+        "fit_family": "F7",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -64,6 +88,9 @@
         "operator": "Down projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "down_proj",
+        "fit_family": "F5",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -71,6 +98,9 @@
         "operator": "embedding",
         "source": "fitted-profiled-configuration",
         "fit_key": "embedding",
+        "fit_family": "F9",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -78,6 +108,9 @@
         "operator": "final_layernorm",
         "source": "fitted-profiled-configuration",
         "fit_key": "final_layernorm",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -85,6 +118,9 @@
         "operator": "lm_head",
         "source": "fitted-profiled-configuration",
         "fit_key": "lm_head",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -92,6 +128,9 @@
         "operator": "sampler",
         "source": "fitted-profiled-configuration",
         "fit_key": "sampler",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 1
       },
       {
@@ -99,6 +138,9 @@
         "operator": "Input RMSNorm",
         "source": "fitted-profiled-configuration",
         "fit_key": "layernorm",
+        "fit_family": "F4",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -106,6 +148,9 @@
         "operator": "QKV projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "qkv_proj",
+        "fit_family": "F1",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -113,6 +158,9 @@
         "operator": "Rotary position",
         "source": "fitted-profiled-configuration",
         "fit_key": "rotary_emb",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -120,6 +168,9 @@
         "operator": "Attention",
         "source": "fitted-profiled-configuration",
         "fit_key": "attention:decode",
+        "fit_family": "F4",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -127,6 +178,9 @@
         "operator": "Output projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "o_proj",
+        "fit_family": "F5",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -134,6 +188,9 @@
         "operator": "FFN RMSNorm",
         "source": "fitted-profiled-configuration",
         "fit_key": "layernorm",
+        "fit_family": "F4",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -141,6 +198,9 @@
         "operator": "Gate + up projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "gate_up_proj",
+        "fit_family": "F3",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -148,6 +208,9 @@
         "operator": "SwiGLU",
         "source": "fitted-profiled-configuration",
         "fit_key": "act_fn",
+        "fit_family": "F7",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -155,6 +218,9 @@
         "operator": "Down projection",
         "source": "fitted-profiled-configuration",
         "fit_key": "down_proj",
+        "fit_family": "F5",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -162,6 +228,9 @@
         "operator": "embedding",
         "source": "fitted-profiled-configuration",
         "fit_key": "embedding",
+        "fit_family": "F9",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -169,6 +238,9 @@
         "operator": "final_layernorm",
         "source": "fitted-profiled-configuration",
         "fit_key": "final_layernorm",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -176,6 +248,9 @@
         "operator": "lm_head",
         "source": "fitted-profiled-configuration",
         "fit_key": "lm_head",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       },
       {
@@ -183,216 +258,786 @@
         "operator": "sampler",
         "source": "fitted-profiled-configuration",
         "fit_key": "sampler",
+        "fit_family": "F0",
+        "fit_cohort": "kaist",
+        "fallback_reason": null,
         "count": 7
       }
     ],
     "dataset": {
       "revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-      "data_sha256": "3b1a017b30d2342f151e377ac282280c83bddf9d51f2187b9bf36124a1c6a534",
+      "data_sha256": "0ccda728299d2ddb9601f76941d7f2843fe95daa1622e482e316422eca607fd9",
       "profiles": [
         {
-          "id": "rtx6000:llama8:tp1",
-          "model_id": "llama8",
-          "hardware_id": "rtx6000",
-          "tp": 1,
-          "software": {
-            "cuda_version": "13.0",
-            "profiled_at": "2026-09-04T19:37:52+00:00",
-            "vllm_version": "0.28.0"
-          }
-        },
-        {
-          "id": "rtx6000:llama8:tp2",
-          "model_id": "llama8",
-          "hardware_id": "rtx6000",
-          "tp": 2,
-          "software": {
-            "cuda_version": "13.0",
-            "profiled_at": "2026-09-04T19:37:52+00:00",
-            "vllm_version": "0.28.0"
-          }
-        },
-        {
-          "id": "rtx4090:llama8:tp1",
+          "id": "kaist:rtx4090:llama8:tp1",
           "model_id": "llama8",
           "hardware_id": "rtx4090",
           "tp": 1,
           "software": {
             "cuda_version": "12.8",
-            "profiled_at": "2026-08-17T19:43:32+00:00",
             "vllm_version": "0.19.0"
           }
         },
         {
-          "id": "rtx6000:qwen32:tp1",
+          "id": "kaist:rtx6000:llama8:tp1",
+          "model_id": "llama8",
+          "hardware_id": "rtx6000",
+          "tp": 1,
+          "software": {
+            "cuda_version": "13.0",
+            "vllm_version": "0.28.0"
+          }
+        },
+        {
+          "id": "kaist:rtx6000:llama8:tp2",
+          "model_id": "llama8",
+          "hardware_id": "rtx6000",
+          "tp": 2,
+          "software": {
+            "cuda_version": "13.0",
+            "vllm_version": "0.28.0"
+          }
+        },
+        {
+          "id": "kaist:rtx6000:qwen32:tp1",
           "model_id": "qwen32",
           "hardware_id": "rtx6000",
           "tp": 1,
           "software": {
             "cuda_version": "13.0",
-            "profiled_at": "2026-09-05T12:08:19+00:00",
             "vllm_version": "0.28.0"
           }
         },
         {
-          "id": "rtx6000:qwen32:tp2",
+          "id": "kaist:rtx6000:qwen32:tp2",
           "model_id": "qwen32",
           "hardware_id": "rtx6000",
           "tp": 2,
           "software": {
             "cuda_version": "13.0",
-            "profiled_at": "2026-09-05T12:08:19+00:00",
             "vllm_version": "0.28.0"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_codellama34:tp1",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a100",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_codellama34:tp2",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a100",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_codellama34:tp4",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a100",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_codellama34:tp8",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a100",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama70:tp1",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a100",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama70:tp2",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a100",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama70:tp4",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a100",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama70:tp8",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a100",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama7:tp1",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a100",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama7:tp2",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a100",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama7:tp4",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a100",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a100:vidur_llama7:tp8",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a100",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_codellama34:tp1",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a40",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_codellama34:tp2",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a40",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_codellama34:tp4",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a40",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_codellama34:tp8",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "a40",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama70:tp1",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a40",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama70:tp2",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a40",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama70:tp4",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a40",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama70:tp8",
+          "model_id": "vidur_llama70",
+          "hardware_id": "a40",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama7:tp1",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a40",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama7:tp2",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a40",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama7:tp4",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a40",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:a40:vidur_llama7:tp8",
+          "model_id": "vidur_llama7",
+          "hardware_id": "a40",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_codellama34:tp1",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "h100",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_codellama34:tp2",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "h100",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_codellama34:tp4",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "h100",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_codellama34:tp8",
+          "model_id": "vidur_codellama34",
+          "hardware_id": "h100",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama70:tp1",
+          "model_id": "vidur_llama70",
+          "hardware_id": "h100",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama70:tp2",
+          "model_id": "vidur_llama70",
+          "hardware_id": "h100",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama70:tp4",
+          "model_id": "vidur_llama70",
+          "hardware_id": "h100",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama70:tp8",
+          "model_id": "vidur_llama70",
+          "hardware_id": "h100",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama7:tp1",
+          "model_id": "vidur_llama7",
+          "hardware_id": "h100",
+          "tp": 1,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama7:tp2",
+          "model_id": "vidur_llama7",
+          "hardware_id": "h100",
+          "tp": 2,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama7:tp4",
+          "model_id": "vidur_llama7",
+          "hardware_id": "h100",
+          "tp": 4,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
+          }
+        },
+        {
+          "id": "vidur:h100:vidur_llama7:tp8",
+          "model_id": "vidur_llama7",
+          "hardware_id": "h100",
+          "tp": 8,
+          "software": {
+            "engine": "Vidur/Sarathi-vLLM-derived profiler",
+            "versions": "Historical build/clock manifest unavailable"
           }
         }
       ],
       "validation": {
-        "fit_observations": 9411,
-        "held_out_gpu": {
-          "by_operator": {
-            "act_fn": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 45.15467672665873,
-              "median_abs_relative_difference_pct": 52.62110856249579,
-              "p95_abs_relative_difference_pct": 61.686337194511275
-            },
-            "attention:decode": {
-              "count": 99,
-              "mean_abs_relative_difference_pct": 13.688176102950795,
-              "median_abs_relative_difference_pct": 11.732239791218547,
-              "p95_abs_relative_difference_pct": 41.35930766876319
-            },
-            "attention:prefill": {
-              "count": 96,
-              "mean_abs_relative_difference_pct": 43.33506271833155,
-              "median_abs_relative_difference_pct": 44.000801127153935,
-              "p95_abs_relative_difference_pct": 84.40380522485076
-            },
-            "down_proj": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 18.507845988570587,
-              "median_abs_relative_difference_pct": 15.636984925975717,
-              "p95_abs_relative_difference_pct": 39.42945494163378
-            },
-            "embedding": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 28.798810779242583,
-              "median_abs_relative_difference_pct": 29.636844663139563,
-              "p95_abs_relative_difference_pct": 42.628876961928775
-            },
-            "final_layernorm": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 6.931885991047098,
-              "median_abs_relative_difference_pct": 6.113457748290873,
-              "p95_abs_relative_difference_pct": 14.064682466548032
-            },
-            "gate_up_proj": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 13.305180921652974,
-              "median_abs_relative_difference_pct": 10.28524393606649,
-              "p95_abs_relative_difference_pct": 37.87392521878425
-            },
-            "layernorm": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 19.61640194123658,
-              "median_abs_relative_difference_pct": 20.795807796476353,
-              "p95_abs_relative_difference_pct": 30.232102245870866
-            },
-            "lm_head": {
-              "count": 40,
-              "mean_abs_relative_difference_pct": 2.7566509173250067,
-              "median_abs_relative_difference_pct": 1.1699687610094434,
-              "p95_abs_relative_difference_pct": 9.131018494874885
-            },
-            "o_proj": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 25.424074964454736,
-              "median_abs_relative_difference_pct": 26.036051583052046,
-              "p95_abs_relative_difference_pct": 43.01166118665467
-            },
-            "qkv_proj": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 21.95440206394558,
-              "median_abs_relative_difference_pct": 22.152976148557926,
-              "p95_abs_relative_difference_pct": 42.777538077490654
-            },
-            "rotary_emb": {
-              "count": 152,
-              "mean_abs_relative_difference_pct": 20.83768596583654,
-              "median_abs_relative_difference_pct": 18.979644703018494,
-              "p95_abs_relative_difference_pct": 43.99769728213395
-            },
-            "sampler": {
-              "count": 40,
-              "mean_abs_relative_difference_pct": 24.65379879470412,
-              "median_abs_relative_difference_pct": 20.293561350497146,
-              "p95_abs_relative_difference_pct": 49.46600553043773
-            }
+        "baseline": {
+          "count": 599451,
+          "latency_weighted_ape_pct": 13.075717103382475,
+          "macro_operator_mape_pct": 14.355615115118422,
+          "mape_pct": 15.209944296618797,
+          "median_ape_pct": 9.625023786610187,
+          "p95_ape_pct": 51.24164130835891,
+          "rms_log_error": 0.2834808550915035,
+          "signed_bias_pct": -4.795652057552605
+        },
+        "by_gpu": {
+          "a100": {
+            "count": 196680,
+            "latency_weighted_ape_pct": 12.246899456855942,
+            "macro_operator_mape_pct": 14.32772636370874,
+            "mape_pct": 14.421733001489205,
+            "median_ape_pct": 11.068311500243288,
+            "p95_ape_pct": 40.52245186614253,
+            "rms_log_error": 0.2260552712915769,
+            "signed_bias_pct": -6.893957225706534
           },
-          "excluded_from_fit": true,
-          "hardware": "RTX4090",
-          "latency_weighted_absolute_difference_pct": 16.12715369690456,
-          "same_block_samples": {
-            "fitted_function": {
-              "count": 1259,
-              "mean_abs_relative_difference_pct": 24.27715351719621,
-              "median_abs_relative_difference_pct": 21.131046282214694,
-              "p95_abs_relative_difference_pct": 60.31427739329458
-            },
-            "roofline": {
-              "count": 1259,
-              "mean_abs_relative_difference_pct": 52.08566707660939,
-              "median_abs_relative_difference_pct": 48.202189561557105,
-              "p95_abs_relative_difference_pct": 137.15501357848692
-            }
+          "a40": {
+            "count": 196680,
+            "latency_weighted_ape_pct": 10.253392606301908,
+            "macro_operator_mape_pct": 12.880004408233308,
+            "mape_pct": 11.941981596055264,
+            "median_ape_pct": 7.1932906707154025,
+            "p95_ape_pct": 40.45515926134831,
+            "rms_log_error": 0.17373716414021312,
+            "signed_bias_pct": 3.1777607452195427
           },
-          "summary": {
+          "h100": {
+            "count": 196680,
+            "latency_weighted_ape_pct": 26.226740793705154,
+            "macro_operator_mape_pct": 16.55910559965766,
+            "mape_pct": 18.414576363849932,
+            "median_ape_pct": 11.991001850722204,
+            "p95_ape_pct": 58.28232827672567,
+            "rms_log_error": 0.34926496871269525,
+            "signed_bias_pct": -9.06887334438697
+          },
+          "rtx4090": {
             "count": 1643,
-            "mean_abs_relative_difference_pct": 22.57603175636958,
-            "median_abs_relative_difference_pct": 19.928785060960898,
-            "p95_abs_relative_difference_pct": 58.619718866037196
+            "latency_weighted_ape_pct": 11.13301064733435,
+            "macro_operator_mape_pct": 13.687996037038651,
+            "mape_pct": 13.31325132304009,
+            "median_ape_pct": 11.055759184124959,
+            "p95_ape_pct": 37.42201786450869,
+            "rms_log_error": 0.17748842067991427,
+            "signed_bias_pct": 5.241605121194216
+          },
+          "rtx6000": {
+            "count": 7768,
+            "latency_weighted_ape_pct": 9.194219530452395,
+            "macro_operator_mape_pct": 9.998765987923383,
+            "mape_pct": 10.070270664294169,
+            "median_ape_pct": 6.48754439111684,
+            "p95_ape_pct": 35.617271834373284,
+            "rms_log_error": 0.16028877681690512,
+            "signed_bias_pct": -0.6735460550866194
           }
         },
-        "held_out_model": {
-          "excluded_from_fit": true,
-          "model": "qwen32",
-          "summary": {
-            "count": 3732,
-            "mean_abs_relative_difference_pct": 15.37544877429635,
-            "median_abs_relative_difference_pct": 10.321952846558201,
-            "p95_abs_relative_difference_pct": 55.89545564993677
+        "by_operator": {
+          "act_fn": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 4.391739535887969,
+            "mape_pct": 9.37518262782541,
+            "median_ape_pct": 5.688017148006169,
+            "p95_ape_pct": 32.45261404178086,
+            "rms_log_error": 0.2026934697654005,
+            "signed_bias_pct": -1.7810596481174112
           },
-          "tested_rows": 3732,
-          "training_rows": 5375,
-          "unsupported_operator_groups": [
-            "qk_norm"
-          ]
-        },
-        "held_out_shapes": {
-          "split": "SHA256(operator, tensor coordinates) mod 5 == 0 across devices/models/TPs",
-          "summary": {
-            "count": 2011,
-            "mean_abs_relative_difference_pct": 13.074709617024837,
-            "median_abs_relative_difference_pct": 8.07487631809174,
-            "p95_abs_relative_difference_pct": 49.498041694563895
+          "attention:decode": {
+            "count": 364815,
+            "latency_weighted_ape_pct": 7.383075300602016,
+            "mape_pct": 9.644733706486376,
+            "median_ape_pct": 7.418188939256054,
+            "p95_ape_pct": 26.015176642155474,
+            "rms_log_error": 0.14398014733380998,
+            "signed_bias_pct": -1.6883531864407257
           },
-          "tested_rows": 2011,
-          "training_rows": 7400,
-          "unsupported_operator_groups": []
+          "attention:prefill": {
+            "count": 152500,
+            "latency_weighted_ape_pct": 25.76335252673424,
+            "mape_pct": 28.270533865106636,
+            "median_ape_pct": 25.866484646002256,
+            "p95_ape_pct": 62.04900985297088,
+            "rms_log_error": 0.42723939521481935,
+            "signed_bias_pct": -11.33774904284744
+          },
+          "down_proj": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 6.897000351511181,
+            "mape_pct": 8.416285845154263,
+            "median_ape_pct": 6.4260241882558855,
+            "p95_ape_pct": 23.656192472877756,
+            "rms_log_error": 0.11856783638607377,
+            "signed_bias_pct": 0.6538746886833084
+          },
+          "embedding": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 44.85295355024186,
+            "mape_pct": 40.085603261831054,
+            "median_ape_pct": 42.97294277491701,
+            "p95_ape_pct": 60.98991964953937,
+            "rms_log_error": 0.5805752817788655,
+            "signed_bias_pct": -18.930708582898674
+          },
+          "final_layernorm": {
+            "count": 760,
+            "latency_weighted_ape_pct": 5.048140033136963,
+            "mape_pct": 4.9003028873159655,
+            "median_ape_pct": 4.082369252710583,
+            "p95_ape_pct": 12.352114849232452,
+            "rms_log_error": 0.06555487900351224,
+            "signed_bias_pct": -0.39223547384566315
+          },
+          "gate_up_proj": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 6.421664306341877,
+            "mape_pct": 7.379567176376234,
+            "median_ape_pct": 5.56455162662775,
+            "p95_ape_pct": 20.680351762647614,
+            "rms_log_error": 0.1018366979196641,
+            "signed_bias_pct": 0.5311626489717672
+          },
+          "layernorm": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 12.809940853988063,
+            "mape_pct": 11.549914844404666,
+            "median_ape_pct": 9.521951316970656,
+            "p95_ape_pct": 26.962813862329384,
+            "rms_log_error": 0.14458097932169445,
+            "signed_bias_pct": 1.0223370583912204
+          },
+          "lm_head": {
+            "count": 200,
+            "latency_weighted_ape_pct": 2.7124802054203,
+            "mape_pct": 2.584515858028254,
+            "median_ape_pct": 1.5654518686843533,
+            "p95_ape_pct": 10.068310512448281,
+            "rms_log_error": 0.04048217313740099,
+            "signed_bias_pct": -0.12843912522871803
+          },
+          "o_proj": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 6.888620692521847,
+            "mape_pct": 7.950237664287155,
+            "median_ape_pct": 6.149786746012059,
+            "p95_ape_pct": 21.54700990235075,
+            "rms_log_error": 0.10808280828599305,
+            "signed_bias_pct": 0.5707937390147068
+          },
+          "qk_norm": {
+            "count": 304,
+            "latency_weighted_ape_pct": 0.7434304098403524,
+            "mape_pct": 0.9023709812179066,
+            "median_ape_pct": 0.6890870010483552,
+            "p95_ape_pct": 2.6107575855602057,
+            "rms_log_error": 0.01312385073731298,
+            "signed_bias_pct": 0.011823776332370703
+          },
+          "qkv_proj": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 6.561168640108399,
+            "mape_pct": 8.580645988912986,
+            "median_ape_pct": 6.947932628902443,
+            "p95_ape_pct": 21.926252786792496,
+            "rms_log_error": 0.11288259796717907,
+            "signed_bias_pct": 0.6240616131807313
+          },
+          "rotary_emb": {
+            "count": 10084,
+            "latency_weighted_ape_pct": 10.119704669255047,
+            "mape_pct": 12.485724973050674,
+            "median_ape_pct": 9.654104785073663,
+            "p95_ape_pct": 35.35456951027325,
+            "rms_log_error": 0.16339829327017982,
+            "signed_bias_pct": 1.0749888163870103
+          },
+          "sampler": {
+            "count": 200,
+            "latency_weighted_ape_pct": 30.098009394301293,
+            "mape_pct": 28.28817783850254,
+            "median_ape_pct": 24.87943802941053,
+            "p95_ape_pct": 66.63870887259098,
+            "rms_log_error": 0.4589265139763659,
+            "signed_bias_pct": -11.07496879690259
+          }
         },
-        "scope": "Direct fitted-function validation. No runtime table anchors or residual overrides. Two GPU families; empirical residual percentiles are not confidence bounds for an unseen chip.",
-        "training_data_extraction": {
-          "lookups": 9811,
-          "max_absolute_difference_ns": 0
+        "by_source": {
+          "kaist": {
+            "count": 9411,
+            "latency_weighted_ape_pct": 9.731244709672739,
+            "macro_operator_mape_pct": 10.418776057444218,
+            "mape_pct": 10.636439745403463,
+            "median_ape_pct": 6.89786173286695,
+            "p95_ape_pct": 35.75637831570464,
+            "rms_log_error": 0.1634220220315466,
+            "signed_bias_pct": 0.35913839742952286
+          },
+          "vidur": {
+            "count": 590040,
+            "latency_weighted_ape_pct": 13.06003767482846,
+            "macro_operator_mape_pct": 14.588945457199904,
+            "mape_pct": 14.926096987131471,
+            "median_ape_pct": 9.591621667152978,
+            "p95_ape_pct": 49.67805917734325,
+            "rms_log_error": 0.2603021361495597,
+            "signed_bias_pct": -4.261689941624654
+          }
         },
-        "training_fit": {
-          "count": 9411,
-          "mean_abs_relative_difference_pct": 13.72556734449868,
-          "median_abs_relative_difference_pct": 8.4542639150754,
-          "p95_abs_relative_difference_pct": 50.953729520113896
+        "count": 599451,
+        "gpu_transfer": {
+          "kaist:rtx4090": {
+            "held_out_gpu": "rtx4090",
+            "metrics": {
+              "count": 1643,
+              "latency_weighted_ape_pct": 22.91758470011162,
+              "macro_operator_mape_pct": 20.78545336098955,
+              "mape_pct": 21.53611575342456,
+              "median_ape_pct": 20.31004300183399,
+              "p95_ape_pct": 45.94997848301417,
+              "rms_log_error": 0.23879351225270928,
+              "signed_bias_pct": 13.949763464369275
+            },
+            "source": "kaist",
+            "tested_count": 1643,
+            "training_count": 7768,
+            "unsupported": []
+          },
+          "kaist:rtx6000": {
+            "held_out_gpu": "rtx6000",
+            "metrics": {
+              "count": 7464,
+              "latency_weighted_ape_pct": 20.439591302324718,
+              "macro_operator_mape_pct": 21.623070982136518,
+              "mape_pct": 19.288319257601675,
+              "median_ape_pct": 16.117619164931938,
+              "p95_ape_pct": 51.050342050812496,
+              "rms_log_error": 0.2698477414352812,
+              "signed_bias_pct": -7.837347596056348
+            },
+            "source": "kaist",
+            "tested_count": 7464,
+            "training_count": 1643,
+            "unsupported": [
+              {
+                "count": 304,
+                "operator": "qk_norm"
+              }
+            ]
+          },
+          "vidur:a100": {
+            "held_out_gpu": "a100",
+            "metrics": {
+              "count": 196680,
+              "latency_weighted_ape_pct": 12.476591395916243,
+              "macro_operator_mape_pct": 22.002438122262483,
+              "mape_pct": 16.770629973720926,
+              "median_ape_pct": 13.432988369549303,
+              "p95_ape_pct": 44.71965528032792,
+              "rms_log_error": 0.25191277103163945,
+              "signed_bias_pct": -7.504648776883265
+            },
+            "source": "vidur",
+            "tested_count": 196680,
+            "training_count": 393360,
+            "unsupported": []
+          },
+          "vidur:a40": {
+            "held_out_gpu": "a40",
+            "metrics": {
+              "count": 196680,
+              "latency_weighted_ape_pct": 19.861062336666695,
+              "macro_operator_mape_pct": 44.4497263930774,
+              "mape_pct": 23.829046247843817,
+              "median_ape_pct": 9.316287507444322,
+              "p95_ape_pct": 102.98489566225642,
+              "rms_log_error": 0.2972028336761495,
+              "signed_bias_pct": 20.03067644267683
+            },
+            "source": "vidur",
+            "tested_count": 196680,
+            "training_count": 393360,
+            "unsupported": []
+          },
+          "vidur:h100": {
+            "held_out_gpu": "h100",
+            "metrics": {
+              "count": 196680,
+              "latency_weighted_ape_pct": 28.236598749380565,
+              "macro_operator_mape_pct": 18.87622273927742,
+              "mape_pct": 20.02835960200601,
+              "median_ape_pct": 13.26483302099965,
+              "p95_ape_pct": 61.20120362717184,
+              "rms_log_error": 0.3818482541782007,
+              "signed_bias_pct": -8.674562524138365
+            },
+            "source": "vidur",
+            "tested_count": 196680,
+            "training_count": 393360,
+            "unsupported": []
+          }
+        },
+        "overall": {
+          "count": 599451,
+          "latency_weighted_ape_pct": 13.034239094018929,
+          "macro_operator_mape_pct": 12.886699822750009,
+          "mape_pct": 14.85875209271657,
+          "median_ape_pct": 9.544697637240862,
+          "p95_ape_pct": 49.522086100437605,
+          "rms_log_error": 0.25906125949481323,
+          "signed_bias_pct": -4.189145871302244
+        },
+        "protocol": {
+          "candidates": "F0\u2013F8; embedding additionally F9 with fixed 16-token switch.",
+          "cohort_policy": "BF16 KAIST and FP16 Vidur kept separate. No per-GPU/model coefficient selection.",
+          "grouping": "Canonical executed operator geometry across GPU/model/TP; embedding groups token count and hidden width.",
+          "inner_folds": 3,
+          "interpretation": "Exploratory nested cross-validation within imported dense profile conditions, not a new-GPU or end-to-end serving error guarantee.",
+          "outer_folds": 5,
+          "selection": "Family and transition scale selected on inner folds only. Outer fold never fits or selects coefficients."
         }
       },
-      "model": "Nonnegative fitted L + a*compute_ns + b*nominal_memory_ns, arithmetic floor; no runtime timing-table lookup"
+      "model": "Nested-CV selected shape-informed functions; separate KAIST BF16 / Vidur FP16 fits; no runtime timing-table lookup",
+      "accuracy_report": "https://github.com/ryeii/LLM-ServeScope/blob/main/docs/accuracy-2026-10-19/README.md",
+      "training_observations": 599451,
+      "functions": {
+        "kaist": {
+          "act_fn": "F7",
+          "attention:decode": "F4",
+          "attention:prefill": "F4",
+          "down_proj": "F5",
+          "embedding": "F9",
+          "final_layernorm": "F0",
+          "gate_up_proj": "F3",
+          "layernorm": "F4",
+          "lm_head": "F0",
+          "o_proj": "F5",
+          "qk_norm": "F4",
+          "qkv_proj": "F1",
+          "rotary_emb": "F0",
+          "sampler": "F0"
+        },
+        "vidur": {
+          "act_fn": "F0",
+          "attention:decode": "F0",
+          "attention:prefill": "F0",
+          "down_proj": "F3",
+          "embedding": "F8",
+          "gate_up_proj": "F3",
+          "layernorm": "F5",
+          "o_proj": "F3",
+          "qkv_proj": "F3",
+          "rotary_emb": "F5"
+        }
+      }
     },
     "summary": "Fitted GPU function \u00b7 profiled configuration",
     "fallback_operators": []
@@ -449,7 +1094,8 @@
         "provenance": "Capacity/BW/L2/SM/TDP from upstream RTXPRO6000 hardware.yaml; compute peaks and efficiency are explicit illustrative inputs. Native mode uses measured operation profiles.",
         "source_url": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/profiler/perf/RTXPRO6000/hardware.yaml",
         "clock_scale": 1.0,
-        "launch_overhead_us": 0.0
+        "launch_overhead_us": 0.0,
+        "l2_cache_MiB": 128.0
       },
       "tp": 1,
       "pp": 1,
@@ -500,7 +1146,8 @@
         "provenance": "Capacity/BW/L2/SM/TDP from upstream RTXPRO6000 hardware.yaml; compute peaks and efficiency are explicit illustrative inputs. Native mode uses measured operation profiles.",
         "source_url": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/profiler/perf/RTXPRO6000/hardware.yaml",
         "clock_scale": 1.0,
-        "launch_overhead_us": 0.0
+        "launch_overhead_us": 0.0,
+        "l2_cache_MiB": 128.0
       },
       "tp": 1,
       "pp": 1,
@@ -538,21 +1185,21 @@
     "tie_embeddings": false
   },
   "metrics": {
-    "throughput_tps": 318.9895479526217,
-    "request_throughput": 39.87369349407771,
-    "prompt_tps": 5103.832767241947,
-    "ttft_mean_ms": 26.34480443218481,
-    "ttft_p95_ms": 26.47980443218481,
-    "tpot_mean_ms": 10.545994582055268,
-    "latency_p95_ms": 100.30176650657168,
-    "elapsed_ms": 100.31676650657168,
+    "throughput_tps": 305.10283615358196,
+    "request_throughput": 38.137854519197745,
+    "prompt_tps": 4881.645378457311,
+    "ttft_mean_ms": 24.9299968005134,
+    "ttft_p95_ms": 25.064996800513402,
+    "tpot_mean_ms": 11.40038184801419,
+    "latency_p95_ms": 104.86766973661273,
+    "elapsed_ms": 104.88266973661273,
     "gpu_count": 1,
-    "energy_j": 52.385777266190274,
-    "tokens_per_joule": 0.6108528243724803,
-    "tokens_per_gpu_s": 318.9895479526217,
-    "cost_usd": 7.663086330363114e-05,
-    "cost_per_million_tokens": 2.3947144782384733,
-    "gpu_utilization": 0.9970094729879442
+    "energy_j": 54.77602760711675,
+    "tokens_per_joule": 0.5841971643055477,
+    "tokens_per_gpu_s": 305.10283615358196,
+    "cost_usd": 8.01187060488014e-05,
+    "cost_per_million_tokens": 2.5037095640250437,
+    "gpu_utilization": 0.9971396609110601
   },
   "memory": {
     "prefill": {
@@ -598,21 +1245,21 @@
       "batch_ready_ms": 0.3,
       "prefill_batch_id": 0,
       "decode_batch_id": 0,
-      "prefill_end_ms": 26.49480443218481,
-      "first_token_ms": 26.49480443218481,
-      "finish_ms": 100.31676650657168,
-      "ttft_ms": 26.49480443218481,
-      "tpot_ms": 10.545994582055268,
-      "latency_ms": 100.31676650657168,
+      "prefill_end_ms": 25.079996800513403,
+      "first_token_ms": 25.079996800513403,
+      "finish_ms": 104.88266973661273,
+      "ttft_ms": 25.079996800513403,
+      "tpot_ms": 11.40038184801419,
+      "latency_ms": 104.88266973661273,
       "token_times_ms": [
-        26.49480443218481,
-        37.039682471718656,
-        47.58493269209298,
-        58.13055509330777,
-        68.67654967536303,
-        79.22291643825878,
-        89.769655381995,
-        100.31676650657168
+        25.079996800513403,
+        36.47926695545873,
+        47.87890767476035,
+        59.27891895841825,
+        70.67930080643244,
+        82.08005321880292,
+        93.48117619552968,
+        104.88266973661273
       ]
     },
     {
@@ -621,21 +1268,21 @@
       "batch_ready_ms": 0.3,
       "prefill_batch_id": 0,
       "decode_batch_id": 0,
-      "prefill_end_ms": 26.49480443218481,
-      "first_token_ms": 26.49480443218481,
-      "finish_ms": 100.31676650657168,
-      "ttft_ms": 26.39480443218481,
-      "tpot_ms": 10.545994582055268,
-      "latency_ms": 100.21676650657169,
+      "prefill_end_ms": 25.079996800513403,
+      "first_token_ms": 25.079996800513403,
+      "finish_ms": 104.88266973661273,
+      "ttft_ms": 24.9799968005134,
+      "tpot_ms": 11.40038184801419,
+      "latency_ms": 104.78266973661273,
       "token_times_ms": [
-        26.49480443218481,
-        37.039682471718656,
-        47.58493269209298,
-        58.13055509330777,
-        68.67654967536303,
-        79.22291643825878,
-        89.769655381995,
-        100.31676650657168
+        25.079996800513403,
+        36.47926695545873,
+        47.87890767476035,
+        59.27891895841825,
+        70.67930080643244,
+        82.08005321880292,
+        93.48117619552968,
+        104.88266973661273
       ]
     },
     {
@@ -644,21 +1291,21 @@
       "batch_ready_ms": 0.3,
       "prefill_batch_id": 0,
       "decode_batch_id": 0,
-      "prefill_end_ms": 26.49480443218481,
-      "first_token_ms": 26.49480443218481,
-      "finish_ms": 100.31676650657168,
-      "ttft_ms": 26.29480443218481,
-      "tpot_ms": 10.545994582055268,
-      "latency_ms": 100.11676650657168,
+      "prefill_end_ms": 25.079996800513403,
+      "first_token_ms": 25.079996800513403,
+      "finish_ms": 104.88266973661273,
+      "ttft_ms": 24.879996800513403,
+      "tpot_ms": 11.40038184801419,
+      "latency_ms": 104.68266973661272,
       "token_times_ms": [
-        26.49480443218481,
-        37.039682471718656,
-        47.58493269209298,
-        58.13055509330777,
-        68.67654967536303,
-        79.22291643825878,
-        89.769655381995,
-        100.31676650657168
+        25.079996800513403,
+        36.47926695545873,
+        47.87890767476035,
+        59.27891895841825,
+        70.67930080643244,
+        82.08005321880292,
+        93.48117619552968,
+        104.88266973661273
       ]
     },
     {
@@ -667,21 +1314,21 @@
       "batch_ready_ms": 0.3,
       "prefill_batch_id": 0,
       "decode_batch_id": 0,
-      "prefill_end_ms": 26.49480443218481,
-      "first_token_ms": 26.49480443218481,
-      "finish_ms": 100.31676650657168,
-      "ttft_ms": 26.19480443218481,
-      "tpot_ms": 10.545994582055268,
-      "latency_ms": 100.01676650657168,
+      "prefill_end_ms": 25.079996800513403,
+      "first_token_ms": 25.079996800513403,
+      "finish_ms": 104.88266973661273,
+      "ttft_ms": 24.779996800513402,
+      "tpot_ms": 11.40038184801419,
+      "latency_ms": 104.58266973661273,
       "token_times_ms": [
-        26.49480443218481,
-        37.039682471718656,
-        47.58493269209298,
-        58.13055509330777,
-        68.67654967536303,
-        79.22291643825878,
-        89.769655381995,
-        100.31676650657168
+        25.079996800513403,
+        36.47926695545873,
+        47.87890767476035,
+        59.27891895841825,
+        70.67930080643244,
+        82.08005321880292,
+        93.48117619552968,
+        104.88266973661273
       ]
     }
   ],
@@ -698,8 +1345,8 @@
       ],
       "chunk": 128,
       "start_ms": 0.3,
-      "end_ms": 26.49480443218481,
-      "duration_ms": 26.19480443218481,
+      "end_ms": 25.079996800513403,
+      "duration_ms": 24.779996800513402,
       "batch_size": 4,
       "context": 128,
       "components": {
@@ -711,7 +1358,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0049244288028324965,
+          "duration_ms": 0.004482109710320078,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -719,11 +1366,23 @@
             0.0,
             5252.038057085629
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            5252.038057085629,
+            5252.038057085629,
+            10.893617021276595,
+            0.06251525878906249,
+            5253.319979969954
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.006513727226222026,
+          "duration_ms": 0.006513727226222025,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -731,11 +1390,23 @@
             83.88608,
             5255.883825738608
           ],
+          "shape_features_ns": [
+            1.0,
+            83.88608,
+            5255.883825738608,
+            5255.883825738608,
+            10.893617021276595,
+            0.06256103515625,
+            5255.883825738608
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -743,11 +1414,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -755,6 +1438,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -770,9 +1465,9 @@
         3
       ],
       "chunk": 0,
-      "start_ms": 26.49480443218481,
-      "end_ms": 37.039682471718656,
-      "duration_ms": 10.544878039533847,
+      "start_ms": 25.079996800513403,
+      "end_ms": 36.47926695545873,
+      "duration_ms": 11.399270154945329,
       "batch_size": 4,
       "context": 129,
       "components": {
@@ -784,7 +1479,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -792,11 +1487,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -804,11 +1511,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -816,11 +1535,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -828,6 +1559,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -843,9 +1586,9 @@
         3
       ],
       "chunk": 1,
-      "start_ms": 37.039682471718656,
-      "end_ms": 47.58493269209298,
-      "duration_ms": 10.54525022037432,
+      "start_ms": 36.47926695545873,
+      "end_ms": 47.87890767476035,
+      "duration_ms": 11.399640719301615,
       "batch_size": 4,
       "context": 130,
       "components": {
@@ -857,7 +1600,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -865,11 +1608,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -877,11 +1632,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -889,11 +1656,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -901,6 +1680,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -916,9 +1707,9 @@
         3
       ],
       "chunk": 2,
-      "start_ms": 47.58493269209298,
-      "end_ms": 58.13055509330777,
-      "duration_ms": 10.545622401214793,
+      "start_ms": 47.87890767476035,
+      "end_ms": 59.27891895841825,
+      "duration_ms": 11.400011283657902,
       "batch_size": 4,
       "context": 131,
       "components": {
@@ -930,7 +1721,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -938,11 +1729,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -950,11 +1753,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -962,11 +1777,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -974,6 +1801,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -989,9 +1828,9 @@
         3
       ],
       "chunk": 3,
-      "start_ms": 58.13055509330777,
-      "end_ms": 68.67654967536303,
-      "duration_ms": 10.545994582055267,
+      "start_ms": 59.27891895841825,
+      "end_ms": 70.67930080643244,
+      "duration_ms": 11.400381848014188,
       "batch_size": 4,
       "context": 132,
       "components": {
@@ -1003,7 +1842,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -1011,11 +1850,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -1023,11 +1874,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -1035,11 +1898,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -1047,6 +1922,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1062,9 +1949,9 @@
         3
       ],
       "chunk": 4,
-      "start_ms": 68.67654967536303,
-      "end_ms": 79.22291643825878,
-      "duration_ms": 10.546366762895738,
+      "start_ms": 70.67930080643244,
+      "end_ms": 82.08005321880292,
+      "duration_ms": 11.400752412370474,
       "batch_size": 4,
       "context": 133,
       "components": {
@@ -1076,7 +1963,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -1084,11 +1971,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -1096,11 +1995,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -1108,11 +2019,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -1120,6 +2043,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1135,9 +2070,9 @@
         3
       ],
       "chunk": 5,
-      "start_ms": 79.22291643825878,
-      "end_ms": 89.769655381995,
-      "duration_ms": 10.546738943736212,
+      "start_ms": 82.08005321880292,
+      "end_ms": 93.48117619552968,
+      "duration_ms": 11.40112297672676,
       "batch_size": 4,
       "context": 134,
       "components": {
@@ -1149,7 +2084,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -1157,11 +2092,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -1169,11 +2116,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -1181,11 +2140,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -1193,6 +2164,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1208,9 +2191,9 @@
         3
       ],
       "chunk": 6,
-      "start_ms": 89.769655381995,
-      "end_ms": 100.31676650657168,
-      "duration_ms": 10.547111124576686,
+      "start_ms": 93.48117619552968,
+      "end_ms": 104.88266973661273,
+      "duration_ms": 11.401493541083047,
       "batch_size": 4,
       "context": 135,
       "components": {
@@ -1222,7 +2205,7 @@
       "endpoint_timing": [
         {
           "name": "embedding",
-          "duration_ms": 0.0036222491868844646,
+          "duration_ms": 0.0036891131350737243,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "embedding",
           "fit_features_ns": [
@@ -1230,11 +2213,23 @@
             0.0,
             41.031547320981474
           ],
+          "shape_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474,
+            482.12068102153233,
+            0.0851063829787234,
+            0.0004884004592895507,
+            41.04156234351527
+          ],
+          "fit_family": "F9",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "final_layernorm",
-          "duration_ms": 0.002439301293314466,
+          "duration_ms": 0.0024393012933144635,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "final_layernorm",
           "fit_features_ns": [
@@ -1242,11 +2237,23 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "lm_head",
-          "duration_ms": 0.7008422209330719,
+          "duration_ms": 0.700842220933072,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "lm_head",
           "fit_features_ns": [
@@ -1254,11 +2261,23 @@
             8355.25369383698,
             658319.9599399099
           ],
+          "shape_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099,
+            267368.11820278334,
+            0.16655585106382978,
+            7.836013793945312,
+            658319.9599399099
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
           "name": "sampler",
-          "duration_ms": 0.027922065305419096,
+          "duration_ms": 0.027922065305419116,
           "timing_source": "fitted-profiled-configuration",
           "fit_key": "sampler",
           "fit_features_ns": [
@@ -1266,6 +2285,18 @@
             20.52096,
             1284.4867300951425
           ],
+          "shape_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425,
+            1284.4867300951425,
+            2.6648936170212765,
+            0.015289306640624998,
+            1284.4867300951425
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1284,10 +2315,10 @@
       "memory_ms": 0.00656985478217326,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0053693800961239725,
+      "duration_ms": 0.005476850982572357,
       "bound": "Memory",
       "arithmetic_intensity": 1.248780487804878,
-      "achieved_tflops": 1.9528809308116255,
+      "achieved_tflops": 1.9145600333779882,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.00906985478217326,
@@ -1297,6 +2328,18 @@
         83.88608,
         5255.883825738608
       ],
+      "shape_features_ns": [
+        1.0,
+        83.88608,
+        5255.883825738608,
+        5255.883825738608,
+        10.893617021276595,
+        0.06256103515625,
+        5255.883825738608
+      ],
+      "fit_family": "F4",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1315,10 +2358,10 @@
       "memory_ms": 0.04594411617426139,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.09234336557656987,
+      "duration_ms": 0.09450520153857077,
       "bound": "Compute",
       "arithmetic_intensity": 438.85714285714283,
-      "achieved_tflops": 279.0650266545898,
+      "achieved_tflops": 272.6813271276129,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.08375648575162822,
@@ -1328,6 +2371,18 @@
         51232.21426640159,
         38067.98197295944
       ],
+      "shape_features_ns": [
+        1.0,
+        51232.21426640159,
+        38067.98197295944,
+        51232.21426640159,
+        1.0212765957446808,
+        0.45312499999999994,
+        38067.98197295944
+      ],
+      "fit_family": "F1",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1346,10 +2401,10 @@
       "memory_ms": 0.006563445167751627,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.004839979861408259,
+      "duration_ms": 0.0048399798614082576,
       "bound": "Memory",
       "arithmetic_intensity": 1.5,
-      "achieved_tflops": 2.599786023973006,
+      "achieved_tflops": 2.599786023973007,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.009063445167751627,
@@ -1359,6 +2414,18 @@
         100.66329599999999,
         6563.445167751627
       ],
+      "shape_features_ns": [
+        1.0,
+        100.66329599999999,
+        6563.445167751627,
+        6563.445167751627,
+        13.617021276595745,
+        0.07812499999999999,
+        6563.445167751627
+      ],
+      "fit_family": "F0",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1377,10 +2444,10 @@
       "memory_ms": 0.008204306459689534,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.021728055043173714,
+      "duration_ms": 0.020616855626338706,
       "bound": "Memory",
       "arithmetic_intensity": 51.6,
-      "achieved_tflops": 24.90168654879149,
+      "achieved_tflops": 26.243828147526607,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.010704306459689535,
@@ -1390,6 +2457,18 @@
         1075.6763737574552,
         6727.531296945418
       ],
+      "shape_features_ns": [
+        1.0,
+        1075.6763737574552,
+        6727.531296945418,
+        1579.8996739562622,
+        0.6808510638297872,
+        0.08007812499999999,
+        6727.531296945418
+      ],
+      "fit_family": "F4",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1408,10 +2487,10 @@
       "memory_ms": 0.03281722583875814,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0636333506306777,
+      "duration_ms": 0.062714678891921,
       "bound": "Compute",
       "arithmetic_intensity": 409.6,
-      "achieved_tflops": 269.98215579925113,
+      "achieved_tflops": 273.9369711771439,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.05667099050108548,
@@ -1421,6 +2500,18 @@
         34154.80951093439,
         26253.78067100651
       ],
+      "shape_features_ns": [
+        1.0,
+        34154.80951093439,
+        26253.78067100651,
+        50164.87646918489,
+        0.6808510638297872,
+        0.31249999999999994,
+        26253.78067100651
+      ],
+      "fit_family": "F5",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1439,10 +2530,10 @@
       "memory_ms": 0.00656985478217326,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0053693800961239725,
+      "duration_ms": 0.005476850982572357,
       "bound": "Memory",
       "arithmetic_intensity": 1.248780487804878,
-      "achieved_tflops": 1.9528809308116255,
+      "achieved_tflops": 1.9145600333779882,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.00906985478217326,
@@ -1452,6 +2543,18 @@
         83.88608,
         5255.883825738608
       ],
+      "shape_features_ns": [
+        1.0,
+        83.88608,
+        5255.883825738608,
+        5255.883825738608,
+        10.893617021276595,
+        0.06256103515625,
+        5255.883825738608
+      ],
+      "fit_family": "F4",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1470,10 +2573,10 @@
       "memory_ms": 0.2182345518277416,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.3899514041470822,
+      "duration_ms": 0.3549023273598986,
       "bound": "Compute",
       "arithmetic_intensity": 431.1578947368421,
-      "achieved_tflops": 308.3950538684061,
+      "achieved_tflops": 338.8512134665376,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.38169693350759837,
@@ -1483,6 +2586,18 @@
         239083.66657654074,
         168024.19629444164
       ],
+      "shape_features_ns": [
+        1.0,
+        239083.66657654074,
+        168024.19629444164,
+        239083.66657654074,
+        4.76595744680851,
+        1.9999999999999996,
+        168024.19629444164
+      ],
+      "fit_family": "F3",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1501,10 +2616,10 @@
       "memory_ms": 0.03445808713069604,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.012730726330375336,
+      "duration_ms": 0.011075928414886128,
       "bound": "Memory",
       "arithmetic_intensity": 0.8333333333333334,
-      "achieved_tflops": 2.8828017386905826,
+      "achieved_tflops": 3.3135064281089717,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.036958087130696045,
@@ -1514,6 +2629,18 @@
         293.60128000000003,
         27566.469704556835
       ],
+      "shape_features_ns": [
+        1.0,
+        293.60128000000003,
+        27566.469704556835,
+        27566.469704556835,
+        38.12765957446808,
+        0.32812499999999994,
+        27566.469704556835
+      ],
+      "fit_family": "F7",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1532,10 +2659,10 @@
       "memory_ms": 0.09845167751627441,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.1994906704033795,
+      "duration_ms": 0.1916487225086559,
       "bound": "Compute",
       "arithmetic_intensity": 477.8666666666667,
-      "achieved_tflops": 301.41530940978464,
+      "achieved_tflops": 313.74872400354366,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.19209846675379919,
@@ -1545,6 +2672,18 @@
         119541.83328827037,
         85324.78718077115
       ],
+      "shape_features_ns": [
+        1.0,
+        119541.83328827037,
+        85324.78718077115,
+        175577.0676421471,
+        0.6808510638297872,
+        1.0156249999999998,
+        85324.78718077115
+      ],
+      "fit_family": "F5",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -1563,10 +2702,10 @@
       "memory_ms": 5.768652979469204e-05,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0021727362222109595,
+      "duration_ms": 0.002368542973107231,
       "bound": "Memory",
       "arithmetic_intensity": 1.1111111111111112,
-      "achieved_tflops": 0.03770361038885744,
+      "achieved_tflops": 0.034586664008266335,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.002557686529794692,
@@ -1576,6 +2715,18 @@
         0.65536,
         46.14922383575363
       ],
+      "shape_features_ns": [
+        1.0,
+        0.65536,
+        46.14922383575363,
+        542.2533800701052,
+        0.0851063829787234,
+        0.00054931640625,
+        46.14922383575363
+      ],
+      "fit_family": "F4",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1594,10 +2745,10 @@
       "memory_ms": 0.03943194792188282,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.03496469331423007,
+      "duration_ms": 0.03549733108038383,
       "bound": "Memory",
       "arithmetic_intensity": 3.9947984395318596,
-      "achieved_tflops": 5.757996793813241,
+      "achieved_tflops": 5.671598001103104,
       "tile_utilization": 0.2553191489361702,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.041931947921882824,
@@ -1607,6 +2758,18 @@
         400.25167395626244,
         31555.81372058087
       ],
+      "shape_features_ns": [
+        1.0,
+        400.25167395626244,
+        31555.81372058087,
+        50164.87646918489,
+        0.007978723404255319,
+        0.37561035156250006,
+        31555.81372058087
+      ],
+      "fit_family": "F1",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1625,10 +2788,10 @@
       "memory_ms": 5.1276915373059586e-05,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0023321919024766827,
+      "duration_ms": 0.0023321919024766836,
       "bound": "Memory",
       "arithmetic_intensity": 1.5,
-      "achieved_tflops": 0.04215090529025745,
+      "achieved_tflops": 0.04215090529025743,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.00255127691537306,
@@ -1638,6 +2801,18 @@
         0.7864319999999999,
         51.27691537305959
       ],
+      "shape_features_ns": [
+        1.0,
+        0.7864319999999999,
+        51.27691537305959,
+        482.00300450676013,
+        0.10638297872340426,
+        0.0006103515624999999,
+        51.27691537305959
+      ],
+      "fit_family": "F0",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1656,10 +2831,10 @@
       "memory_ms": 6.409614421632449e-05,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.012803737997631098,
+      "duration_ms": 0.013389746299277685,
       "bound": "Compute",
       "arithmetic_intensity": 105.2,
-      "achieved_tflops": 0.6730834387266021,
+      "achieved_tflops": 0.6436256376616262,
       "tile_utilization": 0.1702127659574468,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.002659646895786266,
@@ -1669,6 +2844,18 @@
         17.1331689860835,
         1389.6044066099148
       ],
+      "shape_features_ns": [
+        1.0,
+        17.1331689860835,
+        1389.6044066099148,
+        25.164341948310142,
+        0.6808510638297872,
+        0.016540527343749997,
+        1389.6044066099148
+      ],
+      "fit_family": "F4",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1687,10 +2874,10 @@
       "memory_ms": 0.02630505758637957,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.024357948334246756,
+      "duration_ms": 0.02500944304974436,
       "bound": "Memory",
       "arithmetic_intensity": 3.992202729044834,
-      "achieved_tflops": 5.510223035135219,
+      "achieved_tflops": 5.366682006194134,
       "tile_utilization": 0.1702127659574468,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.02880505758637957,
@@ -1700,6 +2887,18 @@
         266.83444930417494,
         21044.046069103653
       ],
+      "shape_features_ns": [
+        1.0,
+        266.83444930417494,
+        21044.046069103653,
+        50164.87646918489,
+        0.005319148936170213,
+        0.25048828124999994,
+        21044.046069103653
+      ],
+      "fit_family": "F5",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1718,10 +2917,10 @@
       "memory_ms": 5.768652979469204e-05,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0021727362222109595,
+      "duration_ms": 0.002368542973107231,
       "bound": "Memory",
       "arithmetic_intensity": 1.1111111111111112,
-      "achieved_tflops": 0.03770361038885744,
+      "achieved_tflops": 0.034586664008266335,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.002557686529794692,
@@ -1731,6 +2930,18 @@
         0.65536,
         46.14922383575363
       ],
+      "shape_features_ns": [
+        1.0,
+        0.65536,
+        46.14922383575363,
+        542.2533800701052,
+        0.0851063829787234,
+        0.00054931640625,
+        46.14922383575363
+      ],
+      "fit_family": "F4",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1749,10 +2960,10 @@
       "memory_ms": 0.18404566850275414,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.1478767193737214,
+      "duration_ms": 0.1686876440099417,
       "bound": "Memory",
       "arithmetic_intensity": 3.994149195514383,
-      "achieved_tflops": 6.353428044515838,
+      "achieved_tflops": 5.569608263333316,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.18654566850275414,
@@ -1762,6 +2973,18 @@
         1867.8411451292245,
         147185.25788683025
       ],
+      "shape_features_ns": [
+        1.0,
+        1867.8411451292245,
+        147185.25788683025,
+        59770.916644135184,
+        0.03723404255319149,
+        1.751953125,
+        147185.25788683025
+      ],
+      "fit_family": "F3",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1780,10 +3003,10 @@
       "memory_ms": 0.00026920380570856283,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.0021000475023024057,
+      "duration_ms": 0.0033673980659228095,
       "bound": "Memory",
       "arithmetic_intensity": 0.8333333333333334,
-      "achieved_tflops": 0.1365302449995307,
+      "achieved_tflops": 0.08514585872740489,
       "tile_utilization": 1,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.002769203805708563,
@@ -1793,6 +3016,18 @@
         2.2937600000000002,
         215.36304456685028
       ],
+      "shape_features_ns": [
+        1.0,
+        2.2937600000000002,
+        215.36304456685028,
+        723.0045067601402,
+        0.2978723404255319,
+        0.0025634765624999996,
+        215.36304456685028
+      ],
+      "fit_family": "F7",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1811,10 +3046,10 @@
       "memory_ms": 0.09193950926389584,
       "network_ms": 0,
       "launch_ms": 0.0025,
-      "duration_ms": 0.07781239709710523,
+      "duration_ms": 0.0802699054325748,
       "bound": "Memory",
       "arithmetic_intensity": 3.9977691020635806,
-      "achieved_tflops": 6.037110608657447,
+      "achieved_tflops": 5.852281069330414,
       "tile_utilization": 0.1702127659574468,
       "timing_source": "fitted-profiled-configuration",
       "roofline_duration_ms": 0.09443950926389584,
@@ -1824,6 +3059,18 @@
         933.9205725646123,
         73602.88432648974
       ],
+      "shape_features_ns": [
+        1.0,
+        933.9205725646123,
+        73602.88432648974,
+        175577.0676421471,
+        0.005319148936170213,
+        0.8760986328125001,
+        73602.88432648974
+      ],
+      "fit_family": "F5",
+      "fit_cohort": "kaist",
+      "fit_fallback_reason": null,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -1846,10 +3093,10 @@
           "memory_ms": 0.00656985478217326,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0053693800961239725,
+          "duration_ms": 0.005476850982572357,
           "bound": "Memory",
           "arithmetic_intensity": 1.248780487804878,
-          "achieved_tflops": 1.9528809308116255,
+          "achieved_tflops": 1.9145600333779882,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.00906985478217326,
@@ -1859,6 +3106,18 @@
             83.88608,
             5255.883825738608
           ],
+          "shape_features_ns": [
+            1.0,
+            83.88608,
+            5255.883825738608,
+            5255.883825738608,
+            10.893617021276595,
+            0.06256103515625,
+            5255.883825738608
+          ],
+          "fit_family": "F4",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1873,10 +3132,10 @@
           "memory_ms": 0.04594411617426139,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.09234336557656987,
+          "duration_ms": 0.09450520153857077,
           "bound": "Compute",
           "arithmetic_intensity": 438.85714285714283,
-          "achieved_tflops": 279.0650266545898,
+          "achieved_tflops": 272.6813271276129,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.08375648575162822,
@@ -1886,6 +3145,18 @@
             51232.21426640159,
             38067.98197295944
           ],
+          "shape_features_ns": [
+            1.0,
+            51232.21426640159,
+            38067.98197295944,
+            51232.21426640159,
+            1.0212765957446808,
+            0.45312499999999994,
+            38067.98197295944
+          ],
+          "fit_family": "F1",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1900,10 +3171,10 @@
           "memory_ms": 0.006563445167751627,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.004839979861408259,
+          "duration_ms": 0.0048399798614082576,
           "bound": "Memory",
           "arithmetic_intensity": 1.5,
-          "achieved_tflops": 2.599786023973006,
+          "achieved_tflops": 2.599786023973007,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.009063445167751627,
@@ -1913,6 +3184,18 @@
             100.66329599999999,
             6563.445167751627
           ],
+          "shape_features_ns": [
+            1.0,
+            100.66329599999999,
+            6563.445167751627,
+            6563.445167751627,
+            13.617021276595745,
+            0.07812499999999999,
+            6563.445167751627
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1927,10 +3210,10 @@
           "memory_ms": 0.008204306459689534,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.021728055043173714,
+          "duration_ms": 0.020616855626338706,
           "bound": "Memory",
           "arithmetic_intensity": 51.6,
-          "achieved_tflops": 24.90168654879149,
+          "achieved_tflops": 26.243828147526607,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.010704306459689535,
@@ -1940,6 +3223,18 @@
             1075.6763737574552,
             6727.531296945418
           ],
+          "shape_features_ns": [
+            1.0,
+            1075.6763737574552,
+            6727.531296945418,
+            1579.8996739562622,
+            0.6808510638297872,
+            0.08007812499999999,
+            6727.531296945418
+          ],
+          "fit_family": "F4",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1954,10 +3249,10 @@
           "memory_ms": 0.03281722583875814,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0636333506306777,
+          "duration_ms": 0.062714678891921,
           "bound": "Compute",
           "arithmetic_intensity": 409.6,
-          "achieved_tflops": 269.98215579925113,
+          "achieved_tflops": 273.9369711771439,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.05667099050108548,
@@ -1967,6 +3262,18 @@
             34154.80951093439,
             26253.78067100651
           ],
+          "shape_features_ns": [
+            1.0,
+            34154.80951093439,
+            26253.78067100651,
+            50164.87646918489,
+            0.6808510638297872,
+            0.31249999999999994,
+            26253.78067100651
+          ],
+          "fit_family": "F5",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1981,10 +3288,10 @@
           "memory_ms": 0.00656985478217326,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0053693800961239725,
+          "duration_ms": 0.005476850982572357,
           "bound": "Memory",
           "arithmetic_intensity": 1.248780487804878,
-          "achieved_tflops": 1.9528809308116255,
+          "achieved_tflops": 1.9145600333779882,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.00906985478217326,
@@ -1994,6 +3301,18 @@
             83.88608,
             5255.883825738608
           ],
+          "shape_features_ns": [
+            1.0,
+            83.88608,
+            5255.883825738608,
+            5255.883825738608,
+            10.893617021276595,
+            0.06256103515625,
+            5255.883825738608
+          ],
+          "fit_family": "F4",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2008,10 +3327,10 @@
           "memory_ms": 0.2182345518277416,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.3899514041470822,
+          "duration_ms": 0.3549023273598986,
           "bound": "Compute",
           "arithmetic_intensity": 431.1578947368421,
-          "achieved_tflops": 308.3950538684061,
+          "achieved_tflops": 338.8512134665376,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.38169693350759837,
@@ -2021,6 +3340,18 @@
             239083.66657654074,
             168024.19629444164
           ],
+          "shape_features_ns": [
+            1.0,
+            239083.66657654074,
+            168024.19629444164,
+            239083.66657654074,
+            4.76595744680851,
+            1.9999999999999996,
+            168024.19629444164
+          ],
+          "fit_family": "F3",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2035,10 +3366,10 @@
           "memory_ms": 0.03445808713069604,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.012730726330375336,
+          "duration_ms": 0.011075928414886128,
           "bound": "Memory",
           "arithmetic_intensity": 0.8333333333333334,
-          "achieved_tflops": 2.8828017386905826,
+          "achieved_tflops": 3.3135064281089717,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.036958087130696045,
@@ -2048,6 +3379,18 @@
             293.60128000000003,
             27566.469704556835
           ],
+          "shape_features_ns": [
+            1.0,
+            293.60128000000003,
+            27566.469704556835,
+            27566.469704556835,
+            38.12765957446808,
+            0.32812499999999994,
+            27566.469704556835
+          ],
+          "fit_family": "F7",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2062,10 +3405,10 @@
           "memory_ms": 0.09845167751627441,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.1994906704033795,
+          "duration_ms": 0.1916487225086559,
           "bound": "Compute",
           "arithmetic_intensity": 477.8666666666667,
-          "achieved_tflops": 301.41530940978464,
+          "achieved_tflops": 313.74872400354366,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.19209846675379919,
@@ -2075,6 +3418,18 @@
             119541.83328827037,
             85324.78718077115
           ],
+          "shape_features_ns": [
+            1.0,
+            119541.83328827037,
+            85324.78718077115,
+            175577.0676421471,
+            0.6808510638297872,
+            1.0156249999999998,
+            85324.78718077115
+          ],
+          "fit_family": "F5",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ],
@@ -2104,10 +3459,10 @@
           "memory_ms": 5.768652979469204e-05,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0021727362222109595,
+          "duration_ms": 0.002368542973107231,
           "bound": "Memory",
           "arithmetic_intensity": 1.1111111111111112,
-          "achieved_tflops": 0.03770361038885744,
+          "achieved_tflops": 0.034586664008266335,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.002557686529794692,
@@ -2117,6 +3472,18 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F4",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2131,10 +3498,10 @@
           "memory_ms": 0.03943194792188282,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.03496469331423007,
+          "duration_ms": 0.03549733108038383,
           "bound": "Memory",
           "arithmetic_intensity": 3.9947984395318596,
-          "achieved_tflops": 5.757996793813241,
+          "achieved_tflops": 5.671598001103104,
           "tile_utilization": 0.2553191489361702,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.041931947921882824,
@@ -2144,6 +3511,18 @@
             400.25167395626244,
             31555.81372058087
           ],
+          "shape_features_ns": [
+            1.0,
+            400.25167395626244,
+            31555.81372058087,
+            50164.87646918489,
+            0.007978723404255319,
+            0.37561035156250006,
+            31555.81372058087
+          ],
+          "fit_family": "F1",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2158,10 +3537,10 @@
           "memory_ms": 5.1276915373059586e-05,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0023321919024766827,
+          "duration_ms": 0.0023321919024766836,
           "bound": "Memory",
           "arithmetic_intensity": 1.5,
-          "achieved_tflops": 0.04215090529025745,
+          "achieved_tflops": 0.04215090529025743,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.00255127691537306,
@@ -2171,6 +3550,18 @@
             0.7864319999999999,
             51.27691537305959
           ],
+          "shape_features_ns": [
+            1.0,
+            0.7864319999999999,
+            51.27691537305959,
+            482.00300450676013,
+            0.10638297872340426,
+            0.0006103515624999999,
+            51.27691537305959
+          ],
+          "fit_family": "F0",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2185,10 +3576,10 @@
           "memory_ms": 6.409614421632449e-05,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.012803737997631098,
+          "duration_ms": 0.013389746299277685,
           "bound": "Compute",
           "arithmetic_intensity": 105.2,
-          "achieved_tflops": 0.6730834387266021,
+          "achieved_tflops": 0.6436256376616262,
           "tile_utilization": 0.1702127659574468,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.002659646895786266,
@@ -2198,6 +3589,18 @@
             17.1331689860835,
             1389.6044066099148
           ],
+          "shape_features_ns": [
+            1.0,
+            17.1331689860835,
+            1389.6044066099148,
+            25.164341948310142,
+            0.6808510638297872,
+            0.016540527343749997,
+            1389.6044066099148
+          ],
+          "fit_family": "F4",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2212,10 +3615,10 @@
           "memory_ms": 0.02630505758637957,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.024357948334246756,
+          "duration_ms": 0.02500944304974436,
           "bound": "Memory",
           "arithmetic_intensity": 3.992202729044834,
-          "achieved_tflops": 5.510223035135219,
+          "achieved_tflops": 5.366682006194134,
           "tile_utilization": 0.1702127659574468,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.02880505758637957,
@@ -2225,6 +3628,18 @@
             266.83444930417494,
             21044.046069103653
           ],
+          "shape_features_ns": [
+            1.0,
+            266.83444930417494,
+            21044.046069103653,
+            50164.87646918489,
+            0.005319148936170213,
+            0.25048828124999994,
+            21044.046069103653
+          ],
+          "fit_family": "F5",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2239,10 +3654,10 @@
           "memory_ms": 5.768652979469204e-05,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0021727362222109595,
+          "duration_ms": 0.002368542973107231,
           "bound": "Memory",
           "arithmetic_intensity": 1.1111111111111112,
-          "achieved_tflops": 0.03770361038885744,
+          "achieved_tflops": 0.034586664008266335,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.002557686529794692,
@@ -2252,6 +3667,18 @@
             0.65536,
             46.14922383575363
           ],
+          "shape_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363,
+            542.2533800701052,
+            0.0851063829787234,
+            0.00054931640625,
+            46.14922383575363
+          ],
+          "fit_family": "F4",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2266,10 +3693,10 @@
           "memory_ms": 0.18404566850275414,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.1478767193737214,
+          "duration_ms": 0.1686876440099417,
           "bound": "Memory",
           "arithmetic_intensity": 3.994149195514383,
-          "achieved_tflops": 6.353428044515838,
+          "achieved_tflops": 5.569608263333316,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.18654566850275414,
@@ -2279,6 +3706,18 @@
             1867.8411451292245,
             147185.25788683025
           ],
+          "shape_features_ns": [
+            1.0,
+            1867.8411451292245,
+            147185.25788683025,
+            59770.916644135184,
+            0.03723404255319149,
+            1.751953125,
+            147185.25788683025
+          ],
+          "fit_family": "F3",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2293,10 +3732,10 @@
           "memory_ms": 0.00026920380570856283,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.0021000475023024057,
+          "duration_ms": 0.0033673980659228095,
           "bound": "Memory",
           "arithmetic_intensity": 0.8333333333333334,
-          "achieved_tflops": 0.1365302449995307,
+          "achieved_tflops": 0.08514585872740489,
           "tile_utilization": 1,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.002769203805708563,
@@ -2306,6 +3745,18 @@
             2.2937600000000002,
             215.36304456685028
           ],
+          "shape_features_ns": [
+            1.0,
+            2.2937600000000002,
+            215.36304456685028,
+            723.0045067601402,
+            0.2978723404255319,
+            0.0025634765624999996,
+            215.36304456685028
+          ],
+          "fit_family": "F7",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2320,10 +3771,10 @@
           "memory_ms": 0.09193950926389584,
           "network_ms": 0,
           "launch_ms": 0.0025,
-          "duration_ms": 0.07781239709710523,
+          "duration_ms": 0.0802699054325748,
           "bound": "Memory",
           "arithmetic_intensity": 3.9977691020635806,
-          "achieved_tflops": 6.037110608657447,
+          "achieved_tflops": 5.852281069330414,
           "tile_utilization": 0.1702127659574468,
           "timing_source": "fitted-profiled-configuration",
           "roofline_duration_ms": 0.09443950926389584,
@@ -2333,6 +3784,18 @@
             933.9205725646123,
             73602.88432648974
           ],
+          "shape_features_ns": [
+            1.0,
+            933.9205725646123,
+            73602.88432648974,
+            175577.0676421471,
+            0.005319148936170213,
+            0.8760986328125001,
+            73602.88432648974
+          ],
+          "fit_family": "F5",
+          "fit_cohort": "kaist",
+          "fit_fallback_reason": null,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ],
@@ -2359,9 +3822,9 @@
     "Pipeline activation messages use the limiting fabric tier of the entire pool as a conservative placement approximation.",
     "Network tiers use the limiting end-to-end bandwidth plus ring/dispatch overhead; they do not model individual packets or switches.",
     "TTFT includes batch formation, queueing, prefill and KV handoff; the first token is released after the handoff.",
-    "All GPU operator service times use the same nonnegative function fitted offline to KAIST profiles; no runtime timing-table lookup or exact-match override. Profiled configurations also have fitted prediction error.",
+    "GPU operator service times use nested-CV selected shape-informed functions fitted to KAIST BF16 or Vidur FP16 profiles; no runtime timing-table lookup, GPU-ID correction or exact-match override. Profiled configurations also have prediction error.",
     "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
-    "Training uses dense Llama-3.1-8B and Qwen3-32B on two GPU families. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks."
+    "Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks."
   ],
   "provenance": {
     "kind": "behavioral_extension",
@@ -2369,8 +3832,8 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-8B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "bc7bd9fce86b0e8de13e72fbf4fe8545da862b90508d6da87c092fd2a5c8fe6d",
-    "timing_source": "GPU service function fitted to KAIST profiles; identical function for all configurations; SimPy serving and analytical network",
+    "config_sha256": "35447873f12920206dca52b4a764e2f59db4d4d32b93c04fb53400803aef3887",
+    "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }
 }

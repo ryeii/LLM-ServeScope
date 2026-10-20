@@ -60,31 +60,34 @@ are applied only when **Run scenario** is selected.
 
 ## Fitted GPU service-time model
 
-GPU timing uses **one function fitted offline to KAIST's operator profiles**.
-Hardware parameters, precision, operation and tensor geometry determine the
-predicted execution time. The same function handles profiled and unseen inputs;
-there are no runtime timing-table lookups or exact-match overrides. SimPy then
-uses those predictions to model serving throughput and latency.
+GPU timing uses **shape-informed functions selected with nested cross-validation**
+on KAIST BF16 and Microsoft Vidur FP16 profiles. Hardware rates, operation and
+tensor geometry determine execution time; no GPU/model-ID coefficients or runtime
+timing-table lookups are used. SimPy schedules the predictions for serving behavior.
 
-- Training: 9,411 dense operator observations across two models, two GPU families
-  and five model/hardware/TP bundles.
-- Validation: withheld GPU, model and tensor-shape tests, with recorded errors.
-  Paired held-out GPU operator error improves from 52.1% to 24.3% over the original
-  roofline model; new-GPU accuracy is not guaranteed by fitting alone.
-- Integration: mean throughput difference versus nine native reference scenarios
-  improves from 13.5% to 4.1%. Energy, memory and network require separate calibration.
+- Training: **599,451 compatible dense operator observations**, five GPU families,
+  separate historical precision/software cohorts. Final deployment fits use all
+  observations in each cohort after evaluation.
+- Grouped nested validation: **14.86% mean absolute operator-time error**, **9.54%
+  median**, **49.52% P95**. Five outer folds evaluate family/scale selection made
+  inside three training-only inner folds.
+- [Full accuracy report](docs/accuracy-2026-10-19/README.md): one main residual graph,
+  **14 subcomponent graphs**, per-GPU breakdown, and separate unseen-GPU validation.
+- GPU operator accuracy does not establish throughput, energy, memory or network
+  accuracy. Those outputs require their own validation. Unsupported specialized
+  profile bundles and uncalibrated extrapolations are listed explicitly.
+- KAIST embedding uses **two fitted functions switched at 16 tokens**. FP16 has its
+  own selected functions; missing operators or unknown cache inputs report fallbacks.
 - Original roofline mode remains available for comparison.
 
-See [function, assumptions and validation](docs/calibration.md) and the
-[serving comparison](docs/benchmarks/fitted-vs-profiles-2026-10-19/README.md).
+![Cross-validated GPU operator timing accuracy](docs/accuracy-2026-10-19/main-residuals.png)
 
-A subsequent [GPU function-search report](docs/fit-study-2026-10-19/README.md)
-compares nine simple functions, documents additional published Vidur profiles,
-and includes a diagram and validation fit for every trial. The deployed function
-is retained as the baseline: improved shape fit has not yet established reliable
-hardware extrapolation. A [two-regime embedding follow-up](docs/fit-study-2026-10-19/embedding-piecewise/README.md)
-fits separate functions around the source-defined 16-token kernel switch and
-reports both local curve validation and hardware-transfer limits.
+See [current function and assumptions](docs/calibration.md), the earlier
+[function-search experiments](docs/fit-study-2026-10-19/README.md), and the
+[two-regime embedding experiment](docs/fit-study-2026-10-19/embedding-piecewise/README.md).
+The [current serving integration recheck](docs/accuracy-2026-10-19/README.md#serving-integration-recheck-separate-evidence)
+reports 4.83% mean throughput difference from nine native simulator references;
+this is separate evidence from operator CV and from physical GPU serving accuracy.
 
 ## Limitations: behavioral, not mechanistic simulation
 
