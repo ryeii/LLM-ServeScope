@@ -1,4 +1,6 @@
 import { useState } from "react";
+import FormulaValue from "./FormulaValue";
+import { operationCalculation, scaled } from "./calculations";
 type Obj = Record<string, any>;
 const COLORS: Obj = {
   Compute: "#35a58a",
@@ -159,7 +161,17 @@ export default function ModelGraph({
                     {o.name}
                   </text>
                   <text x={p.x + 17} y={p.y + 49} fill="#8ba4b0" fontSize="10">
-                    {f(o.duration_ms * 1000)} µs · {o.bound.toLowerCase()}
+                    <FormulaValue
+                      as="tspan"
+                      calculation={scaled(
+                        operationCalculation(r, phase, o, "duration_ms"),
+                        1000,
+                        "µs",
+                      )}
+                    >
+                      {f(o.duration_ms * 1000)} µs
+                    </FormulaValue>{" "}
+                    · {o.bound.toLowerCase()}
                   </text>
                 </g>
               );
@@ -175,7 +187,20 @@ export default function ModelGraph({
           <dl>
             <div>
               <dt>Time / layer / GPU</dt>
-              <dd>{f(found.duration_ms * 1000)} µs</dd>
+              <dd>
+                <FormulaValue
+                  calculation={scaled(
+                    operationCalculation(r, phase, found, "duration_ms"),
+                    1000,
+                    "µs",
+                  )}
+                  formulaKey={
+                    "graph." + phase + "." + found.id + ".duration_ms"
+                  }
+                >
+                  {f(found.duration_ms * 1000)} µs
+                </FormulaValue>
+              </dd>
             </div>
             <div>
               <dt>Timing source</dt>
@@ -183,15 +208,55 @@ export default function ModelGraph({
             </div>
             <div>
               <dt>Compute work</dt>
-              <dd>{f(found.flops / 1e9)} GFLOP</dd>
+              <dd>
+                <FormulaValue
+                  calculation={scaled(
+                    operationCalculation(r, phase, found, "flops"),
+                    1e-9,
+                    "GFLOP",
+                  )}
+                  formulaKey={"graph." + phase + "." + found.id + ".flops"}
+                >
+                  {f(found.flops / 1e9)} GFLOP
+                </FormulaValue>
+              </dd>
             </div>
             <div>
               <dt>HBM traffic</dt>
-              <dd>{f(found.hbm_bytes / 1e6)} MB</dd>
+              <dd>
+                <FormulaValue
+                  calculation={scaled(
+                    operationCalculation(r, phase, found, "hbm_bytes"),
+                    1e-6,
+                    "MB",
+                  )}
+                  formulaKey={"graph." + phase + "." + found.id + ".hbm_bytes"}
+                >
+                  {f(found.hbm_bytes / 1e6)} MB
+                </FormulaValue>
+              </dd>
             </div>
             <div>
               <dt>Arithmetic intensity</dt>
-              <dd>{f(found.arithmetic_intensity)} FLOP/B</dd>
+              <dd>
+                <FormulaValue
+                  calculation={scaled(
+                    operationCalculation(
+                      r,
+                      phase,
+                      found,
+                      "arithmetic_intensity",
+                    ),
+                    1,
+                    "FLOP/B",
+                  )}
+                  formulaKey={
+                    "graph." + phase + "." + found.id + ".arithmetic_intensity"
+                  }
+                >
+                  {f(found.arithmetic_intensity)} FLOP/B
+                </FormulaValue>
+              </dd>
             </div>
           </dl>
           <p>

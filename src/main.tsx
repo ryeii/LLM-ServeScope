@@ -35,6 +35,23 @@ import "./styles.css";
 import { api, STATIC_PAGES } from "./api";
 import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
+import FormulaValue from "./FormulaValue";
+import {
+  type Calculation,
+  metricCalculation,
+  memoryCalculation,
+  operationCalculation,
+  componentCalculation,
+  trafficCalculation,
+  intervalCalculation,
+  quantileCalculation,
+  sramCalculation,
+  scaled,
+  deltaCalculation,
+  nativeMetricCalculation,
+  calc,
+  v,
+} from "./calculations";
 type Obj = Record<string, any>;
 const colors = {
   Compute: "#35a58a",
@@ -193,13 +210,19 @@ function Kpi({
   note,
   icon,
   delta,
+  calculation,
+  metricKey,
+  deltaFormula,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   unit: string;
-  note: string;
+  note: React.ReactNode;
   icon: React.ReactNode;
   delta?: string;
+  calculation?: Calculation;
+  metricKey?: string;
+  deltaFormula?: Calculation;
 }) {
   return (
     <div className="kpi">
@@ -207,11 +230,24 @@ function Kpi({
         {label}
         {icon}
       </div>
-      <div className="kpi-value">
+      <FormulaValue
+        as="div"
+        className="kpi-value"
+        calculation={calculation}
+        formulaKey={metricKey && "metrics." + metricKey}
+      >
         {value}
         <small>{unit}</small>
+      </FormulaValue>
+      <div className="kpi-note">
+        {delta ? (
+          <FormulaValue calculation={deltaFormula}>
+            <b>{delta} vs pinned</b>
+          </FormulaValue>
+        ) : (
+          note
+        )}
       </div>
-      <div className="kpi-note">{delta ? <b>{delta} vs pinned</b> : note}</div>
     </div>
   );
 }
@@ -249,7 +285,12 @@ function Pipeline({ r }: { r: Obj }) {
             </span>
           </div>
           <b>
-            {r.memory.prefill.gpus}
+            <FormulaValue
+              calculation={memoryCalculation(r, "prefill", "gpus")}
+              formulaKey="memory.prefill.gpus"
+            >
+              {r.memory.prefill.gpus}
+            </FormulaValue>
             <small>GPUs</small>
           </b>
         </div>
@@ -283,7 +324,16 @@ function Pipeline({ r }: { r: Obj }) {
             </span>
           </div>
           <b>
-            {c.separated ? r.memory.decode.gpus : "↳"}
+            {c.separated ? (
+              <FormulaValue
+                calculation={memoryCalculation(r, "decode", "gpus")}
+                formulaKey="memory.decode.gpus"
+              >
+                {r.memory.decode.gpus}
+              </FormulaValue>
+            ) : (
+              "↳"
+            )}
             <small>{c.separated ? "GPUs" : "shared"}</small>
           </b>
         </div>
@@ -329,7 +379,10 @@ function MemoryChart({ r }: { r: Obj }) {
               ].map(([key, color]) => {
                 const width = m[key] * scale;
                 const el = (
-                  <rect
+                  <FormulaValue
+                    as="rect"
+                    calculation={memoryCalculation(r, ph, key)}
+                    formulaKey={"memory." + ph + "." + key}
                     key={key}
                     x={x}
                     y={y}
@@ -342,7 +395,22 @@ function MemoryChart({ r }: { r: Obj }) {
                 return el;
               })}
               <text x="488" y={y + 18} fill="#18394c" fontSize="12">
-                {fmt(m.total_GB)}/{fmt(m.capacity_GB)} GB
+                <FormulaValue
+                  as="tspan"
+                  calculation={memoryCalculation(r, ph, "total_GB")}
+                  formulaKey={"memory." + ph + ".total_GB"}
+                >
+                  {fmt(m.total_GB)}
+                </FormulaValue>
+                /
+                <FormulaValue
+                  as="tspan"
+                  calculation={memoryCalculation(r, ph, "capacity_GB")}
+                  formulaKey={"memory." + ph + ".capacity_GB"}
+                >
+                  {fmt(m.capacity_GB)}
+                </FormulaValue>{" "}
+                GB
               </text>
             </g>
           );
@@ -451,7 +519,12 @@ function Distribution({ requests }: { requests: Obj[] }) {
                 fill="#496577"
                 fontSize="10"
               >
-                {fmt(a.at(-1)!, 0)}
+                <FormulaValue
+                  as="tspan"
+                  calculation={quantileCalculation(requests, key, 1)}
+                >
+                  {fmt(a.at(-1)!, 0)}
+                </FormulaValue>
               </text>
             </g>
           );
@@ -472,7 +545,21 @@ function Distribution({ requests }: { requests: Obj[] }) {
               fontSize="10"
               fill="#84959e"
             >
-              {fmt(max * t, 0)} ms
+              <FormulaValue
+                as="tspan"
+                calculation={calc(
+                  "Latency axis tick",
+                  "Tick_ms = fraction × max(request latency)",
+                  [
+                    v("fraction", "Axis fraction", t),
+                    v("max_latency", "Maximum request latency", max, "ms"),
+                  ],
+                  max * t,
+                  "ms",
+                )}
+              >
+                {fmt(max * t, 0)} ms
+              </FormulaValue>
             </text>
           </g>
         ))}
@@ -549,7 +636,10 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
         <path d={`${path} L684,315 L64,315 Z`} fill="#35a58a" opacity=".04" />
         {ops.map((o: Obj) => (
           <g key={o.id}>
-            <circle
+            <FormulaValue
+              as="circle"
+              calculation={operationCalculation(r, phase, o, "achieved_tflops")}
+              formulaKey={"roofline." + phase + "." + o.id}
               cx={x(o.arithmetic_intensity)}
               cy={y(o.achieved_tflops)}
               r={focus === o.id ? 7 : 5}
@@ -557,12 +647,7 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
               stroke={focus === o.id ? "#234e5f" : "white"}
               strokeWidth={focus === o.id ? 1.5 : 2}
               opacity={focus && focus !== o.id ? 0.35 : 1}
-            >
-              <title>
-                {o.name}: {fmt(o.achieved_tflops, 3)} TFLOP/s;{" "}
-                {fmt(o.arithmetic_intensity)} FLOP/B
-              </title>
-            </circle>
+            ></FormulaValue>
           </g>
         ))}
         <text x="375" y="372" textAnchor="middle" fontSize="11" fill="#708694">
@@ -585,7 +670,27 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
           fontSize="10"
           fill="#218b71"
         >
-          Nominal tensor ceiling {fmt(peak)} TFLOP/s
+          Nominal tensor ceiling{" "}
+          <FormulaValue
+            as="tspan"
+            calculation={calc(
+              "Nominal tensor ceiling",
+              "Peak = precision_peak × clock_scale",
+              [
+                v(
+                  "precision_peak",
+                  "Configured dense peak",
+                  peak / hw.clock_scale,
+                  "TFLOP/s",
+                ),
+                v("clock_scale", "Compute clock scale", hw.clock_scale),
+              ],
+              peak,
+              "TFLOP/s",
+            )}
+          >
+            {fmt(peak)} TFLOP/s
+          </FormulaValue>
         </text>
       </svg>
       <div className="roofline-legend">
@@ -599,7 +704,11 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
           >
             <i style={{ background: colors[o.bound as keyof typeof colors] }} />
             {o.name}
-            <span>{fmt(o.achieved_tflops, 3)} TFLOP/s</span>
+            <FormulaValue
+              calculation={operationCalculation(r, phase, o, "achieved_tflops")}
+            >
+              {fmt(o.achieved_tflops, 3)} TFLOP/s
+            </FormulaValue>
           </button>
         ))}
       </div>
@@ -652,7 +761,10 @@ function BoxGraph({ r }: { r: Obj }) {
             </g>
           ))}
           {visible.map((e: Obj, i: number) => (
-            <rect
+            <FormulaValue
+              as="rect"
+              calculation={intervalCalculation(e)}
+              formulaKey={"timeline." + i}
               key={i}
               x={160 + (e.start_ms / max) * 800}
               y={30 + resources.indexOf(e.resource) * 46}
@@ -667,12 +779,7 @@ function BoxGraph({ r }: { r: Obj }) {
                     : "#ed9c55"
               }
               opacity=".8"
-            >
-              <title>
-                {e.phase} · batch {e.batch_id + 1} · {fmt(e.start_ms)}–
-                {fmt(e.end_ms)} ms · {e.batch_size} requests
-              </title>
-            </rect>
+            ></FormulaValue>
           ))}
           {[0, 0.25, 0.5, 0.75, 1].map((v) => (
             <text
@@ -683,7 +790,16 @@ function BoxGraph({ r }: { r: Obj }) {
               fill="#8b9ca6"
               fontSize="11"
             >
-              {fmt(v * max, 0)} ms
+              <FormulaValue
+                as="tspan"
+                calculation={scaled(
+                  metricCalculation(r, "elapsed_ms"),
+                  v,
+                  "ms",
+                )}
+              >
+                {fmt(v * max, 0)} ms
+              </FormulaValue>
             </text>
           ))}
         </svg>
@@ -1011,6 +1127,10 @@ function Native({
               <div className="native-metrics">
                 <Kpi
                   label="Output throughput"
+                  calculation={nativeMetricCalculation(
+                    r,
+                    "output_tokens_per_second",
+                  )}
                   value={fmt(
                     r.metrics?.output_tokens_per_second ??
                       r.metrics?.throughput_tps,
@@ -1021,6 +1141,7 @@ function Native({
                 />
                 <Kpi
                   label="Mean TTFT"
+                  calculation={nativeMetricCalculation(r, "mean_ttft_ms")}
                   value={fmt(
                     r.metrics?.mean_ttft_ms ?? r.metrics?.ttft_mean_ms,
                   )}
@@ -1030,6 +1151,7 @@ function Native({
                 />
                 <Kpi
                   label="Mean TPOT"
+                  calculation={nativeMetricCalculation(r, "mean_tpot_ms")}
                   value={fmt(
                     r.metrics?.mean_tpot_ms ?? r.metrics?.tpot_mean_ms,
                   )}
@@ -2043,17 +2165,54 @@ function App() {
                       label="Generation throughput"
                       value={fmt(metric!.throughput_tps, 0)}
                       unit="tok/s"
-                      note={`${fmt(metric!.tokens_per_gpu_s)} tok/s per GPU`}
+                      note={
+                        <>
+                          <FormulaValue
+                            calculation={metricCalculation(
+                              r,
+                              "tokens_per_gpu_s",
+                            )}
+                            formulaKey="metrics.tokens_per_gpu_s"
+                          >
+                            {fmt(metric!.tokens_per_gpu_s)}
+                          </FormulaValue>{" "}
+                          tok/s per GPU
+                        </>
+                      }
                       icon={<Activity size={15} />}
                       delta={delta("throughput_tps")}
+                      calculation={metricCalculation(r, "throughput_tps")}
+                      metricKey="throughput_tps"
+                      deltaFormula={
+                        pinned
+                          ? deltaCalculation(r, pinned, "throughput_tps")
+                          : undefined
+                      }
                     />
                     <Kpi
                       label="Time to first token"
                       value={fmt(metric!.ttft_mean_ms, 0)}
                       unit="ms"
-                      note={`P95 ${fmt(metric!.ttft_p95_ms, 0)} ms`}
+                      note={
+                        <>
+                          P95{" "}
+                          <FormulaValue
+                            calculation={metricCalculation(r, "ttft_p95_ms")}
+                            formulaKey="metrics.ttft_p95_ms"
+                          >
+                            {fmt(metric!.ttft_p95_ms, 0)} ms
+                          </FormulaValue>
+                        </>
+                      }
                       icon={<Clock3 size={15} />}
                       delta={delta("ttft_mean_ms")}
+                      calculation={metricCalculation(r, "ttft_mean_ms")}
+                      metricKey="ttft_mean_ms"
+                      deltaFormula={
+                        pinned
+                          ? deltaCalculation(r, pinned, "ttft_mean_ms")
+                          : undefined
+                      }
                     />
                     <Kpi
                       label="Time per output token"
@@ -2062,14 +2221,42 @@ function App() {
                       note="Mean inter-token interval"
                       icon={<Zap size={15} />}
                       delta={delta("tpot_mean_ms")}
+                      calculation={metricCalculation(r, "tpot_mean_ms")}
+                      metricKey="tpot_mean_ms"
+                      deltaFormula={
+                        pinned
+                          ? deltaCalculation(r, pinned, "tpot_mean_ms")
+                          : undefined
+                      }
                     />
                     <Kpi
                       label="Energy efficiency"
                       value={fmt(metric!.tokens_per_joule, 3)}
                       unit="tok/J"
-                      note={`${fmt(metric!.energy_j / 1000, 2)} kJ estimated GPU energy`}
+                      note={
+                        <>
+                          <FormulaValue
+                            calculation={scaled(
+                              metricCalculation(r, "energy_j"),
+                              0.001,
+                              "kJ",
+                            )}
+                            formulaKey="metrics.energy_j"
+                          >
+                            {fmt(metric!.energy_j / 1000, 2)} kJ
+                          </FormulaValue>{" "}
+                          estimated GPU energy
+                        </>
+                      }
                       icon={<Sparkles size={15} />}
                       delta={delta("tokens_per_joule")}
+                      calculation={metricCalculation(r, "tokens_per_joule")}
+                      metricKey="tokens_per_joule"
+                      deltaFormula={
+                        pinned
+                          ? deltaCalculation(r, pinned, "tokens_per_joule")
+                          : undefined
+                      }
                     />
                   </div>
                   <Pipeline r={r} />
@@ -2099,7 +2286,12 @@ function App() {
                                 />
                                 {key}
                               </span>
-                              <b>{fmt(value)} ms</b>
+                              <FormulaValue
+                                calculation={componentCalculation(r, key)}
+                                formulaKey={"components." + key}
+                              >
+                                <b>{fmt(value)} GPU·ms</b>
+                              </FormulaValue>
                             </div>
                             <div className="work-track">
                               <i
@@ -2117,12 +2309,20 @@ function App() {
                         <CircleHelp size={15} />
                         <p>
                           Decode KV reads served from ideal SRAM:{" "}
-                          <strong>
+                          <FormulaValue
+                            as="strong"
+                            calculation={scaled(
+                              sramCalculation(r, "decode"),
+                              100,
+                              "%",
+                            )}
+                            formulaKey="decode.sram_hit_fraction"
+                          >
                             {fmt(
                               r.phases.decode.detail.sram_hit_fraction * 100,
                             )}
                             %
-                          </strong>
+                          </FormulaValue>
                           . Remaining KV reads spill to HBM.
                         </p>
                       </div>
@@ -2130,31 +2330,79 @@ function App() {
                   </div>
                   <div className="economics-grid">
                     {[
-                      [
-                        "GPU pool",
-                        `${metric!.gpu_count} GPUs`,
-                        `${fmt(metric!.gpu_utilization * 100)}% resource occupancy`,
-                      ],
-                      [
-                        "Serving cost",
-                        `$${fmt(metric!.cost_per_million_tokens, 2)}`,
-                        "per million output tokens · GPU rent only",
-                      ],
-                      [
-                        "P95 request latency",
-                        `${fmt(metric!.latency_p95_ms / 1000, 2)} s`,
-                        `${r.requests.length} requests · ${fmt(metric!.elapsed_ms / 1000, 2)} s simulated`,
-                      ],
-                      [
-                        "System traffic",
-                        `${fmt(r.traffic.hbm_bytes / 1e9)} GB`,
-                        "HBM traffic · all GPUs, all requests",
-                      ],
-                    ].map(([a, b, c]) => (
-                      <div className="mini-card" key={a}>
-                        <span>{a}</span>
-                        <strong>{b}</strong>
-                        <small>{c}</small>
+                      {
+                        label: "GPU pool",
+                        key: "gpu_count",
+                        value: `${metric!.gpu_count} GPUs`,
+                        note: (
+                          <>
+                            <FormulaValue
+                              calculation={scaled(
+                                metricCalculation(r, "gpu_utilization"),
+                                100,
+                                "%",
+                              )}
+                              formulaKey="metrics.gpu_utilization"
+                            >
+                              {fmt(metric!.gpu_utilization * 100)}%
+                            </FormulaValue>{" "}
+                            resource occupancy
+                          </>
+                        ),
+                      },
+                      {
+                        label: "Serving cost",
+                        key: "cost_per_million_tokens",
+                        value: `$${fmt(metric!.cost_per_million_tokens, 2)}`,
+                        note: <>per million output tokens · GPU rent only</>,
+                      },
+                      {
+                        label: "P95 request latency",
+                        key: "latency_p95_ms",
+                        value: `${fmt(metric!.latency_p95_ms / 1000, 2)} s`,
+                        note: (
+                          <>
+                            {r.requests.length} requests ·{" "}
+                            <FormulaValue
+                              calculation={scaled(
+                                metricCalculation(r, "elapsed_ms"),
+                                0.001,
+                                "s",
+                              )}
+                              formulaKey="metrics.elapsed_ms"
+                            >
+                              {fmt(metric!.elapsed_ms / 1000, 2)} s
+                            </FormulaValue>{" "}
+                            simulated
+                          </>
+                        ),
+                      },
+                      {
+                        label: "System traffic",
+                        key: "hbm_bytes",
+                        value: `${fmt(r.traffic.hbm_bytes / 1e9)} GB`,
+                        note: <>HBM traffic · all GPUs, all requests</>,
+                      },
+                    ].map(({ label, key, value, note }) => (
+                      <div className="mini-card" key={key}>
+                        <span>{label}</span>
+                        <FormulaValue
+                          as="strong"
+                          calculation={
+                            key === "hbm_bytes"
+                              ? scaled(trafficCalculation(r, key), 1e-9, "GB")
+                              : key === "latency_p95_ms"
+                                ? scaled(metricCalculation(r, key), 0.001, "s")
+                                : metricCalculation(r, key)
+                          }
+                          formulaKey={
+                            (key === "hbm_bytes" ? "traffic." : "metrics.") +
+                            key
+                          }
+                        >
+                          {value}
+                        </FormulaValue>
+                        <small>{note}</small>
                       </div>
                     ))}
                   </div>
@@ -2200,7 +2448,30 @@ function App() {
                       <Cpu size={21} />
                       <h3>Compute ceiling</h3>
                       <p>
-                        {fmt(r.phases[phase].detail.peak_tflops)} dense TFLOPS
+                        <FormulaValue
+                          calculation={calc(
+                            "Nominal tensor ceiling",
+                            "Peak = precision_peak × clock_scale",
+                            [
+                              v(
+                                "clock_scale",
+                                "Compute clock scale",
+                                r.config[phase].hardware.clock_scale,
+                              ),
+                              v(
+                                "precision_peak",
+                                "Configured precision peak",
+                                r.phases[phase].detail.peak_tflops /
+                                  r.config[phase].hardware.clock_scale,
+                                "TFLOP/s",
+                              ),
+                            ],
+                            r.phases[phase].detail.peak_tflops,
+                            "TFLOP/s",
+                          )}
+                        >
+                          {fmt(r.phases[phase].detail.peak_tflops)} dense TFLOPS
+                        </FormulaValue>
                         at {r.config.precision.toUpperCase()}. SM count, tile
                         width and launch overhead affect operation attainment.
                       </p>
@@ -2210,8 +2481,48 @@ function App() {
                       <h3>Collective fabric</h3>
                       <p>
                         {r.phases[phase].detail.fabric.name}:{" "}
-                        {fmt(r.phases[phase].detail.fabric.bw)} GB/s before
-                        collective efficiency. Crossing a hardware domain
+                        <FormulaValue
+                          calculation={calc(
+                            "Limiting fabric bandwidth",
+                            "BW = limiting configured link bandwidth for this fabric tier",
+                            [
+                              v(
+                                "fabric",
+                                "Selected fabric",
+                                r.phases[phase].detail.fabric.name,
+                              ),
+                              v(
+                                "intra",
+                                "Intra-node link",
+                                r.config[phase].hardware.intra_node_bw_GBps,
+                                "GB/s",
+                              ),
+                              v(
+                                "same_rail",
+                                "Same-rail link",
+                                r.config[phase].hardware.same_rail_bw_GBps,
+                                "GB/s",
+                              ),
+                              v(
+                                "scale_out",
+                                "Scale-out link",
+                                r.config[phase].hardware.scale_out_bw_GBps,
+                                "GB/s",
+                              ),
+                              v(
+                                "spine",
+                                "Spine link",
+                                r.config.network.spine_bw_GBps,
+                                "GB/s",
+                              ),
+                            ],
+                            r.phases[phase].detail.fabric.bw,
+                            "GB/s",
+                          )}
+                        >
+                          {fmt(r.phases[phase].detail.fabric.bw)} GB/s
+                        </FormulaValue>{" "}
+                        before collective efficiency. Crossing a hardware domain
                         selects the slower tier.
                       </p>
                     </div>
@@ -2284,11 +2595,81 @@ function App() {
                               <small>{o.phase.toUpperCase()}</small>
                               <strong>{o.name}</strong>
                             </td>
-                            <td>{fmt(o.compute_ms * 1000, 2)} µs</td>
-                            <td>{fmt(o.memory_ms * 1000, 2)} µs</td>
-                            <td>{fmt(o.network_ms * 1000, 2)} µs</td>
                             <td>
-                              <b>{fmt(o.duration_ms * 1000, 2)} µs</b>
+                              <FormulaValue
+                                calculation={scaled(
+                                  operationCalculation(
+                                    r,
+                                    o.phase,
+                                    o,
+                                    "compute_ms",
+                                  ),
+                                  1000,
+                                  "µs",
+                                )}
+                                formulaKey={
+                                  "op." + o.phase + "." + o.id + ".compute_ms"
+                                }
+                              >
+                                {fmt(o.compute_ms * 1000, 2)} µs
+                              </FormulaValue>
+                            </td>
+                            <td>
+                              <FormulaValue
+                                calculation={scaled(
+                                  operationCalculation(
+                                    r,
+                                    o.phase,
+                                    o,
+                                    "memory_ms",
+                                  ),
+                                  1000,
+                                  "µs",
+                                )}
+                                formulaKey={
+                                  "op." + o.phase + "." + o.id + ".memory_ms"
+                                }
+                              >
+                                {fmt(o.memory_ms * 1000, 2)} µs
+                              </FormulaValue>
+                            </td>
+                            <td>
+                              <FormulaValue
+                                calculation={scaled(
+                                  operationCalculation(
+                                    r,
+                                    o.phase,
+                                    o,
+                                    "network_ms",
+                                  ),
+                                  1000,
+                                  "µs",
+                                )}
+                                formulaKey={
+                                  "op." + o.phase + "." + o.id + ".network_ms"
+                                }
+                              >
+                                {fmt(o.network_ms * 1000, 2)} µs
+                              </FormulaValue>
+                            </td>
+                            <td>
+                              <FormulaValue
+                                calculation={scaled(
+                                  operationCalculation(
+                                    r,
+                                    o.phase,
+                                    o,
+                                    "duration_ms",
+                                  ),
+                                  1000,
+                                  "µs",
+                                )}
+                                formulaKey={
+                                  "op." + o.phase + "." + o.id + ".duration_ms"
+                                }
+                              >
+                                <b>{fmt(o.duration_ms * 1000, 2)} µs</b>
+                              </FormulaValue>
                             </td>
                             <td>
                               <span

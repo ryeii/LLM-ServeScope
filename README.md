@@ -55,7 +55,10 @@ collectives and the configured network hierarchy.
 | Configuration | Complete resolved inputs, source revisions, assumptions and SHA-256 fingerprint                                                                    |
 
 Pin a baseline, edit a scenario and run again to compare metrics. Export/import
-scenario JSON, export complete results and download SVG charts. Changed inputs
+scenario JSON, export complete results and download SVG charts. Hover or keyboard-focus
+a result number to inspect its equation, labeled values, units and fitted coefficients.
+Touch users can tap a value; press Esc or tap outside to close. Explanations use the
+completed run, so pending scenario edits do not change the displayed calculation. Changed inputs
 are applied only when **Run scenario** is selected.
 
 ## Fitted GPU service-time model

@@ -2490,3 +2490,28 @@ footer {
 .calibration-status span {
   color: #3d5750;
 }
+
+/* Equations live in a portal so table/chart overflow cannot clip them. */
+.formula-value { cursor: help; text-decoration: underline dotted rgba(58,94,111,.38); text-underline-offset: .2em; }
+.formula-value:focus-visible { outline: 2px solid #258d79; outline-offset: 4px; border-radius: 3px; }
+.formula-tooltip { position: fixed; z-index: 10000; width: min(470px, calc(100vw - 24px)); max-height: min(570px, calc(100dvh - 24px)); overflow: auto; box-sizing: border-box; background: #fff; color: #213c4d; border: 1px solid #b6cbd4; border-radius: 12px; box-shadow: 0 12px 44px #163c4c30; padding: 17px; text-align: left; font-size: 13px; line-height: 1.45; font-weight: 400; }
+.formula-tooltip-heading { font-size: 15px; font-weight: 700; color: #173a4c; padding-bottom: 11px; }
+.formula-tooltip-heading small { display: block; font-size: 12px; font-weight: 400; color: #566d79; margin-top: 3px; }
+.formula-tooltip pre { background: #edf5f4; border: 1px solid #d7e7e3; padding: 11px; border-radius: 7px; color: #164c42; font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 10px; }
+.formula-tooltip dl { margin: 0; }
+.formula-tooltip dl > div { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px; padding: 7px 0; border-bottom: 1px solid #eaf0f2; }
+.formula-tooltip dt { min-width: 0; }
+.formula-tooltip dt code { font-size: 12px; color: #225f51; font-weight: 700; }
+.formula-tooltip dt span { display: block; color: #526b78; font-size: 12px; }
+.formula-tooltip dd { margin: 0; max-width: 185px; overflow-wrap: anywhere; text-align: right; font-variant-numeric: tabular-nums; }
+.formula-tooltip dd small { display: block; font-size: 11px; color: #637c87; }
+.formula-result { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0 5px; align-items: baseline; }
+.formula-result strong { font-size: 15px; color: #17644f; }
+.formula-result small { font-size: 12px; font-weight: 500; }
+.formula-tooltip p { color: #526b78; font-size: 12px; line-height: 1.5; margin: 9px 0 0; }
+.formula-tooltip-hint { margin-top: 10px; color: #6d828d; font-size: 11px; }
+
+.formula-tooltip { display: flex; flex-direction: column; overflow: hidden; }
+.formula-tooltip-heading, .formula-tooltip pre, .formula-result, .formula-tooltip-hint { flex-shrink: 0; }
+.formula-tooltip-details { min-height: 0; overflow: auto; overscroll-behavior: contain; padding-right: 4px; }
+.formula-result { border-top: 1px solid #dbe7e7; margin-top: 8px; background: white; }

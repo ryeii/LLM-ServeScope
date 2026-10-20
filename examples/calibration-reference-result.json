@@ -266,7 +266,7 @@
     ],
     "dataset": {
       "revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-      "data_sha256": "0ccda728299d2ddb9601f76941d7f2843fe95daa1622e482e316422eca607fd9",
+      "data_sha256": "a3df044682a2944ee4f98eea76a31646b2993c4737c60df50daa0d7db6f4ca70",
       "profiles": [
         {
           "id": "kaist:rtx4090:llama8:tp1",
@@ -1203,6 +1203,8 @@
   },
   "memory": {
     "prefill": {
+      "resident_requests": 4,
+      "representative_batch": 4,
       "weights_GB": 16.060522496,
       "kv_GB": 0.07077888,
       "activation_GB": 0.033554432,
@@ -1215,6 +1217,8 @@
       "gpus": 1
     },
     "decode": {
+      "resident_requests": 4,
+      "representative_batch": 4,
       "weights_GB": 16.060522496,
       "kv_GB": 0.07077888,
       "activation_GB": 0.000262144,
@@ -1237,6 +1241,52 @@
     "Memory": 97.88434972458691,
     "Network": 0.0,
     "Launch": 5.759999999999999
+  },
+  "accounting": {
+    "busy_ms": {
+      "shared:0:0": 104.58266973661271
+    },
+    "phase_traffic": {
+      "prefill": {
+        "tensor_flops": 7168342360064.0,
+        "vector_flops": 2248146944.0,
+        "hbm_bytes": 19774570496.0,
+        "network_bytes": 0.0
+      },
+      "decode": {
+        "tensor_flops": 422198640640.0,
+        "vector_flops": 122945536.0,
+        "hbm_bytes": 105329459200.0,
+        "network_bytes": 0.0
+      }
+    },
+    "energy_terms": [
+      {
+        "phase": "prefill",
+        "gpus": 1,
+        "weighted_busy_ms": 104.58266973661271,
+        "idle_watts": 90.0,
+        "active_watts": 523.5,
+        "tdp_watts": 600.0,
+        "mode": "activity",
+        "dynamic_j": 45.33658733082161,
+        "counters": {
+          "tensor_flops": 7168342360064.0,
+          "vector_flops": 2248146944.0,
+          "hbm_bytes": 19774570496.0,
+          "network_bytes": 0.0
+        },
+        "coefficients": {
+          "pj_per_flop": 0.0,
+          "pj_per_vop": 0.0,
+          "pj_per_mem_byte": 0.0,
+          "pj_per_net_byte": 0.0
+        },
+        "hourly_cost": 2.75
+      }
+    ],
+    "shared_parameters": 2393116672,
+    "expert_parameters": 5637144576
   },
   "requests": [
     {
@@ -1378,6 +1428,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 4482.109710320077,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1402,6 +1472,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 83.88608,
+          "fit_base_ns": 6513.727226222025,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1426,6 +1511,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1450,6 +1550,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1499,6 +1614,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1523,6 +1658,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1547,6 +1697,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1571,6 +1736,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1620,6 +1800,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1644,6 +1844,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1668,6 +1883,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1692,6 +1922,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1741,6 +1986,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1765,6 +2030,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1789,6 +2069,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1813,6 +2108,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1862,6 +2172,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1886,6 +2216,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1910,6 +2255,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -1934,6 +2294,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -1983,6 +2358,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2007,6 +2402,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2031,6 +2441,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2055,6 +2480,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -2104,6 +2544,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2128,6 +2588,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2152,6 +2627,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2176,6 +2666,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -2225,6 +2730,26 @@
           "fit_family": "F9",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F9",
+            "branches": {
+              "gather": [
+                3108.919086546675,
+                0.2613948187068659
+              ],
+              "small_index": [
+                2996.5061566985287,
+                16.87574592258743
+              ]
+            },
+            "threshold_tokens": 16
+          },
+          "fit_compute_floor_ns": 0.0,
+          "fit_base_ns": 3689.113135073724,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2249,6 +2774,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2407.2191993545616,
+              48.95339044174508,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2439.3012933144637,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2273,6 +2813,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              401.9283936347901,
+              0.267172098653013,
+              1.0605906616275276
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 8355.25369383698,
+          "fit_base_ns": 700842.220933072,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -2297,6 +2852,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              26246.378315450464,
+              81.65733912880553,
+              0.0
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 20.52096,
+          "fit_base_ns": 27922.065305419117,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ]
@@ -2340,6 +2910,21 @@
       "fit_family": "F4",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F4",
+        "coefficients": [
+          2055.711705890558,
+          0.5700254512388988,
+          0.08089062493617293
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 83.88608,
+      "fit_base_ns": 5476.850982572357,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2383,6 +2968,21 @@
       "fit_family": "F1",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F1",
+        "coefficients": [
+          6696.998233706274,
+          1.0456160927493858,
+          0.8994166180138221
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 51232.21426640159,
+      "fit_base_ns": 94505.20153857076,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2426,6 +3026,21 @@
       "fit_family": "F0",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F0",
+        "coefficients": [
+          2312.4455405953327,
+          0.0,
+          0.3850926237993936
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 100.66329599999999,
+      "fit_base_ns": 4839.979861408257,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2469,6 +3084,21 @@
       "fit_family": "F4",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F4",
+        "coefficients": [
+          5801.258431743033,
+          0.9000339062426068,
+          1.9908690615314821
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 1075.6763737574552,
+      "fit_base_ns": 20616.855626338707,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2512,6 +3142,22 @@
       "fit_family": "F5",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F5",
+        "coefficients": [
+          4369.933818450539,
+          0.2822600430436685,
+          0.9696964666636709,
+          12.258989039896594
+        ],
+        "scale": 8.0
+      },
+      "fit_compute_floor_ns": 34154.80951093439,
+      "fit_base_ns": 62714.678891921,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2555,6 +3201,21 @@
       "fit_family": "F4",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F4",
+        "coefficients": [
+          2055.711705890558,
+          0.5700254512388988,
+          0.08089062493617293
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 83.88608,
+      "fit_base_ns": 5476.850982572357,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2598,6 +3259,21 @@
       "fit_family": "F3",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F3",
+        "coefficients": [
+          16273.222541135017,
+          1.2151445012877242,
+          1.0354129414420958
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 239083.66657654074,
+      "fit_base_ns": 354902.3273598986,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2641,6 +3317,22 @@
       "fit_family": "F7",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F7",
+        "coefficients": [
+          3366.8510468501336,
+          6.952850122985806e-11,
+          3.120939890875206e-12,
+          1.9842127050106029
+        ],
+        "scale": 2.0
+      },
+      "fit_compute_floor_ns": 293.60128000000003,
+      "fit_base_ns": 11075.928414886128,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2684,6 +3376,22 @@
       "fit_family": "F5",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F5",
+        "coefficients": [
+          12612.05219663606,
+          0.29473493895133474,
+          0.9092974918564141,
+          38.16059719236054
+        ],
+        "scale": 32.0
+      },
+      "fit_compute_floor_ns": 119541.83328827037,
+      "fit_base_ns": 191648.7225086559,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 512,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "prefill",
       "batch": 4,
@@ -2727,6 +3435,21 @@
       "fit_family": "F4",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F4",
+        "coefficients": [
+          2055.711705890558,
+          0.5700254512388988,
+          0.08089062493617293
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 0.65536,
+      "fit_base_ns": 2368.542973107231,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -2770,6 +3493,21 @@
       "fit_family": "F1",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F1",
+        "coefficients": [
+          6696.998233706274,
+          1.0456160927493858,
+          0.8994166180138221
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 400.25167395626244,
+      "fit_base_ns": 35497.33108038383,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -2813,6 +3551,21 @@
       "fit_family": "F0",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F0",
+        "coefficients": [
+          2312.4455405953327,
+          0.0,
+          0.3850926237993936
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 0.7864319999999999,
+      "fit_base_ns": 2332.1919024766835,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -2856,6 +3609,21 @@
       "fit_family": "F4",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F4",
+        "coefficients": [
+          11822.651912070478,
+          2.631190908454086,
+          1.080078756454971
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 17.1331689860835,
+      "fit_base_ns": 13389.746299277685,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -2899,6 +3667,22 @@
       "fit_family": "F5",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F5",
+        "coefficients": [
+          4369.933818450539,
+          0.2822600430436685,
+          0.9696964666636709,
+          12.258989039896594
+        ],
+        "scale": 8.0
+      },
+      "fit_compute_floor_ns": 266.83444930417494,
+      "fit_base_ns": 25009.44304974436,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -2942,6 +3726,21 @@
       "fit_family": "F4",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F4",
+        "coefficients": [
+          2055.711705890558,
+          0.5700254512388988,
+          0.08089062493617293
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 0.65536,
+      "fit_base_ns": 2368.542973107231,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -2985,6 +3784,21 @@
       "fit_family": "F3",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F3",
+        "coefficients": [
+          16273.222541135017,
+          1.2151445012877242,
+          1.0354129414420958
+        ],
+        "scale": 1.0
+      },
+      "fit_compute_floor_ns": 1867.8411451292245,
+      "fit_base_ns": 168687.64400994172,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -3028,6 +3842,22 @@
       "fit_family": "F7",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F7",
+        "coefficients": [
+          3366.8510468501336,
+          6.952850122985806e-11,
+          3.120939890875206e-12,
+          1.9842127050106029
+        ],
+        "scale": 2.0
+      },
+      "fit_compute_floor_ns": 2.2937600000000002,
+      "fit_base_ns": 3367.3980659228096,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -3071,6 +3901,22 @@
       "fit_family": "F5",
       "fit_cohort": "kaist",
       "fit_fallback_reason": null,
+      "fit_parameters": {
+        "family": "F5",
+        "coefficients": [
+          12612.05219663606,
+          0.29473493895133474,
+          0.9092974918564141,
+          38.16059719236054
+        ],
+        "scale": 32.0
+      },
+      "fit_compute_floor_ns": 933.9205725646123,
+      "fit_base_ns": 80269.9054325748,
+      "fit_engine_multiplier": 1.0,
+      "fit_engine_offset_ns": 0.0,
+      "fit_extra_launch_ns": 0.0,
+      "fit_token_count": 4,
       "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
       "phase": "decode",
       "batch": 4,
@@ -3118,6 +3964,21 @@
           "fit_family": "F4",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F4",
+            "coefficients": [
+              2055.711705890558,
+              0.5700254512388988,
+              0.08089062493617293
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 83.88608,
+          "fit_base_ns": 5476.850982572357,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3157,6 +4018,21 @@
           "fit_family": "F1",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F1",
+            "coefficients": [
+              6696.998233706274,
+              1.0456160927493858,
+              0.8994166180138221
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 51232.21426640159,
+          "fit_base_ns": 94505.20153857076,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3196,6 +4072,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2312.4455405953327,
+              0.0,
+              0.3850926237993936
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 100.66329599999999,
+          "fit_base_ns": 4839.979861408257,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3235,6 +4126,21 @@
           "fit_family": "F4",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F4",
+            "coefficients": [
+              5801.258431743033,
+              0.9000339062426068,
+              1.9908690615314821
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 1075.6763737574552,
+          "fit_base_ns": 20616.855626338707,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3274,6 +4180,22 @@
           "fit_family": "F5",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F5",
+            "coefficients": [
+              4369.933818450539,
+              0.2822600430436685,
+              0.9696964666636709,
+              12.258989039896594
+            ],
+            "scale": 8.0
+          },
+          "fit_compute_floor_ns": 34154.80951093439,
+          "fit_base_ns": 62714.678891921,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3313,6 +4235,21 @@
           "fit_family": "F4",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F4",
+            "coefficients": [
+              2055.711705890558,
+              0.5700254512388988,
+              0.08089062493617293
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 83.88608,
+          "fit_base_ns": 5476.850982572357,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3352,6 +4289,21 @@
           "fit_family": "F3",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F3",
+            "coefficients": [
+              16273.222541135017,
+              1.2151445012877242,
+              1.0354129414420958
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 239083.66657654074,
+          "fit_base_ns": 354902.3273598986,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3391,6 +4343,22 @@
           "fit_family": "F7",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F7",
+            "coefficients": [
+              3366.8510468501336,
+              6.952850122985806e-11,
+              3.120939890875206e-12,
+              1.9842127050106029
+            ],
+            "scale": 2.0
+          },
+          "fit_compute_floor_ns": 293.60128000000003,
+          "fit_base_ns": 11075.928414886128,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3430,6 +4398,22 @@
           "fit_family": "F5",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F5",
+            "coefficients": [
+              12612.05219663606,
+              0.29473493895133474,
+              0.9092974918564141,
+              38.16059719236054
+            ],
+            "scale": 32.0
+          },
+          "fit_compute_floor_ns": 119541.83328827037,
+          "fit_base_ns": 191648.7225086559,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 512,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ],
@@ -3484,6 +4468,21 @@
           "fit_family": "F4",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F4",
+            "coefficients": [
+              2055.711705890558,
+              0.5700254512388988,
+              0.08089062493617293
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2368.542973107231,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3523,6 +4522,21 @@
           "fit_family": "F1",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F1",
+            "coefficients": [
+              6696.998233706274,
+              1.0456160927493858,
+              0.8994166180138221
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 400.25167395626244,
+          "fit_base_ns": 35497.33108038383,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3562,6 +4576,21 @@
           "fit_family": "F0",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F0",
+            "coefficients": [
+              2312.4455405953327,
+              0.0,
+              0.3850926237993936
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.7864319999999999,
+          "fit_base_ns": 2332.1919024766835,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3601,6 +4630,21 @@
           "fit_family": "F4",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F4",
+            "coefficients": [
+              11822.651912070478,
+              2.631190908454086,
+              1.080078756454971
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 17.1331689860835,
+          "fit_base_ns": 13389.746299277685,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3640,6 +4684,22 @@
           "fit_family": "F5",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F5",
+            "coefficients": [
+              4369.933818450539,
+              0.2822600430436685,
+              0.9696964666636709,
+              12.258989039896594
+            ],
+            "scale": 8.0
+          },
+          "fit_compute_floor_ns": 266.83444930417494,
+          "fit_base_ns": 25009.44304974436,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3679,6 +4739,21 @@
           "fit_family": "F4",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F4",
+            "coefficients": [
+              2055.711705890558,
+              0.5700254512388988,
+              0.08089062493617293
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 0.65536,
+          "fit_base_ns": 2368.542973107231,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3718,6 +4793,21 @@
           "fit_family": "F3",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F3",
+            "coefficients": [
+              16273.222541135017,
+              1.2151445012877242,
+              1.0354129414420958
+            ],
+            "scale": 1.0
+          },
+          "fit_compute_floor_ns": 1867.8411451292245,
+          "fit_base_ns": 168687.64400994172,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3757,6 +4847,22 @@
           "fit_family": "F7",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F7",
+            "coefficients": [
+              3366.8510468501336,
+              6.952850122985806e-11,
+              3.120939890875206e-12,
+              1.9842127050106029
+            ],
+            "scale": 2.0
+          },
+          "fit_compute_floor_ns": 2.2937600000000002,
+          "fit_base_ns": 3367.3980659228096,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         },
         {
@@ -3796,6 +4902,22 @@
           "fit_family": "F5",
           "fit_cohort": "kaist",
           "fit_fallback_reason": null,
+          "fit_parameters": {
+            "family": "F5",
+            "coefficients": [
+              12612.05219663606,
+              0.29473493895133474,
+              0.9092974918564141,
+              38.16059719236054
+            ],
+            "scale": 32.0
+          },
+          "fit_compute_floor_ns": 933.9205725646123,
+          "fit_base_ns": 80269.9054325748,
+          "fit_engine_multiplier": 1.0,
+          "fit_engine_offset_ns": 0.0,
+          "fit_extra_launch_ns": 0.0,
+          "fit_token_count": 4,
           "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
         }
       ],
