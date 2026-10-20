@@ -2468,3 +2468,25 @@ footer {
   object-fit: contain;
   flex-shrink: 0;
 }
+
+/* Operator calibration status accompanies the computed result, not draft inputs. */
+.calibration-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 18px;
+  padding: 13px 17px;
+  margin-bottom: 18px;
+  border: 1px solid #cfddd9;
+  border-radius: 10px;
+  background: #f2f8f6;
+  color: #284c45;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.calibration-status strong {
+  font-size: 15px;
+}
+.calibration-status span {
+  color: #3d5750;
+}

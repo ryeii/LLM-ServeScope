@@ -483,8 +483,8 @@ function Distribution({ requests }: { requests: Obj[] }) {
 function Roofline({ r, phase }: { r: Obj; phase: string }) {
   const [focus, setFocus] = useState<string | null>(null);
   const hw = r.config[phase].hardware;
-  const peak = r.phases[phase].detail.peak_tflops * hw.compute_efficiency;
-  const bw = hw.dram_bandwidth_TBps * hw.memory_efficiency;
+  const peak = r.phases[phase].detail.peak_tflops;
+  const bw = hw.dram_bandwidth_TBps;
   const x = (v: number) => 64 + ((Math.log10(Math.max(0.1, v)) + 1) / 6) * 620;
   const y = (v: number) =>
     315 - ((Math.log10(Math.max(0.001, v)) + 3) / 7) * 275;
@@ -497,7 +497,7 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
     <Chart
       id="roofline-chart"
       title={`${phase === "prefill" ? "Prefill" : "Decode"} performance roofline`}
-      note="Per-GPU operation estimates; decimal TFLOP/s and bytes"
+      note="Per-GPU operation timing from the selected model; nominal hardware roofline"
     >
       <svg
         viewBox="0 0 740 380"
@@ -585,7 +585,7 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
           fontSize="10"
           fill="#218b71"
         >
-          Effective tensor ceiling {fmt(peak)} TFLOP/s
+          Nominal tensor ceiling {fmt(peak)} TFLOP/s
         </text>
       </svg>
       <div className="roofline-legend">
@@ -1528,6 +1528,21 @@ function App() {
                 <option value="eager">Eager execution · conservative</option>
               </select>
             </label>
+            <label className="field vertical">
+              <span>Operator timing model</span>
+              <select
+                aria-label="Operator timing model"
+                value={config.timing_mode || "calibrated"}
+                onChange={(e) => update("timing_mode", e.target.value)}
+              >
+                <option value="calibrated">
+                  Fitted GPU function · KAIST training data
+                </option>
+                <option value="roofline">
+                  Original roofline · uncalibrated
+                </option>
+              </select>
+            </label>
             {config.model_id === "custom" && (
               <details className="model-geometry" open>
                 <summary>
@@ -1706,7 +1721,9 @@ function App() {
               <span>
                 {selectedPool.hardware_modified
                   ? "Edited scenario inputs"
-                  : "Peak-spec scenario · uncalibrated"}
+                  : config.timing_mode === "roofline"
+                    ? "Peak-spec scenario · uncalibrated"
+                    : "Fitted GPU model enabled"}
               </span>
               {h.source_url && (
                 <a href={h.source_url} target="_blank" rel="noreferrer">
@@ -1998,6 +2015,20 @@ function App() {
               </div>
               {tab === "overview" && (
                 <>
+                  <div
+                    className="calibration-status"
+                    aria-label="Timing calibration"
+                  >
+                    <strong>
+                      {r.calibration?.summary ||
+                        "Original roofline · uncalibrated"}
+                    </strong>
+                    <span>
+                      {r.config.timing_mode === "calibrated"
+                        ? "All GPU operator times use the fitted function. Profiled configurations are predictions too; serving, network and energy remain modeled."
+                        : "GPU operator service times use ideal compute/memory overlap and assumed efficiencies."}
+                    </span>
+                  </div>
                   <div className="kpi-grid">
                     <Kpi
                       label="Generation throughput"
@@ -2040,8 +2071,8 @@ function App() {
                         <div>
                           <h3>Resource service demand</h3>
                           <p>
-                            Accumulated resource work · compute and memory
-                            overlap
+                            Nominal resource-work estimates; calibrated service
+                            timing is separate
                           </p>
                         </div>
                         <Activity size={16} />
@@ -2124,10 +2155,10 @@ function App() {
                       <strong>
                         Behavioral simulation, not mechanistic simulation.
                       </strong>{" "}
-                      Hardware presets and engine efficiency are scenario
-                      assumptions. Use the native LLMServingSim tab for
-                      profile-driven reference runs, then calibrate the
-                      behavioral model against measurements.
+                      One fitted GPU function predicts all configurations. KAIST
+                      profiles are offline training and validation data.
+                      Extrapolation errors are reported separately; energy
+                      remains an estimate.
                     </p>
                   </div>
                 </>
@@ -2201,6 +2232,8 @@ function App() {
                           "network_ms",
                           "duration_ms",
                           "bound",
+                          "timing_source",
+                          "fit_key",
                         ];
                         download(
                           "layer-estimates.csv",
@@ -2228,7 +2261,8 @@ function App() {
                             "HBM",
                             "Network",
                             "Service time",
-                            "Limit",
+                            "Analytical limit",
+                            "Timing source",
                           ].map((s) => (
                             <th key={s}>{s}</th>
                           ))}
@@ -2253,6 +2287,9 @@ function App() {
                               >
                                 {o.bound}
                               </span>
+                            </td>
+                            <td title={o.fit_key || "Analytical timing"}>
+                              {o.timing_source}
                             </td>
                           </tr>
                         ))}
@@ -2318,6 +2355,20 @@ function App() {
                           <dt>Timing engine</dt>
                           <dd>{r.engine}</dd>
                         </div>
+                        <div>
+                          <dt>GPU operator timing</dt>
+                          <dd>{r.calibration?.summary}</dd>
+                        </div>
+                        {r.calibration?.dataset && (
+                          <div>
+                            <dt>Calibration data fingerprint</dt>
+                            <dd>
+                              <code>
+                                {r.calibration.dataset.data_sha256.slice(0, 16)}
+                              </code>
+                            </dd>
+                          </div>
+                        )}
                         <div>
                           <dt>Architecture source</dt>
                           <dd>{r.model.source}</dd>
@@ -2391,7 +2442,11 @@ function App() {
                 height="18"
               />
               LLM-ServeScope ·
-              <a href="https://github.com/ryeii" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/ryeii"
+                target="_blank"
+                rel="noreferrer"
+              >
                 ryeii (Ryan Z An)
               </a>
             </span>
@@ -2445,28 +2500,37 @@ function App() {
             </p>
             <h3>Behavioral scenario model</h3>
             <p>
-              Our closed-form operation model uses max(compute, memory), adds
-              network and launch costs, then runs FIFO microbatches through
-              SimPy pipeline resources. It covers the six output families in the
-              supplied specification. It is an independently implemented
-              extension, not a reimplementation of KAIST’s measured clocks.
+              A single nonnegative GPU service-time function is fitted offline
+              to KAIST's operator profiles. It takes hardware rates, operation
+              and tensor geometry and predicts execution time for all
+              configurations. It has no runtime timing-table lookup or
+              exact-match override. Held-out hardware, model and shape
+              experiments assess generalization. SimPy schedules those
+              predictions; network and energy remain separate behavioral models.
             </p>
             <h3>LLM-ServeScope design and implementation</h3>
             <p>
-              <a href="https://github.com/ryeii" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/ryeii"
+                target="_blank"
+                rel="noreferrer"
+              >
                 ryeii (Ryan Z An)
               </a>{" "}
-              created LLM-ServeScope: the behavioral modeling extension,
-              serving scenario controls, visualizations, user interface,
-              browser execution layer and native backend integration.
+              created LLM-ServeScope: the behavioral modeling extension, serving
+              scenario controls, visualizations, user interface, browser
+              execution layer and native backend integration.
             </p>
             <h3>Reference backend: LLMServingSim 2.0 · CASYS Lab, KAIST</h3>
             <p>
               Jaehong Cho, Hyunmin Choi, Guseul Heo and Jongse Park developed
               LLMServingSim 2.0. Their MIT-licensed scheduler, measured profiles
               and ASTRA-Sim integration are used by the local reference path.
-              LLM-ServeScope’s behavioral equations, interface and browser
-              execution layer are independently implemented.
+              Their dense operator grids supply offline training and validation
+              data. Both editions run the same fitted function, with source
+              hashes and MIT credit retained. LLM-ServeScope’s behavioral
+              equations, interface and browser execution layer are independently
+              implemented.
             </p>
             <p>
               Runs the pristine pinned KAIST scheduler, measured operation

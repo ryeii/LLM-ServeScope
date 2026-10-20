@@ -102,3 +102,14 @@ Sources: [KAIST repository](https://github.com/casys-kaist/LLMServingSim),
 ## Analytical versus profile-backed comparison
 
 See the [nine-scenario comparison and reproduction instructions](../docs/benchmarks/roofline-vs-profiles-2026-10-19/README.md) for measured-profile versus analytical timing differences.
+
+## Fitted GPU service-time function
+
+`build_calibration.py` uses compatible dense profiles offline to fit a single GPU
+timing function. It validates withheld hardware, model and tensor shapes. Both
+local and browser editions evaluate that function directly using coefficients
+only. The profile reader and grids are offline evidence, not runtime anchors.
+See [method and validation](../docs/calibration.md). Native KAIST/ASTRA sources are
+unchanged. `compare_roofline_profiles.py --timing-mode calibrated` compares the
+fitted function with native output; its default `roofline` preserves the original
+benchmark.

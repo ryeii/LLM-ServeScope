@@ -41,7 +41,13 @@ const runtime = [
 ];
 for (const name of runtime)
   copy(`node_modules/pyodide/${name}`, `${output}/python/${name}`);
-for (const name of ["__init__.py", "model.py", "catalog.py"])
+for (const name of [
+  "__init__.py",
+  "model.py",
+  "catalog.py",
+  "calibration.py",
+  "gpu-fit.json",
+])
   copy(`backend/${name}`, `${output}/python/backend/${name}`);
 const wheel = "simpy-4.1.1-py3-none-any.whl";
 const wheelHash = createHash("sha256")
@@ -65,7 +71,10 @@ for (const name of [
   copy(`licenses/${name}`, `${output}/licenses/${name}`);
 copy("THIRD_PARTY_NOTICES.md", `${output}/THIRD_PARTY_NOTICES.md`);
 // Serve README imagery from Pages, avoiding dependence on GitHub raw-image delivery.
-copy("docs/screenshots/github-pages.png", `${output}/docs/screenshots/github-pages.png`);
+copy(
+  "docs/screenshots/github-pages.png",
+  `${output}/docs/screenshots/github-pages.png`,
+);
 writeFileSync(
   `${output}/README.md`,
   `# LLM-ServeScope production deployment

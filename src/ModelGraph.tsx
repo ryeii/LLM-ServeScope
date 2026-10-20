@@ -178,6 +178,10 @@ export default function ModelGraph({
               <dd>{f(found.duration_ms * 1000)} µs</dd>
             </div>
             <div>
+              <dt>Timing source</dt>
+              <dd title={found.fit_key}>{found.timing_source}</dd>
+            </div>
+            <div>
               <dt>Compute work</dt>
               <dd>{f(found.flops / 1e9)} GFLOP</dd>
             </div>
@@ -191,9 +195,10 @@ export default function ModelGraph({
             </div>
           </dl>
           <p>
-            Edges follow transformer data flow. Residual addition and sampling
-            overhead are abstracted. Each operation’s cost matches the layer
-            table. Native graphs are available in the LLMServingSim tab.
+            Edges follow transformer data flow. Each operation uses the fitted
+            service-time function and matches the layer table. Shared embedding,
+            head and sampling costs are charged separately in the timeline.
+            Native graphs are available in the LLMServingSim tab.
           </p>
         </aside>
       </div>

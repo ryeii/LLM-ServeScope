@@ -21,7 +21,7 @@ function loadRuntime(): Promise<PyodideAPI> {
     const py: PyodideAPI = await loadPyodide({ indexURL: assets.href });
     py.FS.mkdirTree("/servescope/backend");
     py.FS.mkdirTree("/servescope/site-packages");
-    const modules = ["__init__.py", "catalog.py", "model.py"];
+    const modules = ["__init__.py", "catalog.py", "calibration.py", "model.py"];
     const files = await Promise.all(
       modules.map(async (name) => [
         name,
@@ -30,6 +30,10 @@ function loadRuntime(): Promise<PyodideAPI> {
     );
     for (const [name, contents] of files)
       py.FS.writeFile(`/servescope/backend/${name}`, contents);
+    py.FS.writeFile(
+      "/servescope/backend/gpu-fit.json",
+      await (await source("backend/gpu-fit.json")).text(),
+    );
     py.unpackArchive(
       await (await source("simpy-4.1.1-py3-none-any.whl")).arrayBuffer(),
       "zip",

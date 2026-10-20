@@ -21,6 +21,14 @@ Authors: Jaehong Cho, Hyunmin Choi, Guseul Heo and Jongse Park.
 The optional local reference engine uses LLMServingSim's serving scheduler,
 measured profiles, Chakra DAG generation and ASTRA-Sim integration. Selected
 model/hardware configuration references are derived from its published configs.
+Selected dense operator timings are retained as offline training/validation
+data in `third_party/kaist-dense-profile-grids.json.gz`, with source hashes.
+`integration/profile_reference.py` adapts the pure-phase extraction/interpolation
+contracts and retains KAIST's MIT copyright and license. The local and browser
+runtime ships fitted coefficients/metadata in `backend/gpu-fit.json`; it does not
+read the timing tables. The fitted function, physical features/constraints and
+validation pipeline are ServeScope extensions by ryeii (Ryan Z An).
+See `docs/calibration.md` for training coverage and validation.
 LLM-ServeScope's behavioral model and interface are independently implemented;
 this is not an official KAIST product and inherits no upstream validation claim.
 The upstream source checkouts and native dependencies are fetched separately,

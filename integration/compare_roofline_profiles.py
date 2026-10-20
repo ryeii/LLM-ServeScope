@@ -1,7 +1,8 @@
 """Compare unmodified ServeScope analytical timing with the pinned KAIST backend.
 
 Run from the repository with .venv/bin/python integration/compare_roofline_profiles.py.
-Raw runs are retained under runs/; no GPU inference or fitted coefficients are used.
+Raw runs are retained under runs/. Original roofline is the default; calibrated
+mode evaluates the fitted GPU function. No new GPU inference is run.
 """
 from __future__ import annotations
 
@@ -39,6 +40,7 @@ def dump(path, value):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="runs/roofline-profile-comparison-2026-10-19")
+    parser.add_argument("--timing-mode", choices=["roofline", "calibrated"], default="roofline")
     args = parser.parse_args()
     output = (ROOT / args.output).resolve()
     output.relative_to(ROOT / "runs")
@@ -82,7 +84,7 @@ def main():
             assert abs(csv_throughput - native["metrics"]["request_span_output_tokens_per_second"]) < 1e-9
 
             config = copy.deepcopy(DEFAULT)
-            config.update(model_id="llama8", precision="bf16", kv_precision="bf16",
+            config.update(model_id="llama8", timing_mode=args.timing_mode, precision="bf16", kv_precision="bf16",
                           inference_engine="vllm", separated=False, requests=batch,
                           input_tokens=prompt, output_tokens=generation, batch_size=batch,
                           prefill_chunk=prompt, arrival_rate=10000)
@@ -137,16 +139,18 @@ def main():
             print(json.dumps(row), flush=True)
 
     result = dict(kind="analytical_vs_native_profile_simulation", source_revision=revision,
+                  working_tree_source_sha256={str(p): hashlib.sha256((ROOT/p).read_bytes()).hexdigest()
+                                              for p in [Path("backend/model.py"),Path("backend/catalog.py"),Path("backend/calibration.py"),Path("backend/gpu-fit.json")]},
                   script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                   methodology={
-                      "comparison": "Uncalibrated existing analytical model vs freshly executed pinned KAIST/ASTRA backend; not comparison against measured end-to-end inference.",
+                      "comparison": f"ServeScope {args.timing_mode} timing vs executed pinned KAIST/ASTRA backend; not measured end-to-end inference.",
                       "workload": "Llama 3.1 8B BF16 weights/activations and BF16 KV; colocated; one replica; PP1/EP1; one prefill chunk; max batched tokens 2048; no prefix sharing/offload.",
                       "throughput": "Output tokens / earliest-arrival-to-last-completion window for both. Native total-clock throughput retained separately; includes control tail.",
                       "arrivals": "Native requests arrive simultaneously. Analytical public schema requires positive rate; use maximum 10000 requests/s (0.1 ms spacing). Batch-four initial wait is 0.3 ms and mean formation delay 0.15 ms. Single-request cases match exactly. No production code patched.",
-                      "hardware": "Capacity and memory/link bandwidth units aligned. Link =16 GiB/s, latency=1000 ns. Compute efficiency=.65, memory efficiency=.8, generic vLLM factor/launch/tiling and cache assumptions retained without fitting.",
-                      "software": "RTXPRO6000 upstream profiles report vLLM0.28.0/CUDA13.0; RTX4090 vLLM0.19.0/CUDA12.8. Analytical vLLM factor is not version- or kernel-calibrated.",
+                      "hardware": "Capacity and memory/link bandwidth units aligned. Link =16 GiB/s, latency=1000 ns. Compute/memory efficiency inputs remain at their reference settings. Calibrated mode uses the fitted GPU function; original mode uses the uncalibrated tile/roofline assumptions.",
+                      "software": "RTXPRO6000 profiles report vLLM0.28.0/CUDA13.0; RTX4090 vLLM0.19.0/CUDA12.8. Fitted mode learns kernel baselines from these snapshots; other engine/version changes are unvalidated. Original mode uses an assumed generic engine factor.",
                       "operator_comparison": "First transformer block COMP_NODE costs in native prefill and first decode graphs vs matching nine analytical operators. COMP_NODE cost is whole profiled kernel elapsed time, including its internal memory effects; not arithmetic-only time. Embedding/final norm/head/communications excluded from matched block comparison, retained in end-to-end simulations.",
-                      "scope": "End-to-end differences include operator coverage, traffic/cache assumptions, scheduling and communication, not just max() overlap. This small suite is not a universal accuracy assessment. No energy comparison because accounting scopes differ. No model weights or hardware inference executed.",
+                      "scope": "End-to-end differences include fitted operator residuals (or original roofline assumptions), operator coverage, traffic/cache estimates, scheduling and communication. This small suite is not a universal accuracy assessment. No energy comparison because accounting scopes differ. No model weights or hardware inference executed.",
                   }, statistics={metric: {
                       "min_signed_delta_pct": min(r[f"delta_{metric}_pct"] for r in rows),
                       "max_signed_delta_pct": max(r[f"delta_{metric}_pct"] for r in rows),

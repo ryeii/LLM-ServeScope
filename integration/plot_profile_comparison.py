@@ -14,6 +14,7 @@ parser.add_argument("output", type=Path)
 args = parser.parse_args()
 data = json.loads(args.input.read_text())
 rows = data["results"]
+fitted = "calibrated" in data["methodology"]["comparison"]
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 11,
                      "axes.spines.top": False, "axes.spines.right": False})
 fig, axes = plt.subplots(1, 3, figsize=(16, 7.8), sharey=True)
@@ -26,7 +27,7 @@ for ax, (metric, title, xlabel) in zip(axes, [
     ("tpot_ms", "Time per output token", "ms · lower is faster"),
 ]):
     for offset, prefix, color, label in [(-.19, "native", "#167d8d", "KAIST · profile backed"),
-                                        (.19, "analytical", "#d08340", "ServeScope · analytical")]:
+                                        (.19, "analytical", "#d08340", "ServeScope · fitted function" if fitted else "ServeScope · analytical")]:
         values = [r[f"{prefix}_{metric}"] for r in rows]
         bars = ax.barh(y+offset, values, height=.34, color=color, label=label)
         ax.bar_label(bars, fmt="%.1f", padding=4, fontsize=9, color="#293b46")
@@ -49,8 +50,9 @@ fig.text(.02,.94,"Llama 3.1 8B · BF16 · colocated serving · nine local simula
 handles, legend_labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, legend_labels, loc="lower center", bbox_to_anchor=(.58,.025),
            ncol=2, frameon=False, fontsize=11)
-fig.text(.02,.005,"Throughput uses the request-completion window. B4 analytical arrivals span 0.3 ms; native arrivals are simultaneous.\n"
-         "Comparison against upstream profiles, not measured end-to-end inference. No coefficients fitted. 19 Oct 2026.",
+fig.text(.02,.005,"Throughput uses the request-completion window. B4 analytical arrivals span 0.3 ms; native arrivals are simultaneous.\n" +
+         ("Operator coefficients fitted offline; no fitting to these serving results. 19 Oct 2026." if fitted else
+          "Comparison against upstream profiles, not measured end-to-end inference. No coefficients fitted. 19 Oct 2026."),
          fontsize=9, color="#405864")
 fig.tight_layout(rect=(0,.085,1,.91),w_pad=2.5)
 args.output.parent.mkdir(parents=True,exist_ok=True)

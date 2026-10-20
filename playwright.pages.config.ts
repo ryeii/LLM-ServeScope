@@ -1,5 +1,6 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
+  outputDir: "test-results/pages",
   testDir: "./tests/pages",
   timeout: 90000,
   workers: 1,
@@ -7,7 +8,7 @@ export default defineConfig({
     baseURL: "http://127.0.0.1:4182/LLM-ServeScope/",
     viewport: { width: 1512, height: 1050 },
     headless: true,
-    channel: "chromium",
+    channel: process.env.SERVESCOPE_BROWSER_CHANNEL || "chromium",
   },
   webServer: {
     command:

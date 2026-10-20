@@ -1,0 +1,2376 @@
+{
+  "schema_version": "servescope.behavioral.v3",
+  "calibration": {
+    "mode": "calibrated",
+    "operator_sources": [
+      {
+        "phase": "prefill",
+        "operator": "Input RMSNorm",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "layernorm",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "QKV projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "qkv_proj",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "Rotary position",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "rotary_emb",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "Attention",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "attention:prefill",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "Output projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "o_proj",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "FFN RMSNorm",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "layernorm",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "Gate + up projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "gate_up_proj",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "SwiGLU",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "act_fn",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "Down projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "down_proj",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "embedding",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "embedding",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "final_layernorm",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "final_layernorm",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "lm_head",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "lm_head",
+        "count": 1
+      },
+      {
+        "phase": "prefill",
+        "operator": "sampler",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "sampler",
+        "count": 1
+      },
+      {
+        "phase": "decode",
+        "operator": "Input RMSNorm",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "layernorm",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "QKV projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "qkv_proj",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "Rotary position",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "rotary_emb",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "Attention",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "attention:decode",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "Output projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "o_proj",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "FFN RMSNorm",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "layernorm",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "Gate + up projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "gate_up_proj",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "SwiGLU",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "act_fn",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "Down projection",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "down_proj",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "embedding",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "embedding",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "final_layernorm",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "final_layernorm",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "lm_head",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "lm_head",
+        "count": 7
+      },
+      {
+        "phase": "decode",
+        "operator": "sampler",
+        "source": "fitted-profiled-configuration",
+        "fit_key": "sampler",
+        "count": 7
+      }
+    ],
+    "dataset": {
+      "revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
+      "data_sha256": "3b1a017b30d2342f151e377ac282280c83bddf9d51f2187b9bf36124a1c6a534",
+      "profiles": [
+        {
+          "id": "rtx6000:llama8:tp1",
+          "model_id": "llama8",
+          "hardware_id": "rtx6000",
+          "tp": 1,
+          "software": {
+            "cuda_version": "13.0",
+            "profiled_at": "2026-09-04T19:37:52+00:00",
+            "vllm_version": "0.28.0"
+          }
+        },
+        {
+          "id": "rtx6000:llama8:tp2",
+          "model_id": "llama8",
+          "hardware_id": "rtx6000",
+          "tp": 2,
+          "software": {
+            "cuda_version": "13.0",
+            "profiled_at": "2026-09-04T19:37:52+00:00",
+            "vllm_version": "0.28.0"
+          }
+        },
+        {
+          "id": "rtx4090:llama8:tp1",
+          "model_id": "llama8",
+          "hardware_id": "rtx4090",
+          "tp": 1,
+          "software": {
+            "cuda_version": "12.8",
+            "profiled_at": "2026-08-17T19:43:32+00:00",
+            "vllm_version": "0.19.0"
+          }
+        },
+        {
+          "id": "rtx6000:qwen32:tp1",
+          "model_id": "qwen32",
+          "hardware_id": "rtx6000",
+          "tp": 1,
+          "software": {
+            "cuda_version": "13.0",
+            "profiled_at": "2026-09-05T12:08:19+00:00",
+            "vllm_version": "0.28.0"
+          }
+        },
+        {
+          "id": "rtx6000:qwen32:tp2",
+          "model_id": "qwen32",
+          "hardware_id": "rtx6000",
+          "tp": 2,
+          "software": {
+            "cuda_version": "13.0",
+            "profiled_at": "2026-09-05T12:08:19+00:00",
+            "vllm_version": "0.28.0"
+          }
+        }
+      ],
+      "validation": {
+        "fit_observations": 9411,
+        "held_out_gpu": {
+          "by_operator": {
+            "act_fn": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 45.15467672665873,
+              "median_abs_relative_difference_pct": 52.62110856249579,
+              "p95_abs_relative_difference_pct": 61.686337194511275
+            },
+            "attention:decode": {
+              "count": 99,
+              "mean_abs_relative_difference_pct": 13.688176102950795,
+              "median_abs_relative_difference_pct": 11.732239791218547,
+              "p95_abs_relative_difference_pct": 41.35930766876319
+            },
+            "attention:prefill": {
+              "count": 96,
+              "mean_abs_relative_difference_pct": 43.33506271833155,
+              "median_abs_relative_difference_pct": 44.000801127153935,
+              "p95_abs_relative_difference_pct": 84.40380522485076
+            },
+            "down_proj": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 18.507845988570587,
+              "median_abs_relative_difference_pct": 15.636984925975717,
+              "p95_abs_relative_difference_pct": 39.42945494163378
+            },
+            "embedding": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 28.798810779242583,
+              "median_abs_relative_difference_pct": 29.636844663139563,
+              "p95_abs_relative_difference_pct": 42.628876961928775
+            },
+            "final_layernorm": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 6.931885991047098,
+              "median_abs_relative_difference_pct": 6.113457748290873,
+              "p95_abs_relative_difference_pct": 14.064682466548032
+            },
+            "gate_up_proj": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 13.305180921652974,
+              "median_abs_relative_difference_pct": 10.28524393606649,
+              "p95_abs_relative_difference_pct": 37.87392521878425
+            },
+            "layernorm": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 19.61640194123658,
+              "median_abs_relative_difference_pct": 20.795807796476353,
+              "p95_abs_relative_difference_pct": 30.232102245870866
+            },
+            "lm_head": {
+              "count": 40,
+              "mean_abs_relative_difference_pct": 2.7566509173250067,
+              "median_abs_relative_difference_pct": 1.1699687610094434,
+              "p95_abs_relative_difference_pct": 9.131018494874885
+            },
+            "o_proj": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 25.424074964454736,
+              "median_abs_relative_difference_pct": 26.036051583052046,
+              "p95_abs_relative_difference_pct": 43.01166118665467
+            },
+            "qkv_proj": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 21.95440206394558,
+              "median_abs_relative_difference_pct": 22.152976148557926,
+              "p95_abs_relative_difference_pct": 42.777538077490654
+            },
+            "rotary_emb": {
+              "count": 152,
+              "mean_abs_relative_difference_pct": 20.83768596583654,
+              "median_abs_relative_difference_pct": 18.979644703018494,
+              "p95_abs_relative_difference_pct": 43.99769728213395
+            },
+            "sampler": {
+              "count": 40,
+              "mean_abs_relative_difference_pct": 24.65379879470412,
+              "median_abs_relative_difference_pct": 20.293561350497146,
+              "p95_abs_relative_difference_pct": 49.46600553043773
+            }
+          },
+          "excluded_from_fit": true,
+          "hardware": "RTX4090",
+          "latency_weighted_absolute_difference_pct": 16.12715369690456,
+          "same_block_samples": {
+            "fitted_function": {
+              "count": 1259,
+              "mean_abs_relative_difference_pct": 24.27715351719621,
+              "median_abs_relative_difference_pct": 21.131046282214694,
+              "p95_abs_relative_difference_pct": 60.31427739329458
+            },
+            "roofline": {
+              "count": 1259,
+              "mean_abs_relative_difference_pct": 52.08566707660939,
+              "median_abs_relative_difference_pct": 48.202189561557105,
+              "p95_abs_relative_difference_pct": 137.15501357848692
+            }
+          },
+          "summary": {
+            "count": 1643,
+            "mean_abs_relative_difference_pct": 22.57603175636958,
+            "median_abs_relative_difference_pct": 19.928785060960898,
+            "p95_abs_relative_difference_pct": 58.619718866037196
+          }
+        },
+        "held_out_model": {
+          "excluded_from_fit": true,
+          "model": "qwen32",
+          "summary": {
+            "count": 3732,
+            "mean_abs_relative_difference_pct": 15.37544877429635,
+            "median_abs_relative_difference_pct": 10.321952846558201,
+            "p95_abs_relative_difference_pct": 55.89545564993677
+          },
+          "tested_rows": 3732,
+          "training_rows": 5375,
+          "unsupported_operator_groups": [
+            "qk_norm"
+          ]
+        },
+        "held_out_shapes": {
+          "split": "SHA256(operator, tensor coordinates) mod 5 == 0 across devices/models/TPs",
+          "summary": {
+            "count": 2011,
+            "mean_abs_relative_difference_pct": 13.074709617024837,
+            "median_abs_relative_difference_pct": 8.07487631809174,
+            "p95_abs_relative_difference_pct": 49.498041694563895
+          },
+          "tested_rows": 2011,
+          "training_rows": 7400,
+          "unsupported_operator_groups": []
+        },
+        "scope": "Direct fitted-function validation. No runtime table anchors or residual overrides. Two GPU families; empirical residual percentiles are not confidence bounds for an unseen chip.",
+        "training_data_extraction": {
+          "lookups": 9811,
+          "max_absolute_difference_ns": 0
+        },
+        "training_fit": {
+          "count": 9411,
+          "mean_abs_relative_difference_pct": 13.72556734449868,
+          "median_abs_relative_difference_pct": 8.4542639150754,
+          "p95_abs_relative_difference_pct": 50.953729520113896
+        }
+      },
+      "model": "Nonnegative fitted L + a*compute_ns + b*nominal_memory_ns, arithmetic floor; no runtime timing-table lookup"
+    },
+    "summary": "Fitted GPU function \u00b7 profiled configuration",
+    "fallback_operators": []
+  },
+  "engine": "LLM-ServeScope behavioral / SimPy",
+  "config": {
+    "model_id": "llama8",
+    "timing_mode": "calibrated",
+    "precision": "bf16",
+    "inference_engine": "vllm",
+    "requests": 4,
+    "input_tokens": 128,
+    "output_tokens": 8,
+    "arrival_rate": 10000.0,
+    "batch_size": 4,
+    "prefill_chunk": 128,
+    "separated": false,
+    "prefill": {
+      "hardware_id": "rtx6000",
+      "hardware": {
+        "fp4_tensor_tflops": 2012.0,
+        "fp8_tensor_tflops": 1006.0,
+        "bf16_tensor_tflops": 503.0,
+        "fp16_tensor_tflops": 503.0,
+        "tf32_tensor_tflops": 494.0,
+        "int8_tensor_tflops": 1979.0,
+        "fp32_tflops": 125.0,
+        "main_memory_GB": 102.0,
+        "dram_bandwidth_TBps": 1.5976,
+        "sram_cache_MB": 134.217728,
+        "num_sms": 188,
+        "tensor_width": 64,
+        "intra_node_bw_GBps": 30.85,
+        "chip_cluster_size": 2,
+        "same_rail_bw_GBps": 50.0,
+        "same_rail_gpus": 64,
+        "scale_out_bw_GBps": 50.0,
+        "default_GPUs_per_rack": 64,
+        "cluster_default_racks": 8,
+        "tdp_watts": 600.0,
+        "idle_watts": 90.0,
+        "compute_efficiency": 0.65,
+        "memory_efficiency": 0.8,
+        "network_latency_us": 2.0,
+        "collective_allreduce_fraction": 0.75,
+        "collective_alltoall_fraction": 0.65,
+        "collective_alltoall_offset": 3.0,
+        "pj_per_flop": 0.0,
+        "pj_per_vop": 0.0,
+        "pj_per_mem_byte": 0.0,
+        "pj_per_net_byte": 0.0,
+        "hourly_cost": 2.75,
+        "name": "RTX PRO 6000 \u00b7 profile reference",
+        "provenance": "Capacity/BW/L2/SM/TDP from upstream RTXPRO6000 hardware.yaml; compute peaks and efficiency are explicit illustrative inputs. Native mode uses measured operation profiles.",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/profiler/perf/RTXPRO6000/hardware.yaml",
+        "clock_scale": 1.0,
+        "launch_overhead_us": 0.0
+      },
+      "tp": 1,
+      "pp": 1,
+      "ep": 1,
+      "replicas": 1,
+      "batch_size": 4,
+      "max_concurrent_batches": 128,
+      "memory_utilization": 1.0,
+      "runtime_reserved_GB": 0.0,
+      "engine": "inherit"
+    },
+    "decode": {
+      "hardware_id": "rtx6000",
+      "hardware": {
+        "fp4_tensor_tflops": 2012.0,
+        "fp8_tensor_tflops": 1006.0,
+        "bf16_tensor_tflops": 503.0,
+        "fp16_tensor_tflops": 503.0,
+        "tf32_tensor_tflops": 494.0,
+        "int8_tensor_tflops": 1979.0,
+        "fp32_tflops": 125.0,
+        "main_memory_GB": 102.0,
+        "dram_bandwidth_TBps": 1.5976,
+        "sram_cache_MB": 134.217728,
+        "num_sms": 188,
+        "tensor_width": 64,
+        "intra_node_bw_GBps": 30.85,
+        "chip_cluster_size": 2,
+        "same_rail_bw_GBps": 50.0,
+        "same_rail_gpus": 64,
+        "scale_out_bw_GBps": 50.0,
+        "default_GPUs_per_rack": 64,
+        "cluster_default_racks": 8,
+        "tdp_watts": 600.0,
+        "idle_watts": 90.0,
+        "compute_efficiency": 0.65,
+        "memory_efficiency": 0.8,
+        "network_latency_us": 2.0,
+        "collective_allreduce_fraction": 0.75,
+        "collective_alltoall_fraction": 0.65,
+        "collective_alltoall_offset": 3.0,
+        "pj_per_flop": 0.0,
+        "pj_per_vop": 0.0,
+        "pj_per_mem_byte": 0.0,
+        "pj_per_net_byte": 0.0,
+        "hourly_cost": 2.75,
+        "name": "RTX PRO 6000 \u00b7 profile reference",
+        "provenance": "Capacity/BW/L2/SM/TDP from upstream RTXPRO6000 hardware.yaml; compute peaks and efficiency are explicit illustrative inputs. Native mode uses measured operation profiles.",
+        "source_url": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/profiler/perf/RTXPRO6000/hardware.yaml",
+        "clock_scale": 1.0,
+        "launch_overhead_us": 0.0
+      },
+      "tp": 1,
+      "pp": 1,
+      "ep": 1,
+      "replicas": 1,
+      "batch_size": 4,
+      "max_concurrent_batches": 128,
+      "memory_utilization": 1.0,
+      "runtime_reserved_GB": 0.0,
+      "engine": "inherit"
+    },
+    "network": {
+      "spine_bw_GBps": 25.0,
+      "spine_latency_us": 10.0,
+      "handoff_channels": 1
+    },
+    "kv_precision": "bf16"
+  },
+  "model": {
+    "name": "Llama 3.1 8B",
+    "source": "meta-llama/Llama-3.1-8B",
+    "hidden": 4096,
+    "intermediate": 14336,
+    "layers": 32,
+    "heads": 32,
+    "kv_heads": 8,
+    "head_dim": 128,
+    "vocab": 128256,
+    "experts": 1,
+    "top_k": 1,
+    "source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
+    "source_url": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-8B.json",
+    "max_context": 131072,
+    "qk_norm": false,
+    "tie_embeddings": false
+  },
+  "metrics": {
+    "throughput_tps": 318.9895479526217,
+    "request_throughput": 39.87369349407771,
+    "prompt_tps": 5103.832767241947,
+    "ttft_mean_ms": 26.34480443218481,
+    "ttft_p95_ms": 26.47980443218481,
+    "tpot_mean_ms": 10.545994582055268,
+    "latency_p95_ms": 100.30176650657168,
+    "elapsed_ms": 100.31676650657168,
+    "gpu_count": 1,
+    "energy_j": 52.385777266190274,
+    "tokens_per_joule": 0.6108528243724803,
+    "tokens_per_gpu_s": 318.9895479526217,
+    "cost_usd": 7.663086330363114e-05,
+    "cost_per_million_tokens": 2.3947144782384733,
+    "gpu_utilization": 0.9970094729879442
+  },
+  "memory": {
+    "prefill": {
+      "weights_GB": 16.060522496,
+      "kv_GB": 0.07077888,
+      "activation_GB": 0.033554432,
+      "total_GB": 16.164855808,
+      "capacity_GB": 102.0,
+      "physical_capacity_GB": 102.0,
+      "runtime_reserved_GB": 0.0,
+      "memory_utilization": 1.0,
+      "headroom_GB": 85.835144192,
+      "gpus": 1
+    },
+    "decode": {
+      "weights_GB": 16.060522496,
+      "kv_GB": 0.07077888,
+      "activation_GB": 0.000262144,
+      "total_GB": 16.13156352,
+      "capacity_GB": 102.0,
+      "physical_capacity_GB": 102.0,
+      "runtime_reserved_GB": 0.0,
+      "memory_utilization": 1.0,
+      "headroom_GB": 85.86843648,
+      "gpus": 1
+    }
+  },
+  "traffic": {
+    "hbm_bytes": 125104029696.0,
+    "network_bytes": 0.0,
+    "flops": 7592912093184.0
+  },
+  "component_work_ms": {
+    "Compute": 26.485337114926935,
+    "Memory": 97.88434972458691,
+    "Network": 0.0,
+    "Launch": 5.759999999999999
+  },
+  "requests": [
+    {
+      "id": 0,
+      "arrival_ms": 0.0,
+      "batch_ready_ms": 0.3,
+      "prefill_batch_id": 0,
+      "decode_batch_id": 0,
+      "prefill_end_ms": 26.49480443218481,
+      "first_token_ms": 26.49480443218481,
+      "finish_ms": 100.31676650657168,
+      "ttft_ms": 26.49480443218481,
+      "tpot_ms": 10.545994582055268,
+      "latency_ms": 100.31676650657168,
+      "token_times_ms": [
+        26.49480443218481,
+        37.039682471718656,
+        47.58493269209298,
+        58.13055509330777,
+        68.67654967536303,
+        79.22291643825878,
+        89.769655381995,
+        100.31676650657168
+      ]
+    },
+    {
+      "id": 1,
+      "arrival_ms": 0.1,
+      "batch_ready_ms": 0.3,
+      "prefill_batch_id": 0,
+      "decode_batch_id": 0,
+      "prefill_end_ms": 26.49480443218481,
+      "first_token_ms": 26.49480443218481,
+      "finish_ms": 100.31676650657168,
+      "ttft_ms": 26.39480443218481,
+      "tpot_ms": 10.545994582055268,
+      "latency_ms": 100.21676650657169,
+      "token_times_ms": [
+        26.49480443218481,
+        37.039682471718656,
+        47.58493269209298,
+        58.13055509330777,
+        68.67654967536303,
+        79.22291643825878,
+        89.769655381995,
+        100.31676650657168
+      ]
+    },
+    {
+      "id": 2,
+      "arrival_ms": 0.2,
+      "batch_ready_ms": 0.3,
+      "prefill_batch_id": 0,
+      "decode_batch_id": 0,
+      "prefill_end_ms": 26.49480443218481,
+      "first_token_ms": 26.49480443218481,
+      "finish_ms": 100.31676650657168,
+      "ttft_ms": 26.29480443218481,
+      "tpot_ms": 10.545994582055268,
+      "latency_ms": 100.11676650657168,
+      "token_times_ms": [
+        26.49480443218481,
+        37.039682471718656,
+        47.58493269209298,
+        58.13055509330777,
+        68.67654967536303,
+        79.22291643825878,
+        89.769655381995,
+        100.31676650657168
+      ]
+    },
+    {
+      "id": 3,
+      "arrival_ms": 0.3,
+      "batch_ready_ms": 0.3,
+      "prefill_batch_id": 0,
+      "decode_batch_id": 0,
+      "prefill_end_ms": 26.49480443218481,
+      "first_token_ms": 26.49480443218481,
+      "finish_ms": 100.31676650657168,
+      "ttft_ms": 26.19480443218481,
+      "tpot_ms": 10.545994582055268,
+      "latency_ms": 100.01676650657168,
+      "token_times_ms": [
+        26.49480443218481,
+        37.039682471718656,
+        47.58493269209298,
+        58.13055509330777,
+        68.67654967536303,
+        79.22291643825878,
+        89.769655381995,
+        100.31676650657168
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "phase": "prefill",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 128,
+      "start_ms": 0.3,
+      "end_ms": 26.49480443218481,
+      "duration_ms": 26.19480443218481,
+      "batch_size": 4,
+      "context": 128,
+      "components": {
+        "Compute": 22.63110574487545,
+        "Memory": 15.472091337005509,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0049244288028324965,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            5252.038057085629
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.006513727226222026,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            83.88608,
+            5255.883825738608
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 0,
+      "start_ms": 26.49480443218481,
+      "end_ms": 37.039682471718656,
+      "duration_ms": 10.544878039533847,
+      "batch_size": 4,
+      "context": 129,
+      "components": {
+        "Compute": 0.5504879331317787,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 1,
+      "start_ms": 37.039682471718656,
+      "end_ms": 47.58493269209298,
+      "duration_ms": 10.54525022037432,
+      "batch_size": 4,
+      "context": 130,
+      "components": {
+        "Compute": 0.5505267825664948,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 2,
+      "start_ms": 47.58493269209298,
+      "end_ms": 58.13055509330777,
+      "duration_ms": 10.545622401214793,
+      "batch_size": 4,
+      "context": 131,
+      "components": {
+        "Compute": 0.5505656320012108,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 3,
+      "start_ms": 58.13055509330777,
+      "end_ms": 68.67654967536303,
+      "duration_ms": 10.545994582055267,
+      "batch_size": 4,
+      "context": 132,
+      "components": {
+        "Compute": 0.5506044814359269,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 4,
+      "start_ms": 68.67654967536303,
+      "end_ms": 79.22291643825878,
+      "duration_ms": 10.546366762895738,
+      "batch_size": 4,
+      "context": 133,
+      "components": {
+        "Compute": 0.5506433308706429,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 5,
+      "start_ms": 79.22291643825878,
+      "end_ms": 89.769655381995,
+      "duration_ms": 10.546738943736212,
+      "batch_size": 4,
+      "context": 134,
+      "components": {
+        "Compute": 0.550682180305359,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    },
+    {
+      "phase": "decode",
+      "resource": "shared:0:0",
+      "batch_id": 0,
+      "request_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "chunk": 6,
+      "start_ms": 89.769655381995,
+      "end_ms": 100.31676650657168,
+      "duration_ms": 10.547111124576686,
+      "batch_size": 4,
+      "context": 135,
+      "components": {
+        "Compute": 0.550721029740075,
+        "Memory": 11.773179769654483,
+        "Network": 0.0,
+        "Launch": 0.72
+      },
+      "endpoint_timing": [
+        {
+          "name": "embedding",
+          "duration_ms": 0.0036222491868844646,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "embedding",
+          "fit_features_ns": [
+            1.0,
+            0.0,
+            41.031547320981474
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "final_layernorm",
+          "duration_ms": 0.002439301293314466,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "final_layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "lm_head",
+          "duration_ms": 0.7008422209330719,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "lm_head",
+          "fit_features_ns": [
+            1.0,
+            8355.25369383698,
+            658319.9599399099
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "name": "sampler",
+          "duration_ms": 0.027922065305419096,
+          "timing_source": "fitted-profiled-configuration",
+          "fit_key": "sampler",
+          "fit_features_ns": [
+            1.0,
+            20.52096,
+            1284.4867300951425
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": "input_rmsnorm",
+      "name": "Input RMSNorm",
+      "flops": 10485760.0,
+      "hbm_bytes": 8396800.0,
+      "weight_bytes": 8192.0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.00013304691514670896,
+      "memory_ms": 0.00656985478217326,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0053693800961239725,
+      "bound": "Memory",
+      "arithmetic_intensity": 1.248780487804878,
+      "achieved_tflops": 1.9528809308116255,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.00906985478217326,
+      "fit_key": "layernorm",
+      "fit_features_ns": [
+        1.0,
+        83.88608,
+        5255.883825738608
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "qkv_projection",
+      "name": "QKV projection",
+      "flops": 25769803776.0,
+      "hbm_bytes": 58720256.0,
+      "weight_bytes": 50331648.0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.08125648575162822,
+      "memory_ms": 0.04594411617426139,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.09234336557656987,
+      "bound": "Compute",
+      "arithmetic_intensity": 438.85714285714283,
+      "achieved_tflops": 279.0650266545898,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.08375648575162822,
+      "fit_key": "qkv_proj",
+      "fit_features_ns": [
+        1.0,
+        51232.21426640159,
+        38067.98197295944
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "rotary_position",
+      "name": "Rotary position",
+      "flops": 12582912.0,
+      "hbm_bytes": 8388608.0,
+      "weight_bytes": 0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.00015965629817605074,
+      "memory_ms": 0.006563445167751627,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.004839979861408259,
+      "bound": "Memory",
+      "arithmetic_intensity": 1.5,
+      "achieved_tflops": 2.599786023973006,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.009063445167751627,
+      "fit_key": "rotary_emb",
+      "fit_features_ns": [
+        1.0,
+        100.66329599999999,
+        6563.445167751627
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "attention",
+      "name": "Attention",
+      "flops": 541065216.0,
+      "hbm_bytes": 10485760.0,
+      "weight_bytes": 0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 2097152.0,
+      "compute_ms": 0.0017060687926367252,
+      "memory_ms": 0.008204306459689534,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.021728055043173714,
+      "bound": "Memory",
+      "arithmetic_intensity": 51.6,
+      "achieved_tflops": 24.90168654879149,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.010704306459689535,
+      "fit_key": "attention:prefill",
+      "fit_features_ns": [
+        1.0,
+        1075.6763737574552,
+        6727.531296945418
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "output_projection",
+      "name": "Output projection",
+      "flops": 17179869184.0,
+      "hbm_bytes": 41943040.0,
+      "weight_bytes": 33554432.0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.05417099050108548,
+      "memory_ms": 0.03281722583875814,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0636333506306777,
+      "bound": "Compute",
+      "arithmetic_intensity": 409.6,
+      "achieved_tflops": 269.98215579925113,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.05667099050108548,
+      "fit_key": "o_proj",
+      "fit_features_ns": [
+        1.0,
+        34154.80951093439,
+        26253.78067100651
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "ffn_rmsnorm",
+      "name": "FFN RMSNorm",
+      "flops": 10485760.0,
+      "hbm_bytes": 8396800.0,
+      "weight_bytes": 8192.0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.00013304691514670896,
+      "memory_ms": 0.00656985478217326,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0053693800961239725,
+      "bound": "Memory",
+      "arithmetic_intensity": 1.248780487804878,
+      "achieved_tflops": 1.9528809308116255,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.00906985478217326,
+      "fit_key": "layernorm",
+      "fit_features_ns": [
+        1.0,
+        83.88608,
+        5255.883825738608
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "gate_+_up_projection",
+      "name": "Gate + up projection",
+      "flops": 120259084288.0,
+      "hbm_bytes": 278921216.0,
+      "weight_bytes": 234881024.0,
+      "activation_bytes": 44040192.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.37919693350759837,
+      "memory_ms": 0.2182345518277416,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.3899514041470822,
+      "bound": "Compute",
+      "arithmetic_intensity": 431.1578947368421,
+      "achieved_tflops": 308.3950538684061,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.38169693350759837,
+      "fit_key": "gate_up_proj",
+      "fit_features_ns": [
+        1.0,
+        239083.66657654074,
+        168024.19629444164
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "swiglu",
+      "name": "SwiGLU",
+      "flops": 36700160.0,
+      "hbm_bytes": 44040192.0,
+      "weight_bytes": 0,
+      "activation_bytes": 44040192.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.00046566420301348137,
+      "memory_ms": 0.03445808713069604,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.012730726330375336,
+      "bound": "Memory",
+      "arithmetic_intensity": 0.8333333333333334,
+      "achieved_tflops": 2.8828017386905826,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.036958087130696045,
+      "fit_key": "act_fn",
+      "fit_features_ns": [
+        1.0,
+        293.60128000000003,
+        27566.469704556835
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "down_projection",
+      "name": "Down projection",
+      "flops": 60129542144.0,
+      "hbm_bytes": 125829120.0,
+      "weight_bytes": 117440512.0,
+      "activation_bytes": 8388608.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.18959846675379918,
+      "memory_ms": 0.09845167751627441,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.1994906704033795,
+      "bound": "Compute",
+      "arithmetic_intensity": 477.8666666666667,
+      "achieved_tflops": 301.41530940978464,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.19209846675379919,
+      "fit_key": "down_proj",
+      "fit_features_ns": [
+        1.0,
+        119541.83328827037,
+        85324.78718077115
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "prefill",
+      "batch": 4,
+      "tokens": 128,
+      "context": 128
+    },
+    {
+      "id": "input_rmsnorm",
+      "name": "Input RMSNorm",
+      "flops": 81920.0,
+      "hbm_bytes": 73728.0,
+      "weight_bytes": 8192.0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 1.0394290245836637e-06,
+      "memory_ms": 5.768652979469204e-05,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0021727362222109595,
+      "bound": "Memory",
+      "arithmetic_intensity": 1.1111111111111112,
+      "achieved_tflops": 0.03770361038885744,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.002557686529794692,
+      "fit_key": "layernorm",
+      "fit_features_ns": [
+        1.0,
+        0.65536,
+        46.14922383575363
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "qkv_projection",
+      "name": "QKV projection",
+      "flops": 201326592.0,
+      "hbm_bytes": 50397184.0,
+      "weight_bytes": 50331648.0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.002486363821827166,
+      "memory_ms": 0.03943194792188282,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.03496469331423007,
+      "bound": "Memory",
+      "arithmetic_intensity": 3.9947984395318596,
+      "achieved_tflops": 5.757996793813241,
+      "tile_utilization": 0.2553191489361702,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.041931947921882824,
+      "fit_key": "qkv_proj",
+      "fit_features_ns": [
+        1.0,
+        400.25167395626244,
+        31555.81372058087
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "rotary_position",
+      "name": "Rotary position",
+      "flops": 98304.0,
+      "hbm_bytes": 65536.0,
+      "weight_bytes": 0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 1.2473148295003964e-06,
+      "memory_ms": 5.1276915373059586e-05,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0023321919024766827,
+      "bound": "Memory",
+      "arithmetic_intensity": 1.5,
+      "achieved_tflops": 0.04215090529025745,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.00255127691537306,
+      "fit_key": "rotary_emb",
+      "fit_features_ns": [
+        1.0,
+        0.7864319999999999,
+        51.27691537305959
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "attention",
+      "name": "Attention",
+      "flops": 8617984.0,
+      "hbm_bytes": 81920.0,
+      "weight_bytes": 0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 16384.0,
+      "compute_ms": 0.00015964689578626577,
+      "memory_ms": 6.409614421632449e-05,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.012803737997631098,
+      "bound": "Compute",
+      "arithmetic_intensity": 105.2,
+      "achieved_tflops": 0.6730834387266021,
+      "tile_utilization": 0.1702127659574468,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.002659646895786266,
+      "fit_key": "attention:decode",
+      "fit_features_ns": [
+        1.0,
+        17.1331689860835,
+        1389.6044066099148
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "output_projection",
+      "name": "Output projection",
+      "flops": 134217728.0,
+      "hbm_bytes": 33619968.0,
+      "weight_bytes": 33554432.0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.0024863638218271655,
+      "memory_ms": 0.02630505758637957,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.024357948334246756,
+      "bound": "Memory",
+      "arithmetic_intensity": 3.992202729044834,
+      "achieved_tflops": 5.510223035135219,
+      "tile_utilization": 0.1702127659574468,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.02880505758637957,
+      "fit_key": "o_proj",
+      "fit_features_ns": [
+        1.0,
+        266.83444930417494,
+        21044.046069103653
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "ffn_rmsnorm",
+      "name": "FFN RMSNorm",
+      "flops": 81920.0,
+      "hbm_bytes": 73728.0,
+      "weight_bytes": 8192.0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 1.0394290245836637e-06,
+      "memory_ms": 5.768652979469204e-05,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0021727362222109595,
+      "bound": "Memory",
+      "arithmetic_intensity": 1.1111111111111112,
+      "achieved_tflops": 0.03770361038885744,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.002557686529794692,
+      "fit_key": "layernorm",
+      "fit_features_ns": [
+        1.0,
+        0.65536,
+        46.14922383575363
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "gate_+_up_projection",
+      "name": "Gate + up projection",
+      "flops": 939524096.0,
+      "hbm_bytes": 235225088.0,
+      "weight_bytes": 234881024.0,
+      "activation_bytes": 344064.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.0029624760430281122,
+      "memory_ms": 0.18404566850275414,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.1478767193737214,
+      "bound": "Memory",
+      "arithmetic_intensity": 3.994149195514383,
+      "achieved_tflops": 6.353428044515838,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.18654566850275414,
+      "fit_key": "gate_up_proj",
+      "fit_features_ns": [
+        1.0,
+        1867.8411451292245,
+        147185.25788683025
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "swiglu",
+      "name": "SwiGLU",
+      "flops": 286720.0,
+      "hbm_bytes": 344064.0,
+      "weight_bytes": 0,
+      "activation_bytes": 344064.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 3.638001586042823e-06,
+      "memory_ms": 0.00026920380570856283,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.0021000475023024057,
+      "bound": "Memory",
+      "arithmetic_intensity": 0.8333333333333334,
+      "achieved_tflops": 0.1365302449995307,
+      "tile_utilization": 1,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.002769203805708563,
+      "fit_key": "act_fn",
+      "fit_features_ns": [
+        1.0,
+        2.2937600000000002,
+        215.36304456685028
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    },
+    {
+      "id": "down_projection",
+      "name": "Down projection",
+      "flops": 469762048.0,
+      "hbm_bytes": 117506048.0,
+      "weight_bytes": 117440512.0,
+      "activation_bytes": 65536.0,
+      "kv_hbm_bytes": 0,
+      "compute_ms": 0.00870227337639508,
+      "memory_ms": 0.09193950926389584,
+      "network_ms": 0,
+      "launch_ms": 0.0025,
+      "duration_ms": 0.07781239709710523,
+      "bound": "Memory",
+      "arithmetic_intensity": 3.9977691020635806,
+      "achieved_tflops": 6.037110608657447,
+      "tile_utilization": 0.1702127659574468,
+      "timing_source": "fitted-profiled-configuration",
+      "roofline_duration_ms": 0.09443950926389584,
+      "fit_key": "down_proj",
+      "fit_features_ns": [
+        1.0,
+        933.9205725646123,
+        73602.88432648974
+      ],
+      "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled",
+      "phase": "decode",
+      "batch": 4,
+      "tokens": 1,
+      "context": 131.5
+    }
+  ],
+  "phases": {
+    "prefill": {
+      "operations": [
+        {
+          "id": "input_rmsnorm",
+          "name": "Input RMSNorm",
+          "flops": 10485760.0,
+          "hbm_bytes": 8396800.0,
+          "weight_bytes": 8192.0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.00013304691514670896,
+          "memory_ms": 0.00656985478217326,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0053693800961239725,
+          "bound": "Memory",
+          "arithmetic_intensity": 1.248780487804878,
+          "achieved_tflops": 1.9528809308116255,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.00906985478217326,
+          "fit_key": "layernorm",
+          "fit_features_ns": [
+            1.0,
+            83.88608,
+            5255.883825738608
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "qkv_projection",
+          "name": "QKV projection",
+          "flops": 25769803776.0,
+          "hbm_bytes": 58720256.0,
+          "weight_bytes": 50331648.0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.08125648575162822,
+          "memory_ms": 0.04594411617426139,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.09234336557656987,
+          "bound": "Compute",
+          "arithmetic_intensity": 438.85714285714283,
+          "achieved_tflops": 279.0650266545898,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.08375648575162822,
+          "fit_key": "qkv_proj",
+          "fit_features_ns": [
+            1.0,
+            51232.21426640159,
+            38067.98197295944
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "rotary_position",
+          "name": "Rotary position",
+          "flops": 12582912.0,
+          "hbm_bytes": 8388608.0,
+          "weight_bytes": 0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.00015965629817605074,
+          "memory_ms": 0.006563445167751627,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.004839979861408259,
+          "bound": "Memory",
+          "arithmetic_intensity": 1.5,
+          "achieved_tflops": 2.599786023973006,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.009063445167751627,
+          "fit_key": "rotary_emb",
+          "fit_features_ns": [
+            1.0,
+            100.66329599999999,
+            6563.445167751627
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "attention",
+          "name": "Attention",
+          "flops": 541065216.0,
+          "hbm_bytes": 10485760.0,
+          "weight_bytes": 0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 2097152.0,
+          "compute_ms": 0.0017060687926367252,
+          "memory_ms": 0.008204306459689534,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.021728055043173714,
+          "bound": "Memory",
+          "arithmetic_intensity": 51.6,
+          "achieved_tflops": 24.90168654879149,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.010704306459689535,
+          "fit_key": "attention:prefill",
+          "fit_features_ns": [
+            1.0,
+            1075.6763737574552,
+            6727.531296945418
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "output_projection",
+          "name": "Output projection",
+          "flops": 17179869184.0,
+          "hbm_bytes": 41943040.0,
+          "weight_bytes": 33554432.0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.05417099050108548,
+          "memory_ms": 0.03281722583875814,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0636333506306777,
+          "bound": "Compute",
+          "arithmetic_intensity": 409.6,
+          "achieved_tflops": 269.98215579925113,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.05667099050108548,
+          "fit_key": "o_proj",
+          "fit_features_ns": [
+            1.0,
+            34154.80951093439,
+            26253.78067100651
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "ffn_rmsnorm",
+          "name": "FFN RMSNorm",
+          "flops": 10485760.0,
+          "hbm_bytes": 8396800.0,
+          "weight_bytes": 8192.0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.00013304691514670896,
+          "memory_ms": 0.00656985478217326,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0053693800961239725,
+          "bound": "Memory",
+          "arithmetic_intensity": 1.248780487804878,
+          "achieved_tflops": 1.9528809308116255,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.00906985478217326,
+          "fit_key": "layernorm",
+          "fit_features_ns": [
+            1.0,
+            83.88608,
+            5255.883825738608
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "gate_+_up_projection",
+          "name": "Gate + up projection",
+          "flops": 120259084288.0,
+          "hbm_bytes": 278921216.0,
+          "weight_bytes": 234881024.0,
+          "activation_bytes": 44040192.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.37919693350759837,
+          "memory_ms": 0.2182345518277416,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.3899514041470822,
+          "bound": "Compute",
+          "arithmetic_intensity": 431.1578947368421,
+          "achieved_tflops": 308.3950538684061,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.38169693350759837,
+          "fit_key": "gate_up_proj",
+          "fit_features_ns": [
+            1.0,
+            239083.66657654074,
+            168024.19629444164
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "swiglu",
+          "name": "SwiGLU",
+          "flops": 36700160.0,
+          "hbm_bytes": 44040192.0,
+          "weight_bytes": 0,
+          "activation_bytes": 44040192.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.00046566420301348137,
+          "memory_ms": 0.03445808713069604,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.012730726330375336,
+          "bound": "Memory",
+          "arithmetic_intensity": 0.8333333333333334,
+          "achieved_tflops": 2.8828017386905826,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.036958087130696045,
+          "fit_key": "act_fn",
+          "fit_features_ns": [
+            1.0,
+            293.60128000000003,
+            27566.469704556835
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "down_projection",
+          "name": "Down projection",
+          "flops": 60129542144.0,
+          "hbm_bytes": 125829120.0,
+          "weight_bytes": 117440512.0,
+          "activation_bytes": 8388608.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.18959846675379918,
+          "memory_ms": 0.09845167751627441,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.1994906704033795,
+          "bound": "Compute",
+          "arithmetic_intensity": 477.8666666666667,
+          "achieved_tflops": 301.41530940978464,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.19209846675379919,
+          "fit_key": "down_proj",
+          "fit_features_ns": [
+            1.0,
+            119541.83328827037,
+            85324.78718077115
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ],
+      "detail": {
+        "kv_read_bytes": 2097152.0,
+        "kv_spill_bytes": 0,
+        "sram_hit_fraction": 1,
+        "fabric": {
+          "name": "Intra-node",
+          "bw": 30.85,
+          "latency": 2.0
+        },
+        "peak_tflops": 503.0
+      }
+    },
+    "decode": {
+      "operations": [
+        {
+          "id": "input_rmsnorm",
+          "name": "Input RMSNorm",
+          "flops": 81920.0,
+          "hbm_bytes": 73728.0,
+          "weight_bytes": 8192.0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 1.0394290245836637e-06,
+          "memory_ms": 5.768652979469204e-05,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0021727362222109595,
+          "bound": "Memory",
+          "arithmetic_intensity": 1.1111111111111112,
+          "achieved_tflops": 0.03770361038885744,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.002557686529794692,
+          "fit_key": "layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "qkv_projection",
+          "name": "QKV projection",
+          "flops": 201326592.0,
+          "hbm_bytes": 50397184.0,
+          "weight_bytes": 50331648.0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.002486363821827166,
+          "memory_ms": 0.03943194792188282,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.03496469331423007,
+          "bound": "Memory",
+          "arithmetic_intensity": 3.9947984395318596,
+          "achieved_tflops": 5.757996793813241,
+          "tile_utilization": 0.2553191489361702,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.041931947921882824,
+          "fit_key": "qkv_proj",
+          "fit_features_ns": [
+            1.0,
+            400.25167395626244,
+            31555.81372058087
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "rotary_position",
+          "name": "Rotary position",
+          "flops": 98304.0,
+          "hbm_bytes": 65536.0,
+          "weight_bytes": 0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 1.2473148295003964e-06,
+          "memory_ms": 5.1276915373059586e-05,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0023321919024766827,
+          "bound": "Memory",
+          "arithmetic_intensity": 1.5,
+          "achieved_tflops": 0.04215090529025745,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.00255127691537306,
+          "fit_key": "rotary_emb",
+          "fit_features_ns": [
+            1.0,
+            0.7864319999999999,
+            51.27691537305959
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "attention",
+          "name": "Attention",
+          "flops": 8617984.0,
+          "hbm_bytes": 81920.0,
+          "weight_bytes": 0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 16384.0,
+          "compute_ms": 0.00015964689578626577,
+          "memory_ms": 6.409614421632449e-05,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.012803737997631098,
+          "bound": "Compute",
+          "arithmetic_intensity": 105.2,
+          "achieved_tflops": 0.6730834387266021,
+          "tile_utilization": 0.1702127659574468,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.002659646895786266,
+          "fit_key": "attention:decode",
+          "fit_features_ns": [
+            1.0,
+            17.1331689860835,
+            1389.6044066099148
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "output_projection",
+          "name": "Output projection",
+          "flops": 134217728.0,
+          "hbm_bytes": 33619968.0,
+          "weight_bytes": 33554432.0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.0024863638218271655,
+          "memory_ms": 0.02630505758637957,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.024357948334246756,
+          "bound": "Memory",
+          "arithmetic_intensity": 3.992202729044834,
+          "achieved_tflops": 5.510223035135219,
+          "tile_utilization": 0.1702127659574468,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.02880505758637957,
+          "fit_key": "o_proj",
+          "fit_features_ns": [
+            1.0,
+            266.83444930417494,
+            21044.046069103653
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "ffn_rmsnorm",
+          "name": "FFN RMSNorm",
+          "flops": 81920.0,
+          "hbm_bytes": 73728.0,
+          "weight_bytes": 8192.0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 1.0394290245836637e-06,
+          "memory_ms": 5.768652979469204e-05,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0021727362222109595,
+          "bound": "Memory",
+          "arithmetic_intensity": 1.1111111111111112,
+          "achieved_tflops": 0.03770361038885744,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.002557686529794692,
+          "fit_key": "layernorm",
+          "fit_features_ns": [
+            1.0,
+            0.65536,
+            46.14922383575363
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "gate_+_up_projection",
+          "name": "Gate + up projection",
+          "flops": 939524096.0,
+          "hbm_bytes": 235225088.0,
+          "weight_bytes": 234881024.0,
+          "activation_bytes": 344064.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.0029624760430281122,
+          "memory_ms": 0.18404566850275414,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.1478767193737214,
+          "bound": "Memory",
+          "arithmetic_intensity": 3.994149195514383,
+          "achieved_tflops": 6.353428044515838,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.18654566850275414,
+          "fit_key": "gate_up_proj",
+          "fit_features_ns": [
+            1.0,
+            1867.8411451292245,
+            147185.25788683025
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "swiglu",
+          "name": "SwiGLU",
+          "flops": 286720.0,
+          "hbm_bytes": 344064.0,
+          "weight_bytes": 0,
+          "activation_bytes": 344064.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 3.638001586042823e-06,
+          "memory_ms": 0.00026920380570856283,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.0021000475023024057,
+          "bound": "Memory",
+          "arithmetic_intensity": 0.8333333333333334,
+          "achieved_tflops": 0.1365302449995307,
+          "tile_utilization": 1,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.002769203805708563,
+          "fit_key": "act_fn",
+          "fit_features_ns": [
+            1.0,
+            2.2937600000000002,
+            215.36304456685028
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        },
+        {
+          "id": "down_projection",
+          "name": "Down projection",
+          "flops": 469762048.0,
+          "hbm_bytes": 117506048.0,
+          "weight_bytes": 117440512.0,
+          "activation_bytes": 65536.0,
+          "kv_hbm_bytes": 0,
+          "compute_ms": 0.00870227337639508,
+          "memory_ms": 0.09193950926389584,
+          "network_ms": 0,
+          "launch_ms": 0.0025,
+          "duration_ms": 0.07781239709710523,
+          "bound": "Memory",
+          "arithmetic_intensity": 3.9977691020635806,
+          "achieved_tflops": 6.037110608657447,
+          "tile_utilization": 0.1702127659574468,
+          "timing_source": "fitted-profiled-configuration",
+          "roofline_duration_ms": 0.09443950926389584,
+          "fit_key": "down_proj",
+          "fit_features_ns": [
+            1.0,
+            933.9205725646123,
+            73602.88432648974
+          ],
+          "calibration_scope": "Fitted GPU operator service time; serving/network/energy remain modeled"
+        }
+      ],
+      "detail": {
+        "kv_read_bytes": 2154496.0,
+        "kv_spill_bytes": 0,
+        "sram_hit_fraction": 1,
+        "fabric": {
+          "name": "Intra-node",
+          "bw": 30.85,
+          "latency": 2.0
+        },
+        "peak_tflops": 503.0
+      }
+    }
+  },
+  "warnings": [
+    "Behavioral simulation, not mechanistic simulation. Estimates do not model GPU instructions, cycles, page-level memory events or physical network packets; not measured hardware performance or a KAIST validation claim.",
+    "Fixed prefill microbatches with optional decode splitting; no cross-prefill merge or continuous rebatching. Independent FIFO phase admission limits are per replica and held across all chunks/tokens.",
+    "Memory utilization and runtime reservation reduce usable device capacity. No offload, allocator fragmentation or recomputation is modeled.",
+    "Uniform decoder layers with RMSNorm, RoPE and SwiGLU; optional QK normalization and routed experts. MLA, hybrid attention, shared experts, encoder-decoder and vision encoders are outside this architecture model.",
+    "Ideal KV SRAM read reuse; KV writes still reach HBM. HBM stores the complete KV payload.",
+    "Tensor tiling, uniform MoE routing, engine efficiency, activation traffic and activity-based energy are explicit assumptions. Quantization conversion overhead and numerical quality are excluded.",
+    "Pipeline activation messages use the limiting fabric tier of the entire pool as a conservative placement approximation.",
+    "Network tiers use the limiting end-to-end bandwidth plus ring/dispatch overhead; they do not model individual packets or switches.",
+    "TTFT includes batch formation, queueing, prefill and KV handoff; the first token is released after the handoff.",
+    "All GPU operator service times use the same nonnegative function fitted offline to KAIST profiles; no runtime timing-table lookup or exact-match override. Profiled configurations also have fitted prediction error.",
+    "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
+    "Training uses dense Llama-3.1-8B and Qwen3-32B on two GPU families. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks."
+  ],
+  "provenance": {
+    "kind": "behavioral_extension",
+    "upstream_url": "https://github.com/casys-kaist/LLMServingSim",
+    "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
+    "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-8B.json",
+    "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
+    "config_sha256": "bc7bd9fce86b0e8de13e72fbf4fe8545da862b90508d6da87c092fd2a5c8fe6d",
+    "timing_source": "GPU service function fitted to KAIST profiles; identical function for all configurations; SimPy serving and analytical network",
+    "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
+  }
+}

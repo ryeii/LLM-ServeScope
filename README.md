@@ -58,6 +58,26 @@ Pin a baseline, edit a scenario and run again to compare metrics. Export/import
 scenario JSON, export complete results and download SVG charts. Changed inputs
 are applied only when **Run scenario** is selected.
 
+## Fitted GPU service-time model
+
+GPU timing uses **one function fitted offline to KAIST's operator profiles**.
+Hardware parameters, precision, operation and tensor geometry determine the
+predicted execution time. The same function handles profiled and unseen inputs;
+there are no runtime timing-table lookups or exact-match overrides. SimPy then
+uses those predictions to model serving throughput and latency.
+
+- Training: 9,411 dense operator observations across two models, two GPU families
+  and five model/hardware/TP bundles.
+- Validation: withheld GPU, model and tensor-shape tests, with recorded errors.
+  Paired held-out GPU operator error improves from 52.1% to 24.3% over the original
+  roofline model; new-GPU accuracy is not guaranteed by fitting alone.
+- Integration: mean throughput difference versus nine native reference scenarios
+  improves from 13.5% to 4.1%. Energy, memory and network require separate calibration.
+- Original roofline mode remains available for comparison.
+
+See [function, assumptions and validation](docs/calibration.md) and the
+[serving comparison](docs/benchmarks/fitted-vs-profiles-2026-10-19/README.md).
+
 ## Limitations: behavioral, not mechanistic simulation
 
 **LLM-ServeScope is a behavioral simulation, not a mechanistic simulation.**
@@ -97,7 +117,7 @@ instruction-, cycle-, page- or transaction-level behavior is the question.
 ### LLM-ServeScope — ryeii (Ryan Z An)
 
 [ryeii (Ryan Z An)](https://github.com/ryeii) created LLM-ServeScope, including
-its behavioral modeling extension, serving scenario controls, visualizations,
+its behavioral modeling extension, profile-calibrated timing function, serving scenario controls, visualizations,
 user interface, browser execution layer and native backend integration.
 
 ### Reference backend — LLMServingSim 2.0

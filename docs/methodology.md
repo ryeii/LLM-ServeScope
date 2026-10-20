@@ -15,7 +15,17 @@ and Jongse Park), using their scheduler, measured profiles, Chakra DAG generatio
 and ASTRA-Sim integration. SimPy supplies discrete-event scheduling for the
 behavioral engine. See [full credits and notices](../THIRD_PARTY_NOTICES.md).
 
-## Operation model
+## Fitted GPU service-time function
+
+The default mode evaluates the same nonnegative compute/memory function for every
+GPU and input. Coefficients are learned offline from KAIST profiles; no timing table
+or residual anchor is consulted during simulation. Profiled configurations also
+have fitted prediction error. See [equations, physical constraints, assumptions
+and withheld-data validation](calibration.md). SimPy serving, network, capacity/
+traffic and energy remain separate behavioral models. The equations below describe
+the retained original roofline mode and nominal resource-work estimates.
+
+## Original roofline operation model
 
 Model geometry is taken from pinned KAIST or publisher configuration files (or
 explicitly user-defined decoder inputs): hidden and
@@ -124,7 +134,7 @@ extrapolation as a measured KAIST result. No accuracy percentage is claimed here
 ## Reproducibility
 
 All results include resolved inputs, configuration SHA-256 and source revisions.
-Behavioral results now use `servescope.behavioral.v2`. Legacy scenarios with a
+Behavioral results now use `servescope.behavioral.v3`, including timing provenance and calibration fingerprints. Legacy scenarios with a
 single top-level `batch_size` and missing server controls are still accepted;
 that batch size initializes both pool caps. Resolved per-pool caps take precedence,
 and the top-level field remains an alias for the prefill cap.
