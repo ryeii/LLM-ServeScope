@@ -97,6 +97,9 @@ function Field({
   unit?: string;
   tip?: string;
 }) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+
   return (
     <label className="field" title={tip}>
       <span>{label}</span>
@@ -104,13 +107,17 @@ function Field({
         <input
           type="number"
           aria-label={label}
-          value={value}
+          value={draft}
           min={min}
           max={max}
           step={step}
-          onChange={(e) =>
-            onChange(e.target.value === "" ? 0 : Number(e.target.value))
-          }
+          onChange={(e) => {
+            setDraft(e.currentTarget.value);
+            // An empty or incomplete edit is not a new numeric value.
+            const next = e.currentTarget.valueAsNumber;
+            if (Number.isFinite(next)) onChange(next);
+          }}
+          onBlur={() => setDraft(String(value))}
         />
         {unit && <small>{unit}</small>}
       </div>
