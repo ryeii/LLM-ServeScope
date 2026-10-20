@@ -1,4 +1,4 @@
-"""System-level behavioral model. These equations are our extension, not KAIST timings."""
+"""Behavioral serving simulation with a GPU function fitted to KAIST profiles."""
 
 from __future__ import annotations
 import copy, hashlib, json, math, statistics
@@ -8,9 +8,11 @@ import simpy
 ROOT = Path(__file__).resolve().parents[1]
 PIN = "b09c7aaab4b072d73136641841cc2688616c49eb"
 from .catalog import MODELS, HARDWARE, BASE
+from .calibration import OPERATOR_NAMES, manifest as calibration_manifest, timing as calibrated_timing
 
 DEFAULT = dict(
     model_id="llama70",
+    timing_mode="calibrated",
     precision="bf16",
     inference_engine="vllm",
     requests=16,
@@ -101,6 +103,9 @@ def resolve_model(c):
 def validate(config):
     c = copy.deepcopy(config)
     m = resolve_model(c)
+    c["timing_mode"] = c.get("timing_mode", "calibrated")
+    if c["timing_mode"] not in ("calibrated", "roofline"):
+        raise ValueError("Timing model must be calibrated or roofline.")
     if c["model_id"] == "custom":
         c["custom_model"] = m
     if c.get("precision") not in BYTES:
@@ -532,6 +537,16 @@ def phase_ops(c, phase, batch, tokens, context):
         "FFN all-reduce",
     ]
     ops.sort(key=lambda o: order.index(o["name"]))
+    for operation in ops:
+        operation["timing_source"] = "analytical-network" if operation["bound"] == "Network" else "roofline"
+        canonical = OPERATOR_NAMES.get(operation["name"])
+        cost = calibrated_timing(canonical, c, phase, batch, tokens, context) if canonical else None
+        if cost:
+            operation["roofline_duration_ms"] = operation["duration_ms"]
+            operation.update(cost)
+            operation["achieved_tflops"] = operation["flops"] / max(operation["duration_ms"]*1e9, 1)
+        # Resource work remains an analytical estimate; profile latency already
+        # includes the kernel's internal memory and arithmetic interaction.
     # One transformer stage plus amortized embedding/head work. Head is charged only on the last pipeline stage by the scheduler.
     return ops, dict(
         kv_read_bytes=kv_layer,
@@ -660,6 +675,16 @@ def simulate(config):
                     (shared_phase, replica, stage), simpy.Resource(env, capacity=1)
                 )
 
+    timing_records = {}
+
+    def remember_timing(phase, name, cost):
+        key = (phase, name, cost["timing_source"], cost.get("fit_key", ""))
+        if key not in timing_records:
+            timing_records[key] = dict(phase=phase, operator=name,
+                                      source=cost["timing_source"],
+                                      fit_key=cost.get("fit_key"), count=0)
+        timing_records[key]["count"] += 1
+
     def work(
         phase, batch, tokens, context, replica, batch_id, chunk_index, request_ids
     ):
@@ -670,6 +695,8 @@ def simulate(config):
         if key not in op_cache:
             op_cache[key] = phase_ops(c, phase, batch, tokens, context)
         ops, detail = op_cache[key]
+        for operation in ops:
+            remember_timing(phase, operation["name"], operation)
         for stage, resource in enumerate(resources[phase][replica]):
             with resource.request() as ticket:
                 yield ticket
@@ -681,9 +708,20 @@ def simulate(config):
                     Launch=sum(o["launch_ms"] for o in ops) * layers,
                 )
                 duration = sum(o["duration_ms"] for o in ops) * layers
-                # Logits: last pipeline stage, sampled once at prefill end / each decode iteration.
+                endpoint_costs = []
+                if c["timing_mode"] == "calibrated":
+                    # KAIST's shared prologue/head are outside the repeated block.
+                    names = (["embedding"] if stage == 0 else []) + (
+                        ["final_layernorm", "lm_head", "sampler"] if stage == p["pp"]-1 else [])
+                    for endpoint in names:
+                        cost = calibrated_timing(endpoint, c, phase, batch, tokens, context)
+                        if cost:
+                            duration += cost["duration_ms"]
+                            endpoint_costs.append(dict(name=endpoint, **cost))
+                            remember_timing(phase, endpoint, cost)
+                # Original roofline mode retains its separate head approximation.
                 last_prefill = phase == "prefill" and context >= c["input_tokens"]
-                if stage == p["pp"] - 1 and (phase == "decode" or last_prefill):
+                if stage == p["pp"] - 1 and (phase == "decode" or last_prefill or c["timing_mode"] == "calibrated"):
                     head_flops = 2 * batch * m["hidden"] * m["vocab"] / p["tp"]
                     head_bytes = m["hidden"] * m["vocab"] * dtype / p["tp"]
                     hc = (
@@ -705,7 +743,8 @@ def simulate(config):
                         )
                         * 1000
                     )
-                    duration += max(hc, hm)
+                    if not any(endpoint["name"] == "lm_head" for endpoint in endpoint_costs):
+                        duration += max(hc, hm)
                     component["Compute"] += hc
                     component["Memory"] += hm
                     traffic["flops"] += head_flops * p["tp"] * p["ep"]
@@ -731,6 +770,7 @@ def simulate(config):
                         batch_size=batch,
                         context=context,
                         components=component,
+                        endpoint_timing=endpoint_costs,
                     )
                 )
                 for o in ops:
@@ -1027,8 +1067,23 @@ def simulate(config):
         warnings.append(
             "TPOT is zero because no inter-token interval exists for a one-token output."
         )
+    calibration = dict(mode=c["timing_mode"], operator_sources=list(timing_records.values()))
+    if c["timing_mode"] == "calibrated":
+        calibration["dataset"] = calibration_manifest()
+        sources = {record["source"] for record in timing_records.values()} - {"analytical-network"}
+        calibration["summary"] = ("Fitted GPU function · extrapolation" if "fitted-extrapolation" in sources
+                                  else "Fitted GPU function · profiled configuration")
+        calibration["fallback_operators"] = sorted({record["operator"] for record in timing_records.values() if record["source"]=="roofline"})
+        if calibration["fallback_operators"]:
+            calibration["summary"] += " · analytical fallbacks"
+        warnings.append("All GPU operator service times use the same nonnegative function fitted offline to KAIST profiles; no runtime timing-table lookup or exact-match override. Profiled configurations also have fitted prediction error.")
+        warnings.append("Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.")
+        warnings.append("Training uses dense Llama-3.1-8B and Qwen3-32B on two GPU families. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.")
+    else:
+        calibration["summary"] = "Original roofline · uncalibrated"
     return dict(
-        schema_version="servescope.behavioral.v2",
+        schema_version="servescope.behavioral.v3",
+        calibration=calibration,
         engine="LLM-ServeScope behavioral / SimPy",
         config=c,
         model=m,
@@ -1050,7 +1105,8 @@ def simulate(config):
             config_sha256=hashlib.sha256(
                 json.dumps(c, sort_keys=True).encode()
             ).hexdigest(),
-            timing_source="Closed-form roofline + hierarchical network + SimPy resource contention; not native LLMServingSim clocks",
+            timing_source=("GPU service function fitted to KAIST profiles; identical function for all configurations; SimPy serving and analytical network"
+                           if c["timing_mode"] == "calibrated" else "Closed-form roofline + hierarchical network + SimPy resource contention; not native LLMServingSim clocks"),
             precision_note="Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal.",
         ),
     )
@@ -1062,4 +1118,5 @@ def catalog():
         hardware=HARDWARE,
         default_config=validate(DEFAULT),
         upstream_revision=PIN,
+        calibration=calibration_manifest(),
     )
