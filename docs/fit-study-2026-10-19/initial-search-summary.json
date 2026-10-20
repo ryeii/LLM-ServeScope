@@ -1,0 +1,446 @@
+{
+  "kaist": {
+    "F0": {
+      "family": "F0",
+      "description": {
+        "name": "Baseline additive / relative loss",
+        "parameters": 3,
+        "formula": "L + a C + b M",
+        "merge": "sum",
+        "loss": "relative"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 13.725567344498684,
+        "median_ape_pct": 8.454263915075423,
+        "p95_ape_pct": 50.953729520113896,
+        "latency_weighted_ape_pct": 9.947301662507124,
+        "signed_bias_pct": -4.224616279482494,
+        "rms_log_error": 0.2643262608972713,
+        "macro_operator_mape_pct": 13.027272671131323
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 13.769328610321509,
+        "median_ape_pct": 8.497260618438585,
+        "p95_ape_pct": 51.06257539147975,
+        "latency_weighted_ape_pct": 9.995054953651358,
+        "signed_bias_pct": -4.1973802963444715,
+        "rms_log_error": 0.2646655405848345,
+        "macro_operator_mape_pct": 13.081534781167536
+      }
+    },
+    "F1": {
+      "family": "F1",
+      "description": {
+        "name": "Additive / log loss",
+        "parameters": 3,
+        "formula": "L + a C + b M",
+        "merge": "sum",
+        "loss": "log"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 15.358846559469203,
+        "median_ape_pct": 8.475286726489085,
+        "p95_ape_pct": 53.48631971564585,
+        "latency_weighted_ape_pct": 10.019357550439445,
+        "signed_bias_pct": 2.7017195801994505,
+        "rms_log_error": 0.23427572069565697,
+        "macro_operator_mape_pct": 14.453583221699189
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 15.410359052426086,
+        "median_ape_pct": 8.512121720555976,
+        "p95_ape_pct": 53.56034777780242,
+        "latency_weighted_ape_pct": 10.072164256048382,
+        "signed_bias_pct": 2.7309663175157666,
+        "rms_log_error": 0.2350021361135279,
+        "macro_operator_mape_pct": 14.536373823532715
+      }
+    },
+    "F2": {
+      "family": "F2",
+      "description": {
+        "name": "Fitted roofline",
+        "parameters": 3,
+        "formula": "L + max(a C, b M)",
+        "merge": "max",
+        "loss": "log"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 16.88339475316216,
+        "median_ape_pct": 9.135887660451235,
+        "p95_ape_pct": 57.07270794053164,
+        "latency_weighted_ape_pct": 13.393016926126167,
+        "signed_bias_pct": 3.15940432906435,
+        "rms_log_error": 0.25060007790358224,
+        "macro_operator_mape_pct": 15.730750160868975
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 16.94922914035678,
+        "median_ape_pct": 9.17717299416042,
+        "p95_ape_pct": 57.56405902236574,
+        "latency_weighted_ape_pct": 13.43137527728014,
+        "signed_bias_pct": 3.190254978120592,
+        "rms_log_error": 0.25141133621061756,
+        "macro_operator_mape_pct": 15.825683470081183
+      }
+    },
+    "F3": {
+      "family": "F3",
+      "description": {
+        "name": "Smooth overlap",
+        "parameters": 3,
+        "formula": "L + sqrt((a C)^2 + (b M)^2)",
+        "merge": "quadratic",
+        "loss": "log"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 15.891183342702496,
+        "median_ape_pct": 8.481265245718461,
+        "p95_ape_pct": 55.40260106654124,
+        "latency_weighted_ape_pct": 11.98833501564598,
+        "signed_bias_pct": 2.8960340776677875,
+        "rms_log_error": 0.2412478215037384,
+        "macro_operator_mape_pct": 14.848237700737851
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 15.942762009766962,
+        "median_ape_pct": 8.521515958392323,
+        "p95_ape_pct": 55.17042397335298,
+        "latency_weighted_ape_pct": 12.043392734593148,
+        "signed_bias_pct": 2.9306942676996997,
+        "rms_log_error": 0.2419711435344135,
+        "macro_operator_mape_pct": 14.93067133291061
+      }
+    },
+    "F4": {
+      "family": "F4",
+      "description": {
+        "name": "Tile-wave additive",
+        "parameters": 3,
+        "formula": "L + a W + b M",
+        "merge": "wave",
+        "loss": "log"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 17.901886317458185,
+        "median_ape_pct": 12.520555613682038,
+        "p95_ape_pct": 44.9602129345699,
+        "latency_weighted_ape_pct": 14.505011222948621,
+        "signed_bias_pct": -2.0839041048712157,
+        "rms_log_error": 0.25794274719427507,
+        "macro_operator_mape_pct": 17.17247710106265
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 17.990718274157075,
+        "median_ape_pct": 12.628004466627264,
+        "p95_ape_pct": 45.15018033873716,
+        "latency_weighted_ape_pct": 14.55592322211281,
+        "signed_bias_pct": -2.00802523452596,
+        "rms_log_error": 0.2588539804747491,
+        "macro_operator_mape_pct": 17.288523371447276
+      }
+    },
+    "F5": {
+      "family": "F5",
+      "description": {
+        "name": "One bounded shape transition",
+        "parameters": 5,
+        "formula": "L + a C + M [b0 (1-g) + b1 g]",
+        "merge": "memory_gate",
+        "loss": "log"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 12.303648147366673,
+        "median_ape_pct": 7.454831010334817,
+        "p95_ape_pct": 41.11905926537911,
+        "latency_weighted_ape_pct": 7.519951603574428,
+        "signed_bias_pct": 1.6431689346161258,
+        "rms_log_error": 0.17979328314773277,
+        "macro_operator_mape_pct": 12.060497301169173
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 12.382581568189815,
+        "median_ape_pct": 7.492072796526495,
+        "p95_ape_pct": 41.12693612571347,
+        "latency_weighted_ape_pct": 7.581529786737354,
+        "signed_bias_pct": 1.698651911204516,
+        "rms_log_error": 0.18099117682257096,
+        "macro_operator_mape_pct": 12.207717910651237
+      }
+    },
+    "F6": {
+      "family": "F6",
+      "description": {
+        "name": "Two bounded shape transitions",
+        "parameters": 6,
+        "formula": "L + C [a0 (1-g) + a1 g] + M [b0 (1-g) + b1 g]",
+        "merge": "both_gate",
+        "loss": "log"
+      },
+      "training": {
+        "count": 9411,
+        "mape_pct": 12.233000965954576,
+        "median_ape_pct": 7.430981798897296,
+        "p95_ape_pct": 40.91832448415591,
+        "latency_weighted_ape_pct": 7.463730011513854,
+        "signed_bias_pct": 1.6408861458249584,
+        "rms_log_error": 0.17877680892674147,
+        "macro_operator_mape_pct": 12.004192308996542
+      },
+      "oof": {
+        "count": 9411,
+        "mape_pct": 12.31059350761606,
+        "median_ape_pct": 7.452144657242954,
+        "p95_ape_pct": 41.104529293287214,
+        "latency_weighted_ape_pct": 7.525856751034617,
+        "signed_bias_pct": 1.682975355186925,
+        "rms_log_error": 0.1800731344217135,
+        "macro_operator_mape_pct": 12.140894627681504
+      }
+    },
+    "selected_composite": {
+      "count": 9411,
+      "mape_pct": 12.11862154182358,
+      "median_ape_pct": 7.797336964756029,
+      "p95_ape_pct": 38.65715185164649,
+      "latency_weighted_ape_pct": 9.370090441463946,
+      "signed_bias_pct": 0.2814056302200666,
+      "rms_log_error": 0.18156787811351258,
+      "macro_operator_mape_pct": 11.729422389612665
+    }
+  },
+  "vidur": {
+    "F0": {
+      "family": "F0",
+      "description": {
+        "name": "Baseline additive / relative loss",
+        "parameters": 3,
+        "formula": "L + a C + b M",
+        "merge": "sum",
+        "loss": "relative"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 13.277099276436362,
+        "median_ape_pct": 8.576516582476767,
+        "p95_ape_pct": 41.82409200959934,
+        "latency_weighted_ape_pct": 11.352621453955466,
+        "signed_bias_pct": -3.6677903556005576,
+        "rms_log_error": 0.24023179905097922,
+        "macro_operator_mape_pct": 15.64856117727957
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 13.279977013283556,
+        "median_ape_pct": 8.577309549601853,
+        "p95_ape_pct": 41.81666158152841,
+        "latency_weighted_ape_pct": 11.354206495659614,
+        "signed_bias_pct": -3.6665417355852443,
+        "rms_log_error": 0.2402773596214175,
+        "macro_operator_mape_pct": 15.66100782258523
+      }
+    },
+    "F1": {
+      "family": "F1",
+      "description": {
+        "name": "Additive / log loss",
+        "parameters": 3,
+        "formula": "L + a C + b M",
+        "merge": "sum",
+        "loss": "log"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 14.068303946681683,
+        "median_ape_pct": 8.717659182208415,
+        "p95_ape_pct": 44.52170890587152,
+        "latency_weighted_ape_pct": 11.705093880009436,
+        "signed_bias_pct": 2.230651652504899,
+        "rms_log_error": 0.2088803910627453,
+        "macro_operator_mape_pct": 17.92413555623264
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 14.07299319245331,
+        "median_ape_pct": 8.719126836013757,
+        "p95_ape_pct": 44.53310463034903,
+        "latency_weighted_ape_pct": 11.706869498106531,
+        "signed_bias_pct": 2.233097322631292,
+        "rms_log_error": 0.2089664149180247,
+        "macro_operator_mape_pct": 17.945911889009874
+      }
+    },
+    "F2": {
+      "family": "F2",
+      "description": {
+        "name": "Fitted roofline",
+        "parameters": 3,
+        "formula": "L + max(a C, b M)",
+        "merge": "max",
+        "loss": "log"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 14.77726448385346,
+        "median_ape_pct": 8.839878870191075,
+        "p95_ape_pct": 45.73248050171982,
+        "latency_weighted_ape_pct": 12.862819723952853,
+        "signed_bias_pct": 2.37433214820163,
+        "rms_log_error": 0.2154270146942859,
+        "macro_operator_mape_pct": 20.843975987176186
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 14.47751117781362,
+        "median_ape_pct": 8.59694106390645,
+        "p95_ape_pct": 45.368673447434254,
+        "latency_weighted_ape_pct": 12.641589775304674,
+        "signed_bias_pct": 2.328934269939062,
+        "rms_log_error": 0.21342018290858594,
+        "macro_operator_mape_pct": 19.533792888805063
+      }
+    },
+    "F3": {
+      "family": "F3",
+      "description": {
+        "name": "Smooth overlap",
+        "parameters": 3,
+        "formula": "L + sqrt((a C)^2 + (b M)^2)",
+        "merge": "quadratic",
+        "loss": "log"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 14.037294472319955,
+        "median_ape_pct": 8.550486530641098,
+        "p95_ape_pct": 44.82344293935291,
+        "latency_weighted_ape_pct": 11.767307257307722,
+        "signed_bias_pct": 2.259677101609426,
+        "rms_log_error": 0.210261209851195,
+        "macro_operator_mape_pct": 17.63150460539164
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 14.041823950321252,
+        "median_ape_pct": 8.550787131682913,
+        "p95_ape_pct": 44.81068213903073,
+        "latency_weighted_ape_pct": 11.768647994839219,
+        "signed_bias_pct": 2.262067396302299,
+        "rms_log_error": 0.2103436528978889,
+        "macro_operator_mape_pct": 17.653407838011127
+      }
+    },
+    "F4": {
+      "family": "F4",
+      "description": {
+        "name": "Tile-wave additive",
+        "parameters": 3,
+        "formula": "L + a W + b M",
+        "merge": "wave",
+        "loss": "log"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 23.90197860026882,
+        "median_ape_pct": 9.803406032191841,
+        "p95_ape_pct": 74.17683164855367,
+        "latency_weighted_ape_pct": 15.303203465610327,
+        "signed_bias_pct": 7.34769244122823,
+        "rms_log_error": 0.3398212859283937,
+        "macro_operator_mape_pct": 27.174201656846144
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 23.908521917280748,
+        "median_ape_pct": 9.808163864340713,
+        "p95_ape_pct": 74.27512283555366,
+        "latency_weighted_ape_pct": 15.305061485768537,
+        "signed_bias_pct": 7.351814616670774,
+        "rms_log_error": 0.3398990767404675,
+        "macro_operator_mape_pct": 27.19852052229403
+      }
+    },
+    "F5": {
+      "family": "F5",
+      "description": {
+        "name": "One bounded shape transition",
+        "parameters": 5,
+        "formula": "L + a C + M [b0 (1-g) + b1 g]",
+        "merge": "memory_gate",
+        "loss": "log"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 12.867595101136972,
+        "median_ape_pct": 7.375552076606484,
+        "p95_ape_pct": 41.990908353053655,
+        "latency_weighted_ape_pct": 9.01239426625365,
+        "signed_bias_pct": 1.9759526145054056,
+        "rms_log_error": 0.197645575253905,
+        "macro_operator_mape_pct": 16.164744396219646
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 12.87146855433531,
+        "median_ape_pct": 7.378190457779127,
+        "p95_ape_pct": 42.0028680574015,
+        "latency_weighted_ape_pct": 9.013727546601618,
+        "signed_bias_pct": 1.9780486807687239,
+        "rms_log_error": 0.19771676732201846,
+        "macro_operator_mape_pct": 16.184150274468895
+      }
+    },
+    "F6": {
+      "family": "F6",
+      "description": {
+        "name": "Two bounded shape transitions",
+        "parameters": 6,
+        "formula": "L + C [a0 (1-g) + a1 g] + M [b0 (1-g) + b1 g]",
+        "merge": "both_gate",
+        "loss": "log"
+      },
+      "training": {
+        "count": 262240,
+        "mape_pct": 12.74888482913708,
+        "median_ape_pct": 7.427288245361247,
+        "p95_ape_pct": 41.497878552878774,
+        "latency_weighted_ape_pct": 8.220688881549911,
+        "signed_bias_pct": 1.9499070306599091,
+        "rms_log_error": 0.19633431287783906,
+        "macro_operator_mape_pct": 16.043197844408763
+      },
+      "oof": {
+        "count": 262240,
+        "mape_pct": 12.753205488097548,
+        "median_ape_pct": 7.430135432801066,
+        "p95_ape_pct": 41.49545697570686,
+        "latency_weighted_ape_pct": 8.22223227691225,
+        "signed_bias_pct": 1.952246563715988,
+        "rms_log_error": 0.19641063709322157,
+        "macro_operator_mape_pct": 16.06486503915701
+      }
+    },
+    "selected_composite": {
+      "count": 262240,
+      "mape_pct": 12.884952303763203,
+      "median_ape_pct": 8.252725306914105,
+      "p95_ape_pct": 42.076206044700136,
+      "latency_weighted_ape_pct": 10.339327654780668,
+      "signed_bias_pct": -0.673765612413026,
+      "rms_log_error": 0.22619827687005642,
+      "macro_operator_mape_pct": 14.691120676217276
+    }
+  }
+}

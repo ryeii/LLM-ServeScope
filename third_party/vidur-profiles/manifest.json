@@ -1,0 +1,207 @@
+{
+  "repository": "https://github.com/microsoft/vidur",
+  "revision": "abae7f63aa857300f5cdc6f5e0d27860cd24721b",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "LICENSE",
+      "archive": "LICENSE.gz",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/LICENSE"
+    },
+    {
+      "path": "vidur/config/device_sku_config.py",
+      "archive": "vidur__config__device_sku_config.py.gz",
+      "bytes": 883,
+      "sha256": "bcabad662420a480d2508deaef927a91fbe9a8fa4b30cf82349b0f5b57d21c90",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/config/device_sku_config.py"
+    },
+    {
+      "path": "vidur/config/model_config.py",
+      "archive": "vidur__config__model_config.py.gz",
+      "bytes": 5330,
+      "sha256": "58d9f29f1fe832ee5a54eaa60860e6b19ef349709bf3f1cc322b1dcf8913cf71",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/config/model_config.py"
+    },
+    {
+      "path": "vidur/profiling/common/cuda_timer.py",
+      "archive": "vidur__profiling__common__cuda_timer.py.gz",
+      "bytes": 3735,
+      "sha256": "c1b543013854003a8fb14fafc9c017ea1b72eaabf5de7818c8b80b8a1955a9fc",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/common/cuda_timer.py"
+    },
+    {
+      "path": "vidur/profiling/common/timer_stats_store.py",
+      "archive": "vidur__profiling__common__timer_stats_store.py.gz",
+      "bytes": 1161,
+      "sha256": "9c2b83aa497b9e0ffc2584ad379a16f3630baaa65cceb5b7694766a7a8d33df3",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/common/timer_stats_store.py"
+    },
+    {
+      "path": "vidur/profiling/common/model_config.py",
+      "archive": "vidur__profiling__common__model_config.py.gz",
+      "bytes": 2628,
+      "sha256": "332e3fc1e354f13f65d779955967939eafebe43e9ccc8afabb703d77f535652d",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/common/model_config.py"
+    },
+    {
+      "path": "vidur/profiling/mlp/mlp_wrapper.py",
+      "archive": "vidur__profiling__mlp__mlp_wrapper.py.gz",
+      "bytes": 3938,
+      "sha256": "7259c8e23a299650530765f9211c7129d8950bf06c98c4edc6ed4c104c6ddd02",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/mlp/mlp_wrapper.py"
+    },
+    {
+      "path": "vidur/profiling/mlp/mlp_impl.py",
+      "archive": "vidur__profiling__mlp__mlp_impl.py.gz",
+      "bytes": 8127,
+      "sha256": "fb0a9ae25346746afced579f86d39c970e18797a4477c40768c0238d8fd496fc",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/mlp/mlp_impl.py"
+    },
+    {
+      "path": "vidur/profiling/attention/attention_wrapper.py",
+      "archive": "vidur__profiling__attention__attention_wrapper.py.gz",
+      "bytes": 5654,
+      "sha256": "835643f9d2b44fe0d0983845d6530c37e257f2f5ebbaedbe5f6c0ca4cdb9a09a",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/attention/attention_wrapper.py"
+    },
+    {
+      "path": "vidur/profiling/utils/record_function_tracer.py",
+      "archive": "vidur__profiling__utils__record_function_tracer.py.gz",
+      "bytes": 2884,
+      "sha256": "6139dfffd8b257eaf29f77a4f8cf6aeee67de2c01ed5d657a0c0c4210450970e",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/vidur/profiling/utils/record_function_tracer.py"
+    },
+    {
+      "path": "data/profiling/compute/a100/meta-llama/Llama-2-7b-hf/mlp.csv",
+      "archive": "data__profiling__compute__a100__meta-llama__Llama-2-7b-hf__mlp.csv.gz",
+      "bytes": 706614,
+      "sha256": "2cfacca979f32e83257753cf6fd815a71af8ba9a7a9d0643b18d9f54e8a37688",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a100/meta-llama/Llama-2-7b-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/a100/meta-llama/Llama-2-7b-hf/attention.csv",
+      "archive": "data__profiling__compute__a100__meta-llama__Llama-2-7b-hf__attention.csv.gz",
+      "bytes": 10680357,
+      "sha256": "4e3ddcf049d5fcc3b86732523a126d7f49a07d12b17b489bf2a560d6dd9ecbf3",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a100/meta-llama/Llama-2-7b-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/a100/meta-llama/Llama-2-70b-hf/mlp.csv",
+      "archive": "data__profiling__compute__a100__meta-llama__Llama-2-70b-hf__mlp.csv.gz",
+      "bytes": 688286,
+      "sha256": "d690ce601f94ab80586e1d5a6a92ea0d64114dc3e0895bf32b3bee270f3d9b7f",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a100/meta-llama/Llama-2-70b-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/a100/meta-llama/Llama-2-70b-hf/attention.csv",
+      "archive": "data__profiling__compute__a100__meta-llama__Llama-2-70b-hf__attention.csv.gz",
+      "bytes": 10730392,
+      "sha256": "4a6d2f16ab9e0667409f50cd01b0fd88c10757a87ca5de7c69a9a2a05328a600",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a100/meta-llama/Llama-2-70b-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/a100/codellama/CodeLlama-34b-Instruct-hf/mlp.csv",
+      "archive": "data__profiling__compute__a100__codellama__CodeLlama-34b-Instruct-hf__mlp.csv.gz",
+      "bytes": 692374,
+      "sha256": "9ba6058c55b7c291ccdf9cd445655de93d3a3dfc0fdd8b08f654170413906dce",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a100/codellama/CodeLlama-34b-Instruct-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/a100/codellama/CodeLlama-34b-Instruct-hf/attention.csv",
+      "archive": "data__profiling__compute__a100__codellama__CodeLlama-34b-Instruct-hf__attention.csv.gz",
+      "bytes": 10733555,
+      "sha256": "0fe4406a05d40c554b511295ab457729a1aaa16cfd4361f2a14dbbc998c2fcf1",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a100/codellama/CodeLlama-34b-Instruct-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/a40/meta-llama/Llama-2-7b-hf/mlp.csv",
+      "archive": "data__profiling__compute__a40__meta-llama__Llama-2-7b-hf__mlp.csv.gz",
+      "bytes": 689225,
+      "sha256": "f8d0f455d0b72b7975be0ed8e1951dcbf2eabc083001b27f6ef8203c0a96962c",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a40/meta-llama/Llama-2-7b-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/a40/meta-llama/Llama-2-7b-hf/attention.csv",
+      "archive": "data__profiling__compute__a40__meta-llama__Llama-2-7b-hf__attention.csv.gz",
+      "bytes": 10877226,
+      "sha256": "aaa280b3179060a9d0b0dc51f3874232689796f1706f8a763668a205f258d047",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a40/meta-llama/Llama-2-7b-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/a40/meta-llama/Llama-2-70b-hf/mlp.csv",
+      "archive": "data__profiling__compute__a40__meta-llama__Llama-2-70b-hf__mlp.csv.gz",
+      "bytes": 678613,
+      "sha256": "a666d9463c0f6994f8103175cad6359bd738e6d4f8e66e56f1dcf88482f91485",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a40/meta-llama/Llama-2-70b-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/a40/meta-llama/Llama-2-70b-hf/attention.csv",
+      "archive": "data__profiling__compute__a40__meta-llama__Llama-2-70b-hf__attention.csv.gz",
+      "bytes": 10782398,
+      "sha256": "6e3c7373dc6f132b533b90dfab4352c4f40bd188accaec221269af0aba3caa6b",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a40/meta-llama/Llama-2-70b-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/a40/codellama/CodeLlama-34b-Instruct-hf/mlp.csv",
+      "archive": "data__profiling__compute__a40__codellama__CodeLlama-34b-Instruct-hf__mlp.csv.gz",
+      "bytes": 678375,
+      "sha256": "0e9b6468d8fb2d25c55c5d142b5314bb6ae56b6b2991f2de555cb8857389f480",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a40/codellama/CodeLlama-34b-Instruct-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/a40/codellama/CodeLlama-34b-Instruct-hf/attention.csv",
+      "archive": "data__profiling__compute__a40__codellama__CodeLlama-34b-Instruct-hf__attention.csv.gz",
+      "bytes": 10768470,
+      "sha256": "dab4fd86915e820871ea2092b186759602fe8b0e076cd0bb5d070f8e625fa024",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/a40/codellama/CodeLlama-34b-Instruct-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/h100/meta-llama/Llama-2-7b-hf/mlp.csv",
+      "archive": "data__profiling__compute__h100__meta-llama__Llama-2-7b-hf__mlp.csv.gz",
+      "bytes": 715469,
+      "sha256": "b1a2def08857d10e5f66c3b5b2d046b6e8caed5c30b2bc920a0462598e3b2a59",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/h100/meta-llama/Llama-2-7b-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/h100/meta-llama/Llama-2-7b-hf/attention.csv",
+      "archive": "data__profiling__compute__h100__meta-llama__Llama-2-7b-hf__attention.csv.gz",
+      "bytes": 10792177,
+      "sha256": "6b44955921aab09b2f367dce876a503df934b11bfde667e6847b1d437a0969d0",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/h100/meta-llama/Llama-2-7b-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/h100/meta-llama/Llama-2-70b-hf/mlp.csv",
+      "archive": "data__profiling__compute__h100__meta-llama__Llama-2-70b-hf__mlp.csv.gz",
+      "bytes": 691493,
+      "sha256": "fb3581ade7c02caab8a0f7d1ca1ad06a7b0fbac3d9f32a9ed46ae55d95fd6bb3",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/h100/meta-llama/Llama-2-70b-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/h100/meta-llama/Llama-2-70b-hf/attention.csv",
+      "archive": "data__profiling__compute__h100__meta-llama__Llama-2-70b-hf__attention.csv.gz",
+      "bytes": 10524879,
+      "sha256": "7dfe5892da7dbf6ce8363630fff0eb143f4b32efa7cec419d17d22deb771f4c4",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/h100/meta-llama/Llama-2-70b-hf/attention.csv"
+    },
+    {
+      "path": "data/profiling/compute/h100/codellama/CodeLlama-34b-Instruct-hf/mlp.csv",
+      "archive": "data__profiling__compute__h100__codellama__CodeLlama-34b-Instruct-hf__mlp.csv.gz",
+      "bytes": 693809,
+      "sha256": "f5ddfd2ab5a8342c34866f53214a4a4f8f535369c29159da0be2d524bcaf00a5",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/h100/codellama/CodeLlama-34b-Instruct-hf/mlp.csv"
+    },
+    {
+      "path": "data/profiling/compute/h100/codellama/CodeLlama-34b-Instruct-hf/attention.csv",
+      "archive": "data__profiling__compute__h100__codellama__CodeLlama-34b-Instruct-hf__attention.csv.gz",
+      "bytes": 10530592,
+      "sha256": "27d06ef88961a97548f25e7b82476b2964c10868bd13870823c475bc29879fe6",
+      "url": "https://github.com/microsoft/vidur/blob/abae7f63aa857300f5cdc6f5e0d27860cd24721b/data/profiling/compute/h100/codellama/CodeLlama-34b-Instruct-hf/attention.csv"
+    }
+  ],
+  "timing_unit": "milliseconds; CSV means converted to nanoseconds by multiplying 1e6, confirmed in CudaTimer and RecordFunctionTracer",
+  "dtype": "FP16, from mlp_wrapper.py and attention/main.py; not pooled with KAIST BF16",
+  "software": "Sarathi/vLLM-derived kernels; exact historical torch/CUDA/driver versions are not supplied in these CSVs. Current source is evidence of profiler contracts, not proof of each historical run environment.",
+  "hardware": "Device variants inferred from Vidur SKU definitions (A100 80GB, H100 80GB, A40). Bandwidth/SM/vector peaks supplied as documented reference assumptions, with variant sensitivity audit."
+}

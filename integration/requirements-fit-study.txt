@@ -1,0 +1,5 @@
+# Offline research only; tested on Python 3.10. No GPU/upstream simulator needed.
+# The application and GitHub Pages do not depend on NumPy or SciPy.
+numpy==1.23.5
+scipy==1.15.3
+matplotlib==3.5.3

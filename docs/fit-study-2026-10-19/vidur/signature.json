@@ -1,0 +1,7 @@
+{
+  "rows_sha256": "393fd13bebe06c5bf2104dfb0f707a6e6510111ce760d8af68a4401ae5c9e014",
+  "functions_sha256": "496b67a5748b48633926641fea549618cc0f5b6477e004cd1fc65459d227ecbb",
+  "data_adapter_sha256": "16d27dcad0073420a5a7cffcc2ce48dd1c4aaf23d18b24ea7bbfd945d857b25c",
+  "runner_sha256": "75bd02dd490ab8171c34dc04deec1cccd9f792504da83ea499a36f17f05cf607",
+  "protocol_sha256": "aee43c4abef268df354fd1c4f9a6345e00f62c3234f0efa2bc311221b9bf4946"
+}

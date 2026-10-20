@@ -1,5 +1,10 @@
 # Fitted GPU model: method, evidence and limits
 
+The function documented here is the preserved deployed baseline F0. The subsequent
+[function-search study](fit-study-2026-10-19/README.md) compares nine candidates,
+adds an independent published profiling corpus, and documents why the research
+selection has not been promoted to the runtime.
+
 ServeScope models GPU service with one fitted function for every configuration:
 
 **hardware parameters + software policy + operation/tensor geometry → execution time**

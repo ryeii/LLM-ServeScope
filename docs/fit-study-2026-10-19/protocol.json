@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "purpose": "Compare simple fitted GPU latency functions before considering a runtime replacement.",
+  "baseline_commit": "9379b8efb41486dcbab22b2802e4090eaed8c19f",
+  "data": "KAIST five dense BF16 bundles; separate Vidur FP16 Llama-2 7B/70B corpus on A100/A40 for selection. Vidur H100 and CodeLlama34B reserved for subsequent audit.",
+  "known_exposure": "Prior KAIST holdout results were already examined. Vidur schema and several H100 example rows were inspected to establish units; H100 is not a pristine blind test. No aggregate H100 scores used for selection.",
+  "families_in_order": [
+    "F0 original relative-L2 additive",
+    "F1 log-loss additive",
+    "F2 fitted roofline max",
+    "F3 quadratic smooth overlap",
+    "F4 tile-wave additive",
+    "F5 one bounded shape transition (memory)",
+    "F6 two bounded shape transitions (compute and memory)"
+  ],
+  "constraints": "Nonnegative coefficients; arithmetic speed-limit floor; no hardware/model identity features; no runtime tables; no target latency features.",
+  "cv": "Five folds grouped by full operator/tensor geometry and TP across GPUs within each source; repeated rows share a fold. Threshold selection is internal to training folds. KAIST folds from previous study retained as a separate audit where applicable.",
+  "selection": "Choose per operator using grouped cross-validation. Prefer the simplest candidate within max(1 percentage point, paired fold standard error) of the minimum validation MAPE. Additional shape-transition scale is selected using nested inner grouped CV, not outer validation. Select within each source separately rather than pool different software/dtypes.",
+  "reporting": "Training and out-of-fold MAPE, P95, latency-weighted error, per-op results, GPU/model holdouts, extrapolation tails, candidate complexity, actual formulas, source revisions/hashes/licenses, limitations. All candidate outcomes including regressions retained.",
+  "promotion": "Do not replace the deployed baseline automatically. Promotion requires explicit comparison of generalization and physical behavior; exploratory profile fit is not end-to-end serving or energy validation.",
+  "amendments": [
+    {
+      "iteration": "After initial F0\u2013F6 development CV, before F7 fitting and reserved audits",
+      "reason": "Activation cost/byte increases with working-set size; hardware YAML supplies L2 capacity. Add one nonnegative cache-transition term; do not change the selection rule.",
+      "family": "F7: L+aC+bM+dM*r/(r+s); r=nominal_bytes/L2_bytes; L,a,b,d nonnegative; s chosen by inner CV from the same five-value grid. Baseline F0 uses the original enumerated active-set solver to preserve rank-deficient tie behavior exactly."
+    },
+    {
+      "iteration": "After initial F0\u2013F6, before final rerun",
+      "reason": "Vocab-parallel embedding shards vocabulary, not hidden width: the initial nominal traffic incorrectly divided hidden-row movement by TP. Add a minimal three-coefficient corrected-feature candidate, keeping original F0 unchanged.",
+      "family": "F8: original additive relative-L2 fit with corrected embedding bytes n*(4*hidden+8); for non-embedding this is F0.",
+      "validation": "KAIST GPU/model audits rerun formula selection exclusively within the training partition. Vidur H100 and CodeLlama remain excluded from family selection."
+    },
+    {
+      "iteration": "Final feature/split audit before publication",
+      "reason": "Group by canonical executed tensor geometry; replicated normalization and sampler queries share folds across TP. Keep separate measurements but prevent duplicated work in training and validation. Re-run every candidate and audit; do not retune families against reserved scores. Also close metadata files explicitly via read_text.",
+      "validation": "Independent tests cover TP-stable folds and equal local activation width under different nominal TP/model shapes."
+    }
+  ]
+}

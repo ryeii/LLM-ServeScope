@@ -78,6 +78,12 @@ uses those predictions to model serving throughput and latency.
 See [function, assumptions and validation](docs/calibration.md) and the
 [serving comparison](docs/benchmarks/fitted-vs-profiles-2026-10-19/README.md).
 
+A subsequent [GPU function-search report](docs/fit-study-2026-10-19/README.md)
+compares nine simple functions, documents additional published Vidur profiles,
+and includes a diagram and validation fit for every trial. The deployed function
+is retained as the baseline: improved shape fit has not yet established reliable
+hardware extrapolation.
+
 ## Limitations: behavioral, not mechanistic simulation
 
 **LLM-ServeScope is a behavioral simulation, not a mechanistic simulation.**

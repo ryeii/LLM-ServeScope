@@ -1,0 +1,165 @@
+{
+  "identifiability": {
+    "act_fn": {
+      "rtx6000_training_design_rank": 2,
+      "normalized_singular_values": [
+        1.626846637529661,
+        0.5944493401110275,
+        1.3984236894817454e-16
+      ],
+      "normalized_condition_number": 1.1633431625665388e+16
+    },
+    "attention:decode": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.4499386665476992,
+        0.9200870355801302,
+        0.2260922603877671
+      ],
+      "normalized_condition_number": 6.413039809770282
+    },
+    "attention:prefill": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.4564529091953866,
+        0.8359477014602034,
+        0.4241890660067712
+      ],
+      "normalized_condition_number": 3.433499413141728
+    },
+    "down_proj": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6278362722367228,
+        0.5403308661120686,
+        0.24122940516660019
+      ],
+      "normalized_condition_number": 6.748083929123362
+    },
+    "embedding": {
+      "rtx6000_training_design_rank": 2,
+      "normalized_singular_values": [
+        1.324197324261126,
+        0.4964891201422984,
+        0.0
+      ],
+      "normalized_condition_number": 1.3241973242611258e+30
+    },
+    "final_layernorm": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6521443400125748,
+        0.5200183443997648,
+        3.538562078041832e-05
+      ],
+      "normalized_condition_number": 46689.70908451146
+    },
+    "gate_up_proj": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6262816557064361,
+        0.5404956992025008,
+        0.2511421419362603
+      ],
+      "normalized_condition_number": 6.475542667463533
+    },
+    "layernorm": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6521443400125748,
+        0.5200183443997648,
+        3.538562078041832e-05
+      ],
+      "normalized_condition_number": 46689.70908451146
+    },
+    "lm_head": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.5788289677485086,
+        0.6650313073805054,
+        0.2550146089971226
+      ],
+      "normalized_condition_number": 6.191131456968111
+    },
+    "o_proj": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6283095158237504,
+        0.5506966408541408,
+        0.21293503805101763
+      ],
+      "normalized_condition_number": 7.646977832899533
+    },
+    "qk_norm": {
+      "rtx6000_training_design_rank": 2,
+      "normalized_singular_values": [
+        1.6379848262311762,
+        0.5630326003318312,
+        5.889289757546648e-16
+      ],
+      "normalized_condition_number": 2781294338816036.5
+    },
+    "qkv_proj": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6345169703127418,
+        0.5338248961254706,
+        0.20829127210780463
+      ],
+      "normalized_condition_number": 7.847265772455268
+    },
+    "rotary_emb": {
+      "rtx6000_training_design_rank": 3,
+      "normalized_singular_values": [
+        1.6244610200520204,
+        0.6002353113767172,
+        0.029051081013370797
+      ],
+      "normalized_condition_number": 55.91740353153675
+    },
+    "sampler": {
+      "rtx6000_training_design_rank": 2,
+      "normalized_singular_values": [
+        1.6002056930909363,
+        0.6628285900588148,
+        1.699663243004169e-16
+      ],
+      "normalized_condition_number": 9414839672961094.0
+    }
+  },
+  "arithmetic_floor_violations": [
+    {
+      "gpu": "rtx4090",
+      "model": "llama8",
+      "op": "gate_up_proj",
+      "n": 1024,
+      "ns": 1455040.0,
+      "compute_floor_ns": 1455921.1172881357
+    },
+    {
+      "gpu": "rtx4090",
+      "model": "llama8",
+      "op": "gate_up_proj",
+      "n": 1536,
+      "ns": 2177280.0,
+      "compute_floor_ns": 2183881.6759322034
+    },
+    {
+      "gpu": "rtx4090",
+      "model": "llama8",
+      "op": "gate_up_proj",
+      "n": 1792,
+      "ns": 2538660.0,
+      "compute_floor_ns": 2547861.9552542376
+    },
+    {
+      "gpu": "rtx4090",
+      "model": "llama8",
+      "op": "gate_up_proj",
+      "n": 2048,
+      "ns": 2896810.0,
+      "compute_floor_ns": 2911842.2345762714
+    }
+  ],
+  "note": "Four targets lie below the declared arithmetic floor; this flags work-count/rate/measurement inconsistency. Do not interpret fitted slopes as measured efficiencies."
+}
