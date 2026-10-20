@@ -172,6 +172,11 @@ def timing(name, config, phase, batch, tokens, context):
                 timing_source="fitted-profiled-configuration" if covered else "fitted-extrapolation",
                 fit_key=fit_key, fit_features_ns=features, shape_features_ns=extended,
                 fit_family=fit["family"], fit_cohort=cohort_name, fit_fallback_reason=fallback_reason,
+                fit_parameters={key:fit[key] for key in ("family","coefficients","scale","branches","threshold_tokens") if key in fit},
+                fit_compute_floor_ns=arithmetic_floor, fit_base_ns=evaluate(fit,extended,n,arithmetic_floor),
+                fit_engine_multiplier=.97/{"vllm":.97,"trtllm":1.0,"eager":.8}[engine],
+                fit_engine_offset_ns=({"vllm":2.5,"trtllm":2.0,"eager":8.0}[engine]-2.5)*1000,
+                fit_extra_launch_ns=h.get("launch_overhead_us",0)*1000, fit_token_count=n,
                 calibration_scope="Fitted GPU operator service time; serving/network/energy remain modeled")
 
 

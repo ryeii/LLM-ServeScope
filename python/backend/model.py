@@ -622,6 +622,8 @@ def simulate(config):
         )
         capacity = usable_GB * 1e9
         memory[phase] = dict(
+            resident_requests=concurrent,
+            representative_batch=max_batch,
             weights_GB=weight / 1e9,
             kv_GB=kv / 1e9,
             activation_GB=activation / 1e9,
@@ -969,6 +971,7 @@ def simulate(config):
     )
     gpu_busy = sum(busy.values()) / max(1, elapsed)
     energy_j = 0
+    energy_terms = []
     cost = 0
     for phase in ("prefill", "decode"):
         if phase == "decode" and not c["separated"]:
@@ -1011,6 +1014,12 @@ def simulate(config):
                 h["idle_watts"] * memory[phase]["gpus"] * elapsed / 1000
                 + (active_watts - h["idle_watts"]) * b / 1000
             )
+        energy_terms.append(dict(phase=phase,gpus=memory[phase]["gpus"],weighted_busy_ms=b,
+            idle_watts=h["idle_watts"],active_watts=active_watts,tdp_watts=h["tdp_watts"],
+            mode="component" if coeffs else "activity",dynamic_j=dynamic if coeffs else (active_watts-h["idle_watts"])*b/1000,
+            counters=pt if coeffs else phase_traffic[phase],
+            coefficients={key:h[key] for key in ("pj_per_flop","pj_per_vop","pj_per_mem_byte","pj_per_net_byte")},
+            hourly_cost=h["hourly_cost"]))
         cost += memory[phase]["gpus"] * h["hourly_cost"] * elapsed / 3.6e6
     sample_phase = {}
     layer_rows = []
@@ -1093,6 +1102,8 @@ def simulate(config):
         memory=memory,
         traffic=traffic,
         component_work_ms=component_work,
+        accounting=dict(busy_ms=busy,phase_traffic=phase_traffic,energy_terms=energy_terms,
+                        shared_parameters=shared,expert_parameters=expert),
         requests=requests,
         timeline=sorted(timeline, key=lambda e: e["start_ms"]),
         layers=layer_rows,
