@@ -1,6 +1,9 @@
 {
   "project": "LLM-ServeScope",
-  "source_commit": "9379b8efb41486dcbab22b2802e4090eaed8c19f",
+  "gpu_fit_payload_sha256": "0ccda728299d2ddb9601f76941d7f2843fe95daa1622e482e316422eca607fd9",
+  "gpu_fit_schema_version": "servescope.gpu-fit.v2",
+  "training_observations": 599451,
+  "source_commit": "26acb0da8d1652b1cebb577c64408c01c941fd6e",
   "base_path": "/LLM-ServeScope/",
   "engine": "Same backend/model.py + SimPy in a Pyodide web worker",
   "pyodide": "314.0.7",

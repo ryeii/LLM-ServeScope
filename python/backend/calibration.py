@@ -1,6 +1,6 @@
 """Fitted GPU service-time function. Runtime reads coefficients, never timing tables.
 
-Training/validation uses KAIST's MIT-licensed profiles offline. The fitted model
+Training/validation uses KAIST and Vidur's MIT-licensed profiles offline. The fitted model
 and its feature/constraint choices are a ServeScope extension, not KAIST validation.
 """
 from __future__ import annotations
@@ -9,6 +9,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+from .gpu_functions import shape_features, evaluate
 
 OPERATOR_NAMES = {
     "Input RMSNorm": "layernorm", "FFN RMSNorm": "layernorm",
@@ -119,9 +120,19 @@ def timing(name, config, phase, batch, tokens, context):
     engine = config["inference_engine"] if pool["engine"] == "inherit" else pool["engine"]
     data = dataset()
     fit_key = name+":"+phase if name == "attention" else name
-    fit = data["fits"].get(fit_key)
+    cohort_name = "vidur" if config["precision"] == "fp16" else "kaist"
+    cohort = data["cohorts"][cohort_name]
+    fit = cohort["models"].get(fit_key)
+    fallback_reason = None
+    if fit is None:
+        cohort_name, cohort = "kaist", data["cohorts"]["kaist"]
+        fit = cohort["models"].get(fit_key)
+        fallback_reason = "Operator absent from precision-specific corpus; KAIST function extrapolated."
     if fit is None:
         return None
+    if fit["family"] == "F7" and h.get("l2_cache_MiB", 0) <= 0:
+        fit = cohort["fallback_models"][fit_key]
+        fallback_reason = "Physical L2 capacity unspecified; use fitted additive fallback."
     n = batch if name in ("lm_head", "sampler") else batch*tokens
     shape = dict(pc=batch*tokens if phase == "prefill" else 0,
                  kp=max(0, context-tokens)+tokens/2 if phase == "prefill" else 0,
@@ -130,7 +141,9 @@ def timing(name, config, phase, batch, tokens, context):
     features = work_features(name,m,h,effective_tp,n,precision=config["precision"],
                              kv_precision=config["kv_precision"],**shape)
     arithmetic_floor = features[1]*h.get("compute_efficiency",.65)/.65
-    ns = prediction(fit, features, arithmetic_floor)
+    extended = shape_features(name,m,h,effective_tp,n,features,precision=config["precision"],
+                              query_tokens=tokens if cohort_name=="vidur" and phase=="prefill" else None,**shape)
+    ns = evaluate(fit, extended, n, arithmetic_floor)
     ns *= .97/{"vllm":.97,"trtllm":1.0,"eager":.8}[engine]
     ns += ({"vllm":2.5,"trtllm":2.0,"eager":8.0}[engine]-2.5)*1000
     ns += h.get("launch_overhead_us",0)*1000
@@ -140,13 +153,15 @@ def timing(name, config, phase, batch, tokens, context):
     for domain in data["domains"]:
         if (domain["hardware_id"] != pool["hardware_id"] or domain["model_id"] != config["model_id"]
                 or domain["tp"] != effective_tp or engine != "vllm"
-                or config["precision"] != "bf16" or config["kv_precision"] != "bf16"):
+                or domain.get("cohort", "kaist") != cohort_name
+                or config["precision"] != domain.get("precision", "bf16")
+                or config["kv_precision"] != domain.get("precision", "bf16")):
             continue
         if any(m.get(k,False) != domain["model"].get(k,False) for k in GEOMETRY):
             continue
         expected=dict(domain["hardware"],clock_scale=1,compute_efficiency=.65,memory_efficiency=.8,launch_overhead_us=0)
-        if any(not math.isclose(h.get(k,expected[k]),expected[k],rel_tol=1e-10,abs_tol=1e-12)
-               for k in (*RATE_FIELDS,"sram_cache_MB","num_sms","tensor_width","clock_scale","compute_efficiency","memory_efficiency","launch_overhead_us")):
+        if any(not math.isclose(h.get(k,expected.get(k,0)),expected.get(k,0),rel_tol=1e-10,abs_tol=1e-12)
+               for k in (*RATE_FIELDS,config["precision"]+"_tensor_tflops","sram_cache_MB","num_sms","tensor_width","clock_scale","compute_efficiency","memory_efficiency","launch_overhead_us","l2_cache_MiB")):
             continue
         bounds=domain["bounds"].get(fit_key)
         query=shape if name=="attention" else {"n":n}
@@ -155,7 +170,8 @@ def timing(name, config, phase, batch, tokens, context):
             break
     return dict(duration_ms=max(1,arithmetic_floor,ns)/1e6,
                 timing_source="fitted-profiled-configuration" if covered else "fitted-extrapolation",
-                fit_key=fit_key, fit_features_ns=features,
+                fit_key=fit_key, fit_features_ns=features, shape_features_ns=extended,
+                fit_family=fit["family"], fit_cohort=cohort_name, fit_fallback_reason=fallback_reason,
                 calibration_scope="Fitted GPU operator service time; serving/network/energy remain modeled")
 
 
@@ -165,4 +181,6 @@ def manifest():
                 profiles=[dict(id=p["id"],model_id=p["model_id"],hardware_id=p["hardware_id"],tp=p["tp"],software=p["software"])
                           for p in d["domains"]],
                 validation=d["validation"],
-                model="Nonnegative fitted L + a*compute_ns + b*nominal_memory_ns, arithmetic floor; no runtime timing-table lookup")
+                model="Nested-CV selected shape-informed functions; separate KAIST BF16 / Vidur FP16 fits; no runtime timing-table lookup",
+                accuracy_report=d["accuracy_report"], training_observations=d["training_observations"],
+                functions={source:{op:model["family"] for op,model in cohort["models"].items()} for source,cohort in d["cohorts"].items()})

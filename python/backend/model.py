@@ -211,6 +211,7 @@ def validate(config):
                     "tensor_width",
                 ),
             )
+        p["hardware"]["l2_cache_MiB"] = number(p["hardware"].get("l2_cache_MiB", 0), phase+".l2_cache_MiB", 0, 1e7)
         h = p["hardware"]
         if h[PEAK[c["precision"]]] <= 0:
             raise ValueError(
@@ -682,7 +683,8 @@ def simulate(config):
         if key not in timing_records:
             timing_records[key] = dict(phase=phase, operator=name,
                                       source=cost["timing_source"],
-                                      fit_key=cost.get("fit_key"), count=0)
+                                      fit_key=cost.get("fit_key"), fit_family=cost.get("fit_family"),
+                                      fit_cohort=cost.get("fit_cohort"), fallback_reason=cost.get("fit_fallback_reason"), count=0)
         timing_records[key]["count"] += 1
 
     def work(
@@ -1076,9 +1078,9 @@ def simulate(config):
         calibration["fallback_operators"] = sorted({record["operator"] for record in timing_records.values() if record["source"]=="roofline"})
         if calibration["fallback_operators"]:
             calibration["summary"] += " · analytical fallbacks"
-        warnings.append("All GPU operator service times use the same nonnegative function fitted offline to KAIST profiles; no runtime timing-table lookup or exact-match override. Profiled configurations also have fitted prediction error.")
+        warnings.append("GPU operator service times use nested-CV selected shape-informed functions fitted to KAIST BF16 or Vidur FP16 profiles; no runtime timing-table lookup, GPU-ID correction or exact-match override. Profiled configurations also have prediction error.")
         warnings.append("Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.")
-        warnings.append("Training uses dense Llama-3.1-8B and Qwen3-32B on two GPU families. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.")
+        warnings.append("Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.")
     else:
         calibration["summary"] = "Original roofline · uncalibrated"
     return dict(
@@ -1105,7 +1107,7 @@ def simulate(config):
             config_sha256=hashlib.sha256(
                 json.dumps(c, sort_keys=True).encode()
             ).hexdigest(),
-            timing_source=("GPU service function fitted to KAIST profiles; identical function for all configurations; SimPy serving and analytical network"
+            timing_source=("GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network"
                            if c["timing_mode"] == "calibrated" else "Closed-form roofline + hierarchical network + SimPy resource contention; not native LLMServingSim clocks"),
             precision_note="Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal.",
         ),
