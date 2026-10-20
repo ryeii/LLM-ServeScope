@@ -37,34 +37,42 @@ def save(fig,name):
     plt.close(fig)
 
 
-def residual_figure(data,name,title,subtitle):
-    s=scores(data);fig,axes=plt.subplots(1,3,figsize=(17,6.5),gridspec_kw={'width_ratios':[1,1.15,1]})
-    y=data['measured_ns']/1000;p=data['predicted_ns']/1000;error=(p/y-1)*100;abs_error=np.abs(error)
+def prediction_marks(ax,y,p,source):
+    """All observations contribute; dense clouds become log-count hexagonal bins."""
     lo=min(np.min(y),np.min(p))*.8;hi=max(np.max(y),np.max(p))*1.2
-    axes[0].fill_between([lo,hi],[lo*.8,hi*.8],[lo*1.2,hi*1.2],color='#aabccb',alpha=.2,label='±20% band')
-    axes[0].plot([lo,hi],[lo,hi],color='#3c5265',lw=1)
-    axes[1].axhspan(-20,20,color='#aabccb',alpha=.2);axes[1].axhline(0,color='#3c5265',lw=1)
-    for source in ['kaist','vidur']:
-        mask=data['source']==source
-        if not np.any(mask):continue
-        color=COLORS[source];label=LABELS[source]
-        axes[0].scatter(y[mask],p[mask],s=3,alpha=.15,color=color,rasterized=True,label=label)
-        axes[1].scatter(y[mask],error[mask],s=3,alpha=.15,color=color,rasterized=True)
-        sorted_error=np.sort(abs_error[mask]);axes[2].plot(sorted_error,np.arange(1,len(sorted_error)+1)/len(sorted_error)*100,color=color,lw=1.8,label=label)
-    axes[0].set(xscale='log',yscale='log',xlabel='Profiled operator time (µs)',ylabel='Cross-validated prediction (µs)',title='Predicted versus profiled')
-    axes[0].legend(fontsize=8,loc='upper left',markerscale=3)
-    axes[1].set(xscale='log',yscale='symlog',xlabel='Profiled operator time (µs)',ylabel='Signed relative residual (%)',title='Residuals · zero is exact')
-    axes[1].set_yscale('symlog',linthresh=20,linscale=.8)
-    # All absolute errors enter the ECDF; no clipping of the tail.
-    axes[2].set(xscale='symlog',xlabel='Absolute relative error (%)',ylabel='Observations at or below error (%)',title='Error distribution',ylim=(0,101))
-    axes[2].set_xscale('symlog',linthresh=1)
-    axes[2].axhline(95,color='#647486',lw=.8,ls='--');axes[2].axvline(20,color='#647486',lw=.8,ls=':');axes[2].legend(fontsize=8,loc='lower right')
-    for ax in axes:ax.grid(alpha=.16)
-    fig.suptitle(title,fontsize=19,fontweight='bold',color='#183247',y=.97)
-    fig.text(.5,.885,subtitle,ha='center',fontsize=11,color='#506477')
-    fig.text(.5,.085,f"N = {s['count']:,}    |    Mean absolute error {s['mape_pct']:.2f}%    |    Median {s['median_ape_pct']:.2f}%    |    P95 {s['p95_ape_pct']:.2f}%    |    Within ±20%: {s['within_20_pct']:.1f}%",ha='center',fontsize=12,color='#183247')
-    fig.text(.5,.025,'Every eligible observation is plotted. Relative error = (prediction − profile) / profile. GPU timing only; serving throughput and energy require separate validation.',ha='center',fontsize=9,color='#506477')
-    fig.subplots_adjust(top=.78,bottom=.23,left=.065,right=.985,wspace=.32)
+    ax.fill_between([lo,hi],[lo*.8,hi*.8],[lo*1.2,hi*1.2],color='#aabccb',alpha=.18,zorder=0)
+    ax.plot([lo,hi],[lo,hi],color='#526778',lw=1,ls='--',zorder=1)
+    if len(y)>5000:
+        artist=ax.hexbin(y,p,xscale='log',yscale='log',gridsize=65,mincnt=1,
+                         bins='log',cmap='Oranges' if source=='kaist' else 'Blues',
+                         linewidths=0,rasterized=True,zorder=2)
+        colorbar=ax.figure.colorbar(artist,ax=ax,pad=.025,fraction=.045)
+        colorbar.set_label('Observations per bin',fontsize=9)
+    else:
+        ax.scatter(y,p,s=9,alpha=.42,color=COLORS[source],edgecolors='none',rasterized=True,zorder=2)
+    ax.set(xscale='log',yscale='log')
+
+
+def residual_figure(data,name,title,subtitle):
+    sources=set(data['source'])
+    if len(sources)!=1:raise ValueError('Each figure must contain exactly one profiling corpus.')
+    source=next(iter(sources));s=scores(data)
+    fig,axes=plt.subplots(1,2,figsize=(12.8,6.1),gridspec_kw={'width_ratios':[1.12,1]})
+    y=data['measured_ns']/1000;p=data['predicted_ns']/1000;abs_error=np.abs(p/y-1)*100
+    prediction_marks(axes[0],y,p,source)
+    axes[0].set(xlabel='Profiled operator time (µs)',ylabel='Cross-validated prediction (µs)',title='Predicted versus profiled · ±20% band')
+    sorted_error=np.sort(abs_error)
+    axes[1].plot(sorted_error,np.arange(1,len(sorted_error)+1)/len(sorted_error)*100,color=COLORS[source],lw=2)
+    axes[1].set(xlabel='Absolute relative error (%)',ylabel='Observations at or below error (%)',title='Error distribution',ylim=(0,101))
+    axes[1].set_xscale('symlog',linthresh=1)
+    axes[1].axhline(95,color='#647486',lw=.8,ls='--');axes[1].axvline(20,color='#647486',lw=.8,ls=':')
+    for ax in axes:ax.grid(alpha=.14)
+    fig.suptitle(title,fontsize=18,fontweight='bold',color='#183247',y=.97)
+    fig.text(.5,.885,subtitle,ha='center',fontsize=10,color='#506477')
+    fig.text(.5,.105,f"N = {s['count']:,}    |    Mean error {s['mape_pct']:.2f}%    |    Median {s['median_ape_pct']:.2f}%    |    P95 {s['p95_ape_pct']:.2f}%",ha='center',fontsize=11,color='#183247')
+    fig.text(.5,.06,f"Within ±20%: {s['within_20_pct']:.1f}%    ·    All observations included; dense clouds use count bins, without subsampling.",ha='center',fontsize=9,color='#506477')
+    fig.text(.5,.022,'GPU operator timing only; serving throughput and energy require separate validation.',ha='center',fontsize=9,color='#506477')
+    fig.subplots_adjust(top=.78,bottom=.25,left=.085,right=.975,wspace=.35)
     save(fig,name)
     return s
 
@@ -93,24 +101,39 @@ def excluded_profiles():
 def main():
     plt.rcParams.update({'font.family':'DejaVu Sans','font.size':10,'axes.spines.top':False,'axes.spines.right':False,'svg.fonttype':'none','svg.hashsalt':'servescope-production-accuracy-v1'})
     report=json.loads((OUT/'validation.json').read_text());transfer=json.loads((OUT/'gpu-transfer-validation.json').read_text());data=read_predictions(OUT/'cross-validated-predictions.jsonl.gz')
-    overall=residual_figure(data,'main-residuals','How accurate is ServeScope’s GPU timing model?','Grouped five-fold outer CV · function/scale selection inside three inner folds · all imported compatible dense profiles')
-    op_rows=[];embeds=[]
-    for op,metric in report['by_operator'].items():
-        mask=data['op']==op;part={key:value[mask] for key,value in data.items()};slug=op.replace(':','-')
-        residual_figure(part,'operator-'+slug,NAMES[op]+' · cross-validated GPU timing','Same nested protocol and residual definitions as the main figure · separate historical precision/software cohorts')
-        k=report['models']['kaist'].get(op,{}).get('family','—');v=report['models']['vidur'].get(op,{}).get('family','—')
-        op_rows.append([NAMES[op],f"{metric['count']:,}",f"{metric['mape_pct']:.2f}%",f"{metric['p95_ape_pct']:.2f}%",k,v])
-        embeds.append(f"### {NAMES[op]}\n\n![{NAMES[op]} residuals](operator-{slug}.png)\n\n[Vector figure](operator-{slug}.svg).")
-    # Equal visual space per GPU avoids letting Vidur's much larger grids hide KAIST.
-    fig,axes=plt.subplots(2,3,figsize=(15,9));axes=axes.ravel()
-    for ax,(gpu,metric) in zip(axes,report['by_gpu'].items()):
-        mask=data['gpu']==gpu;y=data['measured_ns'][mask]/1000;p=data['predicted_ns'][mask]/1000
-        ax.scatter(y,p,s=3,alpha=.16,color=COLORS[data['source'][mask][0]],rasterized=True)
-        lo=min(y.min(),p.min());hi=max(y.max(),p.max());ax.plot([lo,hi],[lo,hi],color='#546b7c',lw=1)
-        ax.set(xscale='log',yscale='log',xlabel='Profiled time (µs)',ylabel='CV prediction (µs)',title=f"{gpu} · N={metric['count']:,}\nMAPE {metric['mape_pct']:.2f}% · P95 {metric['p95_ape_pct']:.2f}%");ax.grid(alpha=.14)
-    axes[-1].axis('off');axes[-1].text(.05,.7,'Known-GPU shape validation\n\nEach query is excluded across GPUs/models/TP.\nGPU families remain represented in training.\n\nNew-GPU transfer is reported separately.',fontsize=12,va='top')
-    fig.suptitle('Cross-validated residuals by GPU family',fontsize=19,fontweight='bold',color='#183247');fig.tight_layout(rect=(0,0,1,.95));save(fig,'by-gpu')
-    td=read_predictions(OUT/'gpu-transfer-predictions.jsonl.gz');ts=residual_figure(td,'gpu-transfer-residuals','How well does ServeScope transfer to an unseen GPU?','Leave-one-GPU-out validation · target GPU excluded from fitting and inner function/scale selection')
+    overall=scores(data);figures=[];main_embeds=[];gpu_embeds=[];transfer_embeds=[];embeds=[];cohort_metrics={}
+    td=read_predictions(OUT/'gpu-transfer-predictions.jsonl.gz');ts=scores(td)
+    for source in ['kaist','vidur']:
+        mask=data['source']==source;part={key:value[mask] for key,value in data.items()}
+        cohort_metrics[source]=residual_figure(part,source+'-main',LABELS[source]+' · GPU timing accuracy',
+            'Grouped five-fold outer CV · function and scale selection inside three training-only inner folds')
+        figures.append(source+'-main')
+        main_embeds.append(f"### {LABELS[source]}\n\n![{LABELS[source]} cross-validated accuracy]({source}-main.png)\n\n[Vector figure]({source}-main.svg).")
+        op_rows=[];operator_embeds=[]
+        for op in sorted(report['groups'][source]):
+            metric=report['groups'][source][op]['cv'];slug=op.replace(':','-');name=source+'-operator-'+slug
+            selected=(data['source']==source)&(data['op']==op)
+            operator_data={key:value[selected] for key,value in data.items()}
+            residual_figure(operator_data,name,LABELS[source]+' · '+NAMES[op],
+                'Grouped nested cross-validation · identical validation protocol to the corpus overview')
+            figures.append(name);family=report['models'][source][op]['family']
+            op_rows.append([NAMES[op],f"{metric['count']:,}",f"{metric['mape_pct']:.2f}%",f"{metric['p95_ape_pct']:.2f}%",family])
+            operator_embeds.append(f"#### {NAMES[op]}\n\n![{LABELS[source]} {NAMES[op]}]({name}.png)\n\n[Vector figure]({name}.svg).")
+        embeds.append('### '+LABELS[source]+'\n\n'+table(['Subcomponent','Observations','MAPE','P95','Deployed family'],op_rows)+'\n\n'+'\n\n'.join(operator_embeds))
+        gpu_metrics={gpu:metric for gpu,metric in report['by_gpu'].items() if np.any(part['gpu']==gpu)}
+        fig,axes=plt.subplots(1,len(gpu_metrics),figsize=(6*len(gpu_metrics),5.4),squeeze=False)
+        for ax,(gpu,metric) in zip(axes[0],gpu_metrics.items()):
+            selected=part['gpu']==gpu;y=part['measured_ns'][selected]/1000;p=part['predicted_ns'][selected]/1000
+            prediction_marks(ax,y,p,source)
+            ax.set(xlabel='Profiled time (µs)',ylabel='CV prediction (µs)',title=f"{gpu} · N={metric['count']:,}\nMAPE {metric['mape_pct']:.2f}% · P95 {metric['p95_ape_pct']:.2f}%");ax.grid(alpha=.14)
+        fig.suptitle(LABELS[source]+' · known-GPU shape validation',fontsize=17,fontweight='bold',color='#183247')
+        fig.tight_layout(rect=(0,.025,1,.9));save(fig,source+'-by-gpu');figures.append(source+'-by-gpu')
+        gpu_embeds.append(f"![{LABELS[source]} by GPU]({source}-by-gpu.png)")
+        selected=td['source']==source;transfer_data={key:value[selected] for key,value in td.items()}
+        residual_figure(transfer_data,source+'-gpu-transfer',LABELS[source]+' · unseen-GPU transfer',
+            'Leave-one-GPU-out validation · target GPU excluded from fitting and function/scale selection')
+        figures.append(source+'-gpu-transfer')
+        transfer_embeds.append(f"![{LABELS[source]} leave-one-GPU-out accuracy]({source}-gpu-transfer.png)\n\n[Vector figure]({source}-gpu-transfer.svg).")
     gpu_rows=[[g,f"{m['count']:,}",f"{m['mape_pct']:.2f}%",f"{m['p95_ape_pct']:.2f}%",f"{m['latency_weighted_ape_pct']:.2f}%"] for g,m in report['by_gpu'].items()]
     transfer_rows=[[name,f"{a['tested_count']:,}",f"{a['metrics']['mape_pct']:.2f}%",f"{a['metrics']['p95_ape_pct']:.2f}%",', '.join(x['operator'] for x in a['unsupported']) or 'None'] for name,a in transfer['audits'].items()]
     cohort_rows=[[s.upper(),f"{m['count']:,}",f"{m['mape_pct']:.2f}%",f"{m['p95_ape_pct']:.2f}%"] for s,m in report['by_source'].items()]
@@ -129,13 +152,17 @@ They describe GPU operator service time under recorded profile conditions.
 They are **not an error guarantee for serving throughput, request latency, energy,
 new architectures, or a customer workload distribution**.
 
-![Main cross-validated residual graph](main-residuals.png)
+## Separate corpus overviews
 
-[Vector figure](main-residuals.svg). Left: prediction versus profile; center: signed
-relative residual; right: cumulative absolute error. Every eligible observation
-enters the plots and metrics; no tail clipping, random point subsampling or outlier
-removal is used. Positive signed residual means overprediction. Rasterization of
-scatter marks reduces vector-file size without discarding observations.
+{chr(10).join(main_embeds)}
+
+Each figure has two panels: **predicted versus profiled time** and the
+**cumulative absolute-error distribution**. KAIST and Vidur are never overlaid.
+Dense prediction clouds use hexagonal bins colored by observation count; smaller
+plots show individual points. Every eligible observation contributes to the bins,
+error distributions and metrics; there is no point subsampling, outlier removal,
+or tail clipping. The signed-residual middle panel has been removed.
+The numerical validation results and production coefficients are unchanged.
 
 ## What data and model are being tested?
 
@@ -188,7 +215,7 @@ production model evaluated indiscriminately on another profiler.
 
 {table(['GPU family','Observations','MAPE','P95','Latency-weighted error'],gpu_rows)}
 
-![Cross-validated predictions by GPU](by-gpu.png)
+{chr(10).join(gpu_embeds)}
 
 The pooled score is dominated by Vidur's denser attention grids. Equal-operator
 macro MAPE is **{report['overall']['macro_operator_mape_pct']:.2f}%**. Per-GPU and
@@ -197,7 +224,7 @@ sum of absolute ns errors divided by sum of profiled ns, not serving-workload we
 
 ## Unseen-GPU accuracy is a different test
 
-![Leave-one-GPU-out residual graph](gpu-transfer-residuals.png)
+{chr(10).join(transfer_embeds)}
 
 {table(['Excluded GPU/cohort','Scored observations','MAPE','P95','Unsupported groups'],transfer_rows)}
 
@@ -209,12 +236,11 @@ figure has **{ts['count']:,}** points, versus 599,451 in shape CV.
 KAIST also confounds hardware with software version. This audit is not evidence
 that peak specifications alone predict new GPU architectures within a fixed error.
 
-## Main residual graphs for every subcomponent
+## Subcomponent figures, separated by profiling corpus
 
-{table(['Subcomponent','Observations','MAPE','P95','Deployed KAIST family','Deployed Vidur family'],op_rows)}
-
-A dash means no measured operator group in that corpus. The deployed runtime
-retains a documented extrapolation/fallback where a scenario requests such a group.
+KAIST has 14 measured operator groups; Vidur has 10. A missing group has no figure
+in that corpus. The deployed runtime retains a documented extrapolation/fallback
+where a scenario requests an operator missing from its precision-specific corpus.
 Families: F0/F1 additive; F2 max roofline; F3 smooth overlap; F4 tile-wave;
 F5/F6 bounded shape transition; F7 cache-capacity transition; F8 corrected embedding
 traffic; F9 independently fitted embedding dispatch branches.
@@ -245,7 +271,7 @@ main operator residual plot.
 
 ## Coverage exclusions and limits
 
-“All data” in the main graph means **all imported compatible dense-decoder
+“All data” across the two overview figures means **all imported compatible dense-decoder
 observations**, not every CSV row present in an upstream repository. The following
 locally available specialized bundles remain outside the runtime cost contract:
 
@@ -294,6 +320,13 @@ Profile authors receive credit under retained MIT licenses. ServeScope's functio
 selection, implementation, UI and evaluation: [ryeii (Ryan Z An)](https://github.com/ryeii).
 '''
     (OUT/'README.md').write_text(report_text)
-    (OUT/'figure-summary.json').write_text(json.dumps(dict(overall=overall,transfer=ts,figure_count=17,point_subsampling=False),indent=2)+'\n')
-    print('Rendered main graph, 14 operator graphs, GPU panels, and transfer graph.',flush=True)
+    (OUT/'figure-summary.json').write_text(json.dumps(dict(overall=overall,transfer=ts,by_source=cohort_metrics,
+        figure_count=len(figures),figures=figures,panels_per_accuracy_figure=2,signed_residual_panel=False,
+        dense_mark_style='Log-count hexagonal bins above 5000 observations; scatter otherwise.',point_subsampling=False),indent=2)+'\n')
+    # Retire the mixed-corpus figures so stale files cannot be mistaken for current plots.
+    for stem in ['main-residuals','gpu-transfer-residuals','by-gpu']+[p.stem for p in OUT.glob('operator-*.png')]:
+        for ext in ['png','svg']:
+            path=OUT/(stem+'.'+ext)
+            if path.exists():path.unlink()
+    print(f'Rendered {len(figures)} corpus-separated figures; signed-residual panels removed.',flush=True)
 if __name__=='__main__':main()

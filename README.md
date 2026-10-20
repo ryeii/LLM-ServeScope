@@ -71,8 +71,8 @@ timing-table lookups are used. SimPy schedules the predictions for serving behav
 - Grouped nested validation: **14.86% mean absolute operator-time error**, **9.54%
   median**, **49.52% P95**. Five outer folds evaluate family/scale selection made
   inside three training-only inner folds.
-- [Full accuracy report](docs/accuracy-2026-10-19/README.md): one main residual graph,
-  **14 subcomponent graphs**, per-GPU breakdown, and separate unseen-GPU validation.
+- [Full accuracy report](docs/accuracy-2026-10-19/README.md): separate KAIST and Vidur overview figures,
+  **24 corpus-specific subcomponent figures**, per-GPU breakdown, and separate unseen-GPU validation.
 - GPU operator accuracy does not establish throughput, energy, memory or network
   accuracy. Those outputs require their own validation. Unsupported specialized
   profile bundles and uncalibrated extrapolations are listed explicitly.
@@ -80,7 +80,9 @@ timing-table lookups are used. SimPy schedules the predictions for serving behav
   own selected functions; missing operators or unknown cache inputs report fallbacks.
 - Original roofline mode remains available for comparison.
 
-![Cross-validated GPU operator timing accuracy](docs/accuracy-2026-10-19/main-residuals.png)
+![KAIST cross-validated GPU operator timing accuracy](docs/accuracy-2026-10-19/kaist-main.png)
+
+![Vidur cross-validated GPU operator timing accuracy](docs/accuracy-2026-10-19/vidur-main.png)
 
 See [current function and assumptions](docs/calibration.md), the earlier
 [function-search experiments](docs/fit-study-2026-10-19/README.md), and the

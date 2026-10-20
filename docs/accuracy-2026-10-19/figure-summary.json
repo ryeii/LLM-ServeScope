@@ -15,6 +15,59 @@
     "within_10_pct": 44.077163033445885,
     "within_20_pct": 68.06626754369128
   },
-  "figure_count": 17,
+  "by_source": {
+    "kaist": {
+      "count": 9411,
+      "mape_pct": 10.636439745403463,
+      "median_ape_pct": 6.89786173286695,
+      "p95_ape_pct": 35.75637831570464,
+      "within_10_pct": 63.053873127191586,
+      "within_20_pct": 85.64445861226224
+    },
+    "vidur": {
+      "count": 590040,
+      "mape_pct": 14.926096987131471,
+      "median_ape_pct": 9.591621667152978,
+      "p95_ape_pct": 49.67805917734325,
+      "within_10_pct": 51.55955528438751,
+      "within_20_pct": 74.6656158904481
+    }
+  },
+  "figure_count": 30,
+  "figures": [
+    "kaist-main",
+    "kaist-operator-act_fn",
+    "kaist-operator-attention-decode",
+    "kaist-operator-attention-prefill",
+    "kaist-operator-down_proj",
+    "kaist-operator-embedding",
+    "kaist-operator-final_layernorm",
+    "kaist-operator-gate_up_proj",
+    "kaist-operator-layernorm",
+    "kaist-operator-lm_head",
+    "kaist-operator-o_proj",
+    "kaist-operator-qk_norm",
+    "kaist-operator-qkv_proj",
+    "kaist-operator-rotary_emb",
+    "kaist-operator-sampler",
+    "kaist-by-gpu",
+    "kaist-gpu-transfer",
+    "vidur-main",
+    "vidur-operator-act_fn",
+    "vidur-operator-attention-decode",
+    "vidur-operator-attention-prefill",
+    "vidur-operator-down_proj",
+    "vidur-operator-embedding",
+    "vidur-operator-gate_up_proj",
+    "vidur-operator-layernorm",
+    "vidur-operator-o_proj",
+    "vidur-operator-qkv_proj",
+    "vidur-operator-rotary_emb",
+    "vidur-by-gpu",
+    "vidur-gpu-transfer"
+  ],
+  "panels_per_accuracy_figure": 2,
+  "signed_residual_panel": false,
+  "dense_mark_style": "Log-count hexagonal bins above 5000 observations; scatter otherwise.",
   "point_subsampling": false
 }

@@ -11,13 +11,26 @@ They describe GPU operator service time under recorded profile conditions.
 They are **not an error guarantee for serving throughput, request latency, energy,
 new architectures, or a customer workload distribution**.
 
-![Main cross-validated residual graph](main-residuals.png)
+## Separate corpus overviews
 
-[Vector figure](main-residuals.svg). Left: prediction versus profile; center: signed
-relative residual; right: cumulative absolute error. Every eligible observation
-enters the plots and metrics; no tail clipping, random point subsampling or outlier
-removal is used. Positive signed residual means overprediction. Rasterization of
-scatter marks reduces vector-file size without discarding observations.
+### KAIST · BF16
+
+![KAIST · BF16 cross-validated accuracy](kaist-main.png)
+
+[Vector figure](kaist-main.svg).
+### Vidur · FP16
+
+![Vidur · FP16 cross-validated accuracy](vidur-main.png)
+
+[Vector figure](vidur-main.svg).
+
+Each figure has two panels: **predicted versus profiled time** and the
+**cumulative absolute-error distribution**. KAIST and Vidur are never overlaid.
+Dense prediction clouds use hexagonal bins colored by observation count; smaller
+plots show individual points. Every eligible observation contributes to the bins,
+error distributions and metrics; there is no point subsampling, outlier removal,
+or tail clipping. The signed-residual middle panel has been removed.
+The numerical validation results and production coefficients are unchanged.
 
 ## What data and model are being tested?
 
@@ -79,7 +92,8 @@ production model evaluated indiscriminately on another profiler.
 | rtx4090 | 1,643 | 13.31% | 37.42% | 11.13% |
 | rtx6000 | 7,768 | 10.07% | 35.62% | 9.19% |
 
-![Cross-validated predictions by GPU](by-gpu.png)
+![KAIST · BF16 by GPU](kaist-by-gpu.png)
+![Vidur · FP16 by GPU](vidur-by-gpu.png)
 
 The pooled score is dominated by Vidur's denser attention grids. Equal-operator
 macro MAPE is **12.89%**. Per-GPU and
@@ -88,7 +102,12 @@ sum of absolute ns errors divided by sum of profiled ns, not serving-workload we
 
 ## Unseen-GPU accuracy is a different test
 
-![Leave-one-GPU-out residual graph](gpu-transfer-residuals.png)
+![KAIST · BF16 leave-one-GPU-out accuracy](kaist-gpu-transfer.png)
+
+[Vector figure](kaist-gpu-transfer.svg).
+![Vidur · FP16 leave-one-GPU-out accuracy](vidur-gpu-transfer.png)
+
+[Vector figure](vidur-gpu-transfer.svg).
 
 | Excluded GPU/cohort | Scored observations | MAPE | P95 | Unsupported groups |
 | --- | --- | --- | --- | --- |
@@ -106,101 +125,191 @@ figure has **599,147** points, versus 599,451 in shape CV.
 KAIST also confounds hardware with software version. This audit is not evidence
 that peak specifications alone predict new GPU architectures within a fixed error.
 
-## Main residual graphs for every subcomponent
+## Subcomponent figures, separated by profiling corpus
 
-| Subcomponent | Observations | MAPE | P95 | Deployed KAIST family | Deployed Vidur family |
-| --- | --- | --- | --- | --- | --- |
-| Activation / SwiGLU | 10,084 | 9.38% | 32.45% | F7 | F0 |
-| Decode attention | 364,815 | 9.64% | 26.02% | F4 | F0 |
-| Prefill attention | 152,500 | 28.27% | 62.05% | F4 | F0 |
-| MLP down projection | 10,084 | 8.42% | 23.66% | F5 | F3 |
-| Embedding | 10,084 | 40.09% | 60.99% | F9 | F8 |
-| Final normalization | 760 | 4.90% | 12.35% | F0 | — |
-| MLP gate + up projection | 10,084 | 7.38% | 20.68% | F3 | F3 |
-| Layer normalization | 10,084 | 11.55% | 26.96% | F4 | F5 |
-| Language-model output head | 200 | 2.58% | 10.07% | F0 | — |
-| Attention output projection | 10,084 | 7.95% | 21.55% | F5 | F3 |
-| QK normalization | 304 | 0.90% | 2.61% | F4 | — |
-| QKV projection | 10,084 | 8.58% | 21.93% | F1 | F3 |
-| Rotary embedding | 10,084 | 12.49% | 35.35% | F0 | F5 |
-| Sampling | 200 | 28.29% | 66.64% | F0 | — |
-
-A dash means no measured operator group in that corpus. The deployed runtime
-retains a documented extrapolation/fallback where a scenario requests such a group.
+KAIST has 14 measured operator groups; Vidur has 10. A missing group has no figure
+in that corpus. The deployed runtime retains a documented extrapolation/fallback
+where a scenario requests an operator missing from its precision-specific corpus.
 Families: F0/F1 additive; F2 max roofline; F3 smooth overlap; F4 tile-wave;
 F5/F6 bounded shape transition; F7 cache-capacity transition; F8 corrected embedding
 traffic; F9 independently fitted embedding dispatch branches.
 
-### Activation / SwiGLU
+### KAIST · BF16
 
-![Activation / SwiGLU residuals](operator-act_fn.png)
+| Subcomponent | Observations | MAPE | P95 | Deployed family |
+| --- | --- | --- | --- | --- |
+| Activation / SwiGLU | 760 | 17.95% | 59.44% | F7 |
+| Decode attention | 783 | 8.22% | 24.08% | F4 |
+| Prefill attention | 1,084 | 20.85% | 44.35% | F4 |
+| MLP down projection | 760 | 6.20% | 15.80% | F5 |
+| Embedding | 760 | 8.36% | 18.35% | F9 |
+| Final normalization | 760 | 4.90% | 12.35% | F0 |
+| MLP gate + up projection | 760 | 7.96% | 21.01% | F3 |
+| Layer normalization | 760 | 11.19% | 36.36% | F4 |
+| Language-model output head | 200 | 2.58% | 10.07% | F0 |
+| Attention output projection | 760 | 7.59% | 19.54% | F5 |
+| QK normalization | 304 | 0.90% | 2.61% | F4 |
+| QKV projection | 760 | 9.92% | 23.38% | F1 |
+| Rotary embedding | 760 | 10.94% | 34.74% | F0 |
+| Sampling | 200 | 28.29% | 66.64% | F0 |
 
-[Vector figure](operator-act_fn.svg).
-### Decode attention
+#### Activation / SwiGLU
 
-![Decode attention residuals](operator-attention-decode.png)
+![KAIST · BF16 Activation / SwiGLU](kaist-operator-act_fn.png)
 
-[Vector figure](operator-attention-decode.svg).
-### Prefill attention
+[Vector figure](kaist-operator-act_fn.svg).
 
-![Prefill attention residuals](operator-attention-prefill.png)
+#### Decode attention
 
-[Vector figure](operator-attention-prefill.svg).
-### MLP down projection
+![KAIST · BF16 Decode attention](kaist-operator-attention-decode.png)
 
-![MLP down projection residuals](operator-down_proj.png)
+[Vector figure](kaist-operator-attention-decode.svg).
 
-[Vector figure](operator-down_proj.svg).
-### Embedding
+#### Prefill attention
 
-![Embedding residuals](operator-embedding.png)
+![KAIST · BF16 Prefill attention](kaist-operator-attention-prefill.png)
 
-[Vector figure](operator-embedding.svg).
-### Final normalization
+[Vector figure](kaist-operator-attention-prefill.svg).
 
-![Final normalization residuals](operator-final_layernorm.png)
+#### MLP down projection
 
-[Vector figure](operator-final_layernorm.svg).
-### MLP gate + up projection
+![KAIST · BF16 MLP down projection](kaist-operator-down_proj.png)
 
-![MLP gate + up projection residuals](operator-gate_up_proj.png)
+[Vector figure](kaist-operator-down_proj.svg).
 
-[Vector figure](operator-gate_up_proj.svg).
-### Layer normalization
+#### Embedding
 
-![Layer normalization residuals](operator-layernorm.png)
+![KAIST · BF16 Embedding](kaist-operator-embedding.png)
 
-[Vector figure](operator-layernorm.svg).
-### Language-model output head
+[Vector figure](kaist-operator-embedding.svg).
 
-![Language-model output head residuals](operator-lm_head.png)
+#### Final normalization
 
-[Vector figure](operator-lm_head.svg).
-### Attention output projection
+![KAIST · BF16 Final normalization](kaist-operator-final_layernorm.png)
 
-![Attention output projection residuals](operator-o_proj.png)
+[Vector figure](kaist-operator-final_layernorm.svg).
 
-[Vector figure](operator-o_proj.svg).
-### QK normalization
+#### MLP gate + up projection
 
-![QK normalization residuals](operator-qk_norm.png)
+![KAIST · BF16 MLP gate + up projection](kaist-operator-gate_up_proj.png)
 
-[Vector figure](operator-qk_norm.svg).
-### QKV projection
+[Vector figure](kaist-operator-gate_up_proj.svg).
 
-![QKV projection residuals](operator-qkv_proj.png)
+#### Layer normalization
 
-[Vector figure](operator-qkv_proj.svg).
-### Rotary embedding
+![KAIST · BF16 Layer normalization](kaist-operator-layernorm.png)
 
-![Rotary embedding residuals](operator-rotary_emb.png)
+[Vector figure](kaist-operator-layernorm.svg).
 
-[Vector figure](operator-rotary_emb.svg).
-### Sampling
+#### Language-model output head
 
-![Sampling residuals](operator-sampler.png)
+![KAIST · BF16 Language-model output head](kaist-operator-lm_head.png)
 
-[Vector figure](operator-sampler.svg).
+[Vector figure](kaist-operator-lm_head.svg).
+
+#### Attention output projection
+
+![KAIST · BF16 Attention output projection](kaist-operator-o_proj.png)
+
+[Vector figure](kaist-operator-o_proj.svg).
+
+#### QK normalization
+
+![KAIST · BF16 QK normalization](kaist-operator-qk_norm.png)
+
+[Vector figure](kaist-operator-qk_norm.svg).
+
+#### QKV projection
+
+![KAIST · BF16 QKV projection](kaist-operator-qkv_proj.png)
+
+[Vector figure](kaist-operator-qkv_proj.svg).
+
+#### Rotary embedding
+
+![KAIST · BF16 Rotary embedding](kaist-operator-rotary_emb.png)
+
+[Vector figure](kaist-operator-rotary_emb.svg).
+
+#### Sampling
+
+![KAIST · BF16 Sampling](kaist-operator-sampler.png)
+
+[Vector figure](kaist-operator-sampler.svg).
+### Vidur · FP16
+
+| Subcomponent | Observations | MAPE | P95 | Deployed family |
+| --- | --- | --- | --- | --- |
+| Activation / SwiGLU | 9,324 | 8.68% | 28.62% | F0 |
+| Decode attention | 364,032 | 9.65% | 26.02% | F0 |
+| Prefill attention | 151,416 | 28.32% | 62.08% | F0 |
+| MLP down projection | 9,324 | 8.60% | 24.04% | F3 |
+| Embedding | 9,324 | 42.67% | 61.08% | F8 |
+| MLP gate + up projection | 9,324 | 7.33% | 20.61% | F3 |
+| Layer normalization | 9,324 | 11.58% | 26.71% | F5 |
+| Attention output projection | 9,324 | 7.98% | 21.77% | F3 |
+| QKV projection | 9,324 | 8.47% | 21.76% | F3 |
+| Rotary embedding | 9,324 | 12.61% | 35.35% | F5 |
+
+#### Activation / SwiGLU
+
+![Vidur · FP16 Activation / SwiGLU](vidur-operator-act_fn.png)
+
+[Vector figure](vidur-operator-act_fn.svg).
+
+#### Decode attention
+
+![Vidur · FP16 Decode attention](vidur-operator-attention-decode.png)
+
+[Vector figure](vidur-operator-attention-decode.svg).
+
+#### Prefill attention
+
+![Vidur · FP16 Prefill attention](vidur-operator-attention-prefill.png)
+
+[Vector figure](vidur-operator-attention-prefill.svg).
+
+#### MLP down projection
+
+![Vidur · FP16 MLP down projection](vidur-operator-down_proj.png)
+
+[Vector figure](vidur-operator-down_proj.svg).
+
+#### Embedding
+
+![Vidur · FP16 Embedding](vidur-operator-embedding.png)
+
+[Vector figure](vidur-operator-embedding.svg).
+
+#### MLP gate + up projection
+
+![Vidur · FP16 MLP gate + up projection](vidur-operator-gate_up_proj.png)
+
+[Vector figure](vidur-operator-gate_up_proj.svg).
+
+#### Layer normalization
+
+![Vidur · FP16 Layer normalization](vidur-operator-layernorm.png)
+
+[Vector figure](vidur-operator-layernorm.svg).
+
+#### Attention output projection
+
+![Vidur · FP16 Attention output projection](vidur-operator-o_proj.png)
+
+[Vector figure](vidur-operator-o_proj.svg).
+
+#### QKV projection
+
+![Vidur · FP16 QKV projection](vidur-operator-qkv_proj.png)
+
+[Vector figure](vidur-operator-qkv_proj.svg).
+
+#### Rotary embedding
+
+![Vidur · FP16 Rotary embedding](vidur-operator-rotary_emb.png)
+
+[Vector figure](vidur-operator-rotary_emb.svg).
 
 ## Serving integration recheck (separate evidence)
 
@@ -226,7 +335,7 @@ main operator residual plot.
 
 ## Coverage exclusions and limits
 
-“All data” in the main graph means **all imported compatible dense-decoder
+“All data” across the two overview figures means **all imported compatible dense-decoder
 observations**, not every CSV row present in an upstream repository. The following
 locally available specialized bundles remain outside the runtime cost contract:
 
