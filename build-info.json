@@ -1,6 +1,6 @@
 {
   "project": "LLM-ServeScope",
-  "source_commit": "bf8437a59f8de3bd9d0870a3099cbdea0a4a34ed",
+  "source_commit": "cf626870d056cf3d7a67cef8a4db5942badb4854",
   "base_path": "/LLM-ServeScope/",
   "engine": "Same backend/model.py + SimPy in a Pyodide web worker",
   "pyodide": "314.0.7",
