@@ -15,14 +15,14 @@ new architectures, or a customer workload distribution**.
 
 ### KAIST · BF16
 
-![KAIST · BF16 cross-validated accuracy](kaist-main.png)
+![KAIST · BF16 cross-validated accuracy](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-main.png?v=7d83f37f3fbd)
 
-[Vector figure](kaist-main.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-main.svg?v=b27aa6cb5bd7).
 ### Vidur · FP16
 
-![Vidur · FP16 cross-validated accuracy](vidur-main.png)
+![Vidur · FP16 cross-validated accuracy](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-main.png?v=465f07546ef7)
 
-[Vector figure](vidur-main.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-main.svg?v=ed542daa7779).
 
 Each figure has two panels: **predicted versus profiled time** and the
 **cumulative absolute-error distribution**. KAIST and Vidur are never overlaid.
@@ -92,8 +92,8 @@ production model evaluated indiscriminately on another profiler.
 | rtx4090 | 1,643 | 13.31% | 37.42% | 11.13% |
 | rtx6000 | 7,768 | 10.07% | 35.62% | 9.19% |
 
-![KAIST · BF16 by GPU](kaist-by-gpu.png)
-![Vidur · FP16 by GPU](vidur-by-gpu.png)
+![KAIST · BF16 by GPU](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-by-gpu.png?v=d68899dc6fc8)
+![Vidur · FP16 by GPU](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-by-gpu.png?v=fca04b9d9d41)
 
 The pooled score is dominated by Vidur's denser attention grids. Equal-operator
 macro MAPE is **12.89%**. Per-GPU and
@@ -102,12 +102,12 @@ sum of absolute ns errors divided by sum of profiled ns, not serving-workload we
 
 ## Unseen-GPU accuracy is a different test
 
-![KAIST · BF16 leave-one-GPU-out accuracy](kaist-gpu-transfer.png)
+![KAIST · BF16 leave-one-GPU-out accuracy](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-gpu-transfer.png?v=e764a5da17c0)
 
-[Vector figure](kaist-gpu-transfer.svg).
-![Vidur · FP16 leave-one-GPU-out accuracy](vidur-gpu-transfer.png)
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-gpu-transfer.svg?v=419e4466b20a).
+![Vidur · FP16 leave-one-GPU-out accuracy](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-gpu-transfer.png?v=5d7943cd7af0)
 
-[Vector figure](vidur-gpu-transfer.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-gpu-transfer.svg?v=81bdb76a56c0).
 
 | Excluded GPU/cohort | Scored observations | MAPE | P95 | Unsupported groups |
 | --- | --- | --- | --- | --- |
@@ -155,87 +155,87 @@ traffic; F9 independently fitted embedding dispatch branches.
 
 #### Activation / SwiGLU
 
-![KAIST · BF16 Activation / SwiGLU](kaist-operator-act_fn.png)
+![KAIST · BF16 Activation / SwiGLU](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-act_fn.png?v=91c91482f0b8)
 
-[Vector figure](kaist-operator-act_fn.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-act_fn.svg?v=2ca191b8c1a5).
 
 #### Decode attention
 
-![KAIST · BF16 Decode attention](kaist-operator-attention-decode.png)
+![KAIST · BF16 Decode attention](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-attention-decode.png?v=20e0baf88f17)
 
-[Vector figure](kaist-operator-attention-decode.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-attention-decode.svg?v=db1c475d309c).
 
 #### Prefill attention
 
-![KAIST · BF16 Prefill attention](kaist-operator-attention-prefill.png)
+![KAIST · BF16 Prefill attention](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-attention-prefill.png?v=1a8d97e42f22)
 
-[Vector figure](kaist-operator-attention-prefill.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-attention-prefill.svg?v=b5c4d51439d9).
 
 #### MLP down projection
 
-![KAIST · BF16 MLP down projection](kaist-operator-down_proj.png)
+![KAIST · BF16 MLP down projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-down_proj.png?v=fef119d46559)
 
-[Vector figure](kaist-operator-down_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-down_proj.svg?v=bfe59264f135).
 
 #### Embedding
 
-![KAIST · BF16 Embedding](kaist-operator-embedding.png)
+![KAIST · BF16 Embedding](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-embedding.png?v=5355e108bda9)
 
-[Vector figure](kaist-operator-embedding.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-embedding.svg?v=a67b16c32b37).
 
 #### Final normalization
 
-![KAIST · BF16 Final normalization](kaist-operator-final_layernorm.png)
+![KAIST · BF16 Final normalization](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-final_layernorm.png?v=20d18331282a)
 
-[Vector figure](kaist-operator-final_layernorm.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-final_layernorm.svg?v=2bf7b20d5167).
 
 #### MLP gate + up projection
 
-![KAIST · BF16 MLP gate + up projection](kaist-operator-gate_up_proj.png)
+![KAIST · BF16 MLP gate + up projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-gate_up_proj.png?v=d1bbc5247c38)
 
-[Vector figure](kaist-operator-gate_up_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-gate_up_proj.svg?v=b3386b649c1d).
 
 #### Layer normalization
 
-![KAIST · BF16 Layer normalization](kaist-operator-layernorm.png)
+![KAIST · BF16 Layer normalization](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-layernorm.png?v=2919e1c84268)
 
-[Vector figure](kaist-operator-layernorm.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-layernorm.svg?v=96756f9b8206).
 
 #### Language-model output head
 
-![KAIST · BF16 Language-model output head](kaist-operator-lm_head.png)
+![KAIST · BF16 Language-model output head](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-lm_head.png?v=96fdf5cbcd23)
 
-[Vector figure](kaist-operator-lm_head.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-lm_head.svg?v=96229e264180).
 
 #### Attention output projection
 
-![KAIST · BF16 Attention output projection](kaist-operator-o_proj.png)
+![KAIST · BF16 Attention output projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-o_proj.png?v=575a3c5765ac)
 
-[Vector figure](kaist-operator-o_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-o_proj.svg?v=591a37b5fed4).
 
 #### QK normalization
 
-![KAIST · BF16 QK normalization](kaist-operator-qk_norm.png)
+![KAIST · BF16 QK normalization](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-qk_norm.png?v=999490ca119a)
 
-[Vector figure](kaist-operator-qk_norm.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-qk_norm.svg?v=918c5e7ff0a4).
 
 #### QKV projection
 
-![KAIST · BF16 QKV projection](kaist-operator-qkv_proj.png)
+![KAIST · BF16 QKV projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-qkv_proj.png?v=d2a11c77265a)
 
-[Vector figure](kaist-operator-qkv_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-qkv_proj.svg?v=906fe985e7a3).
 
 #### Rotary embedding
 
-![KAIST · BF16 Rotary embedding](kaist-operator-rotary_emb.png)
+![KAIST · BF16 Rotary embedding](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-rotary_emb.png?v=b730de184ff2)
 
-[Vector figure](kaist-operator-rotary_emb.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-rotary_emb.svg?v=1fd605cfe1c1).
 
 #### Sampling
 
-![KAIST · BF16 Sampling](kaist-operator-sampler.png)
+![KAIST · BF16 Sampling](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-sampler.png?v=7b8db557d52b)
 
-[Vector figure](kaist-operator-sampler.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-operator-sampler.svg?v=3e5532b61b9c).
 ### Vidur · FP16
 
 | Subcomponent | Observations | MAPE | P95 | Deployed family |
@@ -253,63 +253,63 @@ traffic; F9 independently fitted embedding dispatch branches.
 
 #### Activation / SwiGLU
 
-![Vidur · FP16 Activation / SwiGLU](vidur-operator-act_fn.png)
+![Vidur · FP16 Activation / SwiGLU](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-act_fn.png?v=48d939e241e5)
 
-[Vector figure](vidur-operator-act_fn.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-act_fn.svg?v=2f1766d10988).
 
 #### Decode attention
 
-![Vidur · FP16 Decode attention](vidur-operator-attention-decode.png)
+![Vidur · FP16 Decode attention](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-attention-decode.png?v=1ae567c088cf)
 
-[Vector figure](vidur-operator-attention-decode.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-attention-decode.svg?v=2aa527002a13).
 
 #### Prefill attention
 
-![Vidur · FP16 Prefill attention](vidur-operator-attention-prefill.png)
+![Vidur · FP16 Prefill attention](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-attention-prefill.png?v=d44a37434f6f)
 
-[Vector figure](vidur-operator-attention-prefill.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-attention-prefill.svg?v=aad3b9880dae).
 
 #### MLP down projection
 
-![Vidur · FP16 MLP down projection](vidur-operator-down_proj.png)
+![Vidur · FP16 MLP down projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-down_proj.png?v=402bdc0adc4f)
 
-[Vector figure](vidur-operator-down_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-down_proj.svg?v=78c6aa1954ee).
 
 #### Embedding
 
-![Vidur · FP16 Embedding](vidur-operator-embedding.png)
+![Vidur · FP16 Embedding](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-embedding.png?v=b85ff139685f)
 
-[Vector figure](vidur-operator-embedding.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-embedding.svg?v=5232203775b8).
 
 #### MLP gate + up projection
 
-![Vidur · FP16 MLP gate + up projection](vidur-operator-gate_up_proj.png)
+![Vidur · FP16 MLP gate + up projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-gate_up_proj.png?v=8c734d685ec8)
 
-[Vector figure](vidur-operator-gate_up_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-gate_up_proj.svg?v=02e36a3e1a91).
 
 #### Layer normalization
 
-![Vidur · FP16 Layer normalization](vidur-operator-layernorm.png)
+![Vidur · FP16 Layer normalization](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-layernorm.png?v=607c5248dcfa)
 
-[Vector figure](vidur-operator-layernorm.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-layernorm.svg?v=09b0f0b04c78).
 
 #### Attention output projection
 
-![Vidur · FP16 Attention output projection](vidur-operator-o_proj.png)
+![Vidur · FP16 Attention output projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-o_proj.png?v=927e6bd0625c)
 
-[Vector figure](vidur-operator-o_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-o_proj.svg?v=ce1f1966ecf6).
 
 #### QKV projection
 
-![Vidur · FP16 QKV projection](vidur-operator-qkv_proj.png)
+![Vidur · FP16 QKV projection](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-qkv_proj.png?v=d3aaca1400d1)
 
-[Vector figure](vidur-operator-qkv_proj.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-qkv_proj.svg?v=0708545b3c1d).
 
 #### Rotary embedding
 
-![Vidur · FP16 Rotary embedding](vidur-operator-rotary_emb.png)
+![Vidur · FP16 Rotary embedding](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-rotary_emb.png?v=5f77305ed038)
 
-[Vector figure](vidur-operator-rotary_emb.svg).
+[Vector figure](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-operator-rotary_emb.svg?v=293dcbe6bc84).
 
 ## Serving integration recheck (separate evidence)
 

@@ -80,9 +80,9 @@ timing-table lookups are used. SimPy schedules the predictions for serving behav
   own selected functions; missing operators or unknown cache inputs report fallbacks.
 - Original roofline mode remains available for comparison.
 
-![KAIST cross-validated GPU operator timing accuracy](docs/accuracy-2026-10-19/kaist-main.png)
+![KAIST cross-validated GPU operator timing accuracy](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/kaist-main.png?v=7d83f37f3fbd)
 
-![Vidur cross-validated GPU operator timing accuracy](docs/accuracy-2026-10-19/vidur-main.png)
+![Vidur cross-validated GPU operator timing accuracy](https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/vidur-main.png?v=465f07546ef7)
 
 See [current function and assumptions](docs/calibration.md), the earlier
 [function-search experiments](docs/fit-study-2026-10-19/README.md), and the

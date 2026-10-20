@@ -1,5 +1,5 @@
 """Render all-point residual figures, operator breakdowns and an auditable accuracy report."""
-import collections,csv,gzip,json
+import collections,csv,gzip,json,re
 from pathlib import Path
 import numpy as np
 import matplotlib
@@ -319,6 +319,10 @@ Sources: [KAIST pinned profiles](https://github.com/casys-kaist/LLMServingSim/tr
 Profile authors receive credit under retained MIT licenses. ServeScope's function
 selection, implementation, UI and evaluation: [ryeii (Ryan Z An)](https://github.com/ryeii).
 '''
+    # GitHub relative image links redirect to raw.githubusercontent.com. Serve the
+    # same committed files through Pages, as for the project logo/screenshots.
+    report_text=re.sub(r'\]\(((?:kaist|vidur)-[a-z0-9_-]+\.(?:png|svg))\)',
+        lambda match: ']('+'https://ryeii.github.io/LLM-ServeScope/docs/accuracy-2026-10-19/'+match[1]+'?v='+hashfile(OUT/match[1])[:12]+')',report_text)
     (OUT/'README.md').write_text(report_text)
     (OUT/'figure-summary.json').write_text(json.dumps(dict(overall=overall,transfer=ts,by_source=cohort_metrics,
         figure_count=len(figures),figures=figures,panels_per_accuracy_figure=2,signed_residual_panel=False,
