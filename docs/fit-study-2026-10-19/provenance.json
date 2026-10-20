@@ -34,10 +34,10 @@
   "files": {
     "integration/fit_study/__init__.py": "8ccbed0a99da6864ca84e68cea65500648eb41b36ee8c269a7d1148506857fec",
     "integration/fit_study/data.py": "16d27dcad0073420a5a7cffcc2ce48dd1c4aaf23d18b24ea7bbfd945d857b25c",
-    "integration/fit_study/figures.py": "1160bbc0337c6d0bf2887ce55a071a00dad16dc3afccfb863645e10bee35d9cf",
+    "integration/fit_study/figures.py": "636bb22b52aaccb9b8499c055fff655e4739732c4f870cc1630094cfa745abdc",
     "integration/fit_study/functions.py": "496b67a5748b48633926641fea549618cc0f5b6477e004cd1fc65459d227ecbb",
     "integration/fit_study/import_vidur.py": "d0581c65628183e4d5cd994fef3e627cc2568d7178756b2a98c53d1c46a4b292",
-    "integration/fit_study/report.py": "023a2084c67c73e3ab684e7d8d27fa1d59fc373751b52a54223c0c67ea3f7f04",
+    "integration/fit_study/report.py": "12ab82850dbb0e3bd06f9fc74dff1061f5115bdf5283b5951617557e8723d620",
     "integration/fit_study/run.py": "75bd02dd490ab8171c34dc04deec1cccd9f792504da83ea499a36f17f05cf607",
     "integration/fit_study/test_study.py": "5e98b8726df77ef07a09b5a75d1d21f2ebf318b67c5d09e75119aa65c0ae42fc"
   },

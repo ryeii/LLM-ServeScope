@@ -277,7 +277,14 @@ not evidence that the asymptote is accurately measured.
 
 [Vector version](selected-shapes.svg). Points are published times; lines connect
 held-out predictions rather than fitted training predictions. This figure reveals
-transitions hidden by a single aggregate error number.
+transitions hidden by a single aggregate error number. The embedding panel contains
+a sharp 16-to-20-token timing drop that a single smooth fit does not represent.
+A subsequent [embedding dispatch diagnosis](embedding-dispatch.md) links it to
+PyTorch's source-defined small-index/gather boundary at 16 indices. F8 corrects
+vocabulary-sharding geometry but **does not model that software dispatch change**.
+The updated plot distinguishes the two regimes; no scores or fitted parameters
+were changed after this diagnosis. A dispatch-aware piecewise function is a
+well-motivated next candidate, not an evaluated tenth trial in this report.
 
 ## 6. Transfer audits and the deployment decision
 

@@ -57,14 +57,21 @@ def main():
     plt.close(fig)
     # Curves show the shape effect behind aggregate scatter/error statistics.
     fig,axes=plt.subplots(1,3,figsize=(17,5.5))
-    for ax,(op,title) in zip(axes,[('act_fn','Activation: cache-transition hypothesis'),('embedding','Embedding: vocabulary sharding'),('attention:prefill','Prefill attention: residual shape effects')]):
+    for ax,(op,title) in zip(axes,[('act_fn','Activation: cache-transition hypothesis'),('embedding','Embedding: kernel-dispatch regimes'),('attention:prefill','Prefill attention: residual shape effects')]):
         chosen=k['selection'][op]['family']
         subset=sorted([r for r in rows if r['op']==op and r['gpu']=='rtx6000' and r['model']=='llama8' and r['tp']==1 and (op!='attention:prefill' or r['shape']['kp']==r['n']/2)],key=lambda r:r['n'])
         if not subset and op=='attention:prefill':
             subset=sorted([r for r in rows if r['op']==op and r['gpu']=='rtx6000' and r['model']=='llama8' and r['tp']==1 and r['shape']['kp']>=r['n']/2],key=lambda r:r['n'])
             subset=[min([r for r in subset if r['n']==n],key=lambda r:r['shape']['kp']) for n in sorted(set(r['n'] for r in subset))]
         x=np.array([r['n'] for r in subset]);target=np.array([r['ns'] for r in subset])/1000
-        ax.plot(x,target,'o',ms=4,c=INK,label='Published profile')
+        if op=='embedding':
+            small=x<=16
+            ax.plot(x[small],target[small],'o',ms=4,c=INK,label='Profile: ≤16 tokens')
+            ax.plot(x[~small],target[~small],'s',ms=3.5,c='#246d65',label='Profile: >16 tokens')
+            ax.axvline(16,color=GRAY,lw=1,ls='--')
+            ax.text(.55,.97,'Dispatch boundary: 16\n(source-supported inference)',transform=ax.transAxes,ha='left',va='top',fontsize=8,color=GRAY)
+        else:
+            ax.plot(x,target,'o',ms=4,c=INK,label='Published profile')
         for f,color in [('F0',ORANGE),(chosen,BLUE)]:
             ax.plot(x,oof_from_report(k,subset,f)/1000,lw=1.7,c=color,label=f'{f}: grouped held-out prediction')
         ax.set(xscale='log',yscale='log',xlabel='Tokens per operator call',ylabel='Latency (µs)',title=title);ax.grid(alpha=.15);ax.legend(fontsize=8)
