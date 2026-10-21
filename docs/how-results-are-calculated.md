@@ -6,7 +6,7 @@ The key dependency is:
 
 **inputs → estimated operation/link service times → shared-resource schedule → request completion times → reported metrics.**
 
-![Process connecting workload, service estimates and scheduling to throughput](results-explained/calculation-process.png)
+![Process connecting workload, service estimates and scheduling to throughput](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/calculation-process.png?v=7fd8f61d14bd)
 
 ## 1. What is in this example?
 
@@ -36,7 +36,7 @@ run duration = max(all request completion timestamps)
 
 Do not add the four completion timestamps. Work overlaps between groups and between the prefill and decode pools. This figure follows the first-arriving request in each batch. It shows actual exported service intervals; gaps within a phase are waits. Later members have shorter formation waits.
 
-![Shared-clock batch timeline and service/wait breakdown for request 12](results-explained/default-timeline.png)
+![Shared-clock batch timeline and service/wait breakdown for request 12](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/default-timeline.png?v=341e72f78cda)
 
 The run duration includes arrivals, startup, queues and the final drain. It is finite-run throughput, not an isolated kernel benchmark or a guarantee of steady-state peak throughput.
 

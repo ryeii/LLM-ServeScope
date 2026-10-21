@@ -81,6 +81,17 @@ copy(
   "docs/screenshots/github-pages.png",
   `${output}/docs/screenshots/github-pages.png`,
 );
+// Publish walkthrough figures on Pages to avoid GitHub raw-image delivery failures.
+for (const figure of ["calculation-process", "default-timeline"])
+  for (const extension of ["png", "svg"])
+    copy(
+      `docs/results-explained/${figure}.${extension}`,
+      `${output}/docs/results-explained/${figure}.${extension}`,
+    );
+copy(
+  "docs/results-explained/numbers.json",
+  `${output}/docs/results-explained/numbers.json`,
+);
 // Accuracy Markdown embeds these Pages URLs, so publish every listed PNG/SVG.
 const accuracyPath = "docs/accuracy-2026-10-19";
 const accuracyFigures = JSON.parse(
