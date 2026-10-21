@@ -56,8 +56,7 @@ def hit_prediction(fit,capacity_blocks,unique_blocks,max_hit_fraction=1):
     return max_hit_fraction*a*(-math.expm1(-min(700,(x/s)**p)))
 
 def validate_storage(c,number):
-    raw=c.get('storage')
-    if raw is None:return
+    raw=c.get('storage') or {}
     if not isinstance(raw,dict):raise ValueError('storage must be an object.')
     s=dict(copy.deepcopy(DEFAULT_STORAGE),**raw);c['storage']=s
     if type(s['enabled']) is not bool:raise ValueError('KV storage enabled must be boolean.')
@@ -71,7 +70,7 @@ def validate_storage(c,number):
         s[k]=number(s[k],k,0,1e6)
     s['io_chunk_KiB']=number(s['io_chunk_KiB'],'I/O chunk KiB',16,2048,True)
     if s['block_tokens']!=512:raise ValueError('Prefix storage currently uses 512-token blocks.')
-    if not s['enabled'] and not s.get('workload'):return
+    if not s['enabled'] and not s.get('workload') and c.get('active_kv',{}).get('placement','hbm')=='hbm':return
     phases=['prefill','decode'] if c.get('separated',True) else ['prefill']
     for phase in phases:
         if number(c[phase].get('replicas'),phase+'.replicas',1,64,True)!=1:
@@ -102,7 +101,7 @@ def validate_storage(c,number):
 
 def workload(c):
     s=c.get('storage',{})
-    if not s.get('enabled') and not s.get('workload'):return None
+    if not s.get('enabled') and not s.get('workload') and c.get('active_kv',{}).get('placement','hbm')=='hbm':return None
     if s['workload']:
         origin=s['workload'][0]['timestamp']
         return [dict(row,arrival_ms=row['timestamp']-origin) for row in s['workload']]
@@ -121,8 +120,8 @@ class CacheTiers:
         self.transitions=[]
         self.caches={k:OrderedDict() for k in self.capacity};self.pins={k:Counter() for k in self.capacity};self.pending={}
         self.links={k:simpy.Resource(env,1) for k in ['ssd','pcie','hbm']}
-        self.stats=Counter();self.peaks=Counter();self.evictions=Counter();self.drops=Counter();self.events=[];self.snapshots=[]
-        self.fit=fit_dataset() if self.s['profile']=='local-mooncake-path' and self.capacity['ssd'] else None
+        self.stats=Counter();self.active_io_stats=Counter();self.peaks=Counter();self.evictions=Counter();self.drops=Counter();self.events=[];self.snapshots=[]
+        self.fit=fit_dataset() if self.s['profile']=='local-mooncake-path' and (self.capacity['ssd'] or c.get('active_kv',{}).get('placement') in ('ssd','hbm-ssd')) else None
 
     def keys(self,row):
         parent='';keys=[]
@@ -141,8 +140,9 @@ class CacheTiers:
         cache[key]=None;self.peaks[tier]=max(self.peaks[tier],len(cache))
         self.snapshots.append(dict(time_ms=self.env.now,tier=tier,blocks=len(cache),request_id=request))
 
-    def _io(self,tier,op,nbytes,identifier,cause):
+    def _io(self,tier,op,nbytes,identifier,cause,scope='prefix',model_phase='prefill',**metadata):
         if nbytes<=0:return
+        counter=self.stats if scope=='prefix' else self.active_io_stats
         ready=self.env.now;resource=self.links[tier]
         with resource.request() as ticket:
             yield ticket;begin=self.env.now
@@ -152,15 +152,17 @@ class CacheTiers:
                 else:model=dict(family='affine',coefficients=[self.s['ssd_'+op+'_latency_us']/1000,1/self.s['ssd_'+op+'_GBps']])
                 duration=full*latency_ms(model,chunk)+(latency_ms(model,tail) if tail else 0)
                 extrapolated=bool(self.fit and ((full and not model['min_bytes']<=chunk<=model['max_bytes']) or (tail and not model['min_bytes']<=tail<=model['max_bytes'])))
-                if extrapolated:self.stats['extrapolated_io_events']+=1
+                if extrapolated:counter['extrapolated_io_events']+=1
             else:
-                bw=self.s['pcie_GBps'] if tier=='pcie' else self.c['prefill']['hardware']['dram_bandwidth_TBps']*1000*self.c['prefill']['tp']*self.c['prefill']['pp']*self.c['prefill']['ep']
+                bw=self.s['pcie_GBps'] if tier=='pcie' else self.c[model_phase]['hardware']['dram_bandwidth_TBps']*1000*self.c[model_phase]['tp']*self.c[model_phase]['pp']*self.c[model_phase]['ep']
                 latency=self.s['pcie_latency_us']/1000 if tier=='pcie' else 0
                 duration=nbytes/(bw*1e9)*1000+latency
                 model=dict(family='affine',coefficients=[latency,1/bw]);full=0;tail=nbytes;extrapolated=False
             yield self.env.timeout(duration)
             event=dict(phase='storage',kind='storage_io',tier=tier,operation=op,cause=cause,resource='kv_'+tier+':0',batch_id=identifier,request_ids=[identifier],chunk=0,batch_size=1,context=0,start_ms=begin,end_ms=self.env.now,duration_ms=duration,payload_bytes=nbytes,service_model=model,profile=self.s['profile'] if tier=='ssd' else 'configured-link-assumption',chunk_bytes=chunk if tier=='ssd' else nbytes,full_chunks=full,tail_bytes=tail,extrapolated=extrapolated,components=dict(Compute=0,Memory=0,Network=0,Launch=0))
-            self.record(event,ready);self.events.append(event);self.stats[tier+'_'+op+'_bytes']+=nbytes;self.stats[tier+'_service_ms']+=duration;self.stats[tier+'_queue_ms']+=begin-ready
+            event.update(scope=scope,model_phase=model_phase,**metadata)
+            self.record(event,ready);self.events.append(event);counter[tier+'_'+op+'_bytes']+=nbytes;counter[tier+'_service_ms']+=duration;counter[tier+'_queue_ms']+=begin-ready
+            return event
 
     def restore(self,row,identifier):
         keys=self.keys(row);selected=[]
