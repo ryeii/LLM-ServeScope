@@ -1,0 +1,66 @@
+{
+  "repository": "https://github.com/kvcache-ai/Mooncake",
+  "revision": "7e4fc11ee0fe9553a82a408009ea2b499c76842e",
+  "files": [
+    {
+      "path": "LICENSE-APACHE",
+      "sha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/__init__.py",
+      "sha256": "ff93cdadcd933874fb064dc81e4b2c8219a6b60189b39a73ef152916e8f44600"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/__main__.py",
+      "sha256": "ae50cf37c3e673016a8c408c97197edfc9007fd580d655ce9c2270efb3f12618"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/benchmark.py",
+      "sha256": "d4a1a2ca44cfcee9921938dfff0fa4d12fdb588ff2ef4c99d6268ed6221a10dc"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/doc/README.md",
+      "sha256": "03a1bfd37bab3b3848041d3465da2cc78d52f7162c39c7048c39776c6d28a906"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/layout/__init__.py",
+      "sha256": "7fa600cfd35686cb0c13846f0958301438e360ea1b6ad0e99cdf15b977ba53ec"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/layout/interface.py",
+      "sha256": "d2b3864ac5131f20212a0024f5d7130012bf9fa6f643b1b537a7cab00b4f633a"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/layout/mla.py",
+      "sha256": "ea7ccfcedd99dcc07be0319fa09a4291b7c59fd81d7efaf35e4c9e5c3b827e58"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/storage/__init__.py",
+      "sha256": "92f5fda01c4b7f09c4b6ef090bf8f50e9f76b1463ddd1f4339ddd11d3f94d04e"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/storage/disk.py",
+      "sha256": "eac86c04c7b7367d2ecdb47505c88d663c020961bd0fe855c57bad0da3943527"
+    },
+    {
+      "path": "benchmarks/storage_benchmark_v1/storage/interface.py",
+      "sha256": "2d7dbed632987de92b1c52744746f7f58cf14cbd6b6f334ba288ca68b6e6935e"
+    },
+    {
+      "path": "docs/source/performance/mooncake/ssd-offload-benchmark-results.md",
+      "sha256": "56a607da54c11080516a179709929d1b24cae1c83580a75eb969b087bf9cddd0"
+    },
+    {
+      "path": "docs/source/performance/mooncake/storage-benchmark.md",
+      "sha256": "9ff9ae0fe0d7dae338d182e645abf2a5be2bdcc75a37b26bfbf169116d81573a"
+    },
+    {
+      "path": "docs/source/performance/mooncake/store-rs-benchmark.md",
+      "sha256": "972a118464a5789ba030ef6a2123052d0f2f06fc7a6cc02d1ebf8903eff51ac8"
+    },
+    {
+      "path": "docs/source/performance/mooncake/tebench.md",
+      "sha256": "5fea7566fcb2ebd4197a9ff3c9deca35c405c67ddff9e8d7b59b9f699d075c0e"
+    }
+  ]
+}

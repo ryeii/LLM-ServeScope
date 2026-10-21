@@ -1093,6 +1093,24 @@
     "output_tokens": 64,
     "arrival_rate": 8.0,
     "batch_size": 4,
+    "storage": {
+      "enabled": false,
+      "profile": "manual",
+      "hbm_cache_GB": 0.125,
+      "dram_cache_GB": 0.25,
+      "ssd_cache_GB": 4.0,
+      "ssd_read_GBps": 3.0,
+      "ssd_write_GBps": 2.0,
+      "ssd_read_latency_us": 100.0,
+      "ssd_write_latency_us": 200.0,
+      "pcie_GBps": 24.0,
+      "pcie_latency_us": 10.0,
+      "io_chunk_KiB": 1024,
+      "block_tokens": 512,
+      "source_id": "synthetic-demo",
+      "source_label": "Generated repeated-prefix workload",
+      "workload": []
+    },
     "prefill_chunk": 512,
     "separated": true,
     "prefill": {
@@ -129344,7 +129362,7 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-70B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "03b737897aea56782f7e616fc10b4e9949e247e949dcbeeaa96f64f2a6ee552e",
+    "config_sha256": "f2afad717092a99a10ded6ae1fe587715d2053a6d2f4dd14519130173e8b98fa",
     "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }

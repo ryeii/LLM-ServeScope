@@ -1,0 +1,40 @@
+{
+  "format": "mooncake-request-jsonl",
+  "classification": "dumped-as-is-trace",
+  "repository": "https://github.com/kvcache-ai/Mooncake",
+  "revision": "e4229791f39d1f4cdb00df1b28366130f742deb0",
+  "block_tokens": 512,
+  "timestamp_unit": "ms",
+  "files": [
+    {
+      "file": "conversation_trace.jsonl",
+      "label": "Conversation",
+      "origin": "production-sampled",
+      "requests": 12031,
+      "bytes": 3029533,
+      "sha256": "b8cbb061a85206d729d91cdc2981f43c9e0d99209dce588d3af5f7934408b9df",
+      "upstream_path": "FAST25-release/traces/conversation_trace.jsonl",
+      "url": "https://github.com/kvcache-ai/Mooncake/blob/e4229791f39d1f4cdb00df1b28366130f742deb0/FAST25-release/traces/conversation_trace.jsonl"
+    },
+    {
+      "file": "toolagent_trace.jsonl",
+      "label": "Tool & agent",
+      "origin": "production-sampled",
+      "requests": 23608,
+      "bytes": 4415857,
+      "sha256": "48a2db1a13d3bc05e6330140c64f604ba366df20d3c9e128b5c35a01c1fa5f71",
+      "upstream_path": "FAST25-release/traces/toolagent_trace.jsonl",
+      "url": "https://github.com/kvcache-ai/Mooncake/blob/e4229791f39d1f4cdb00df1b28366130f742deb0/FAST25-release/traces/toolagent_trace.jsonl"
+    },
+    {
+      "file": "synthetic_trace.jsonl",
+      "label": "Synthetic workload",
+      "origin": "synthetic",
+      "requests": 3993,
+      "bytes": 1136313,
+      "sha256": "bd070915a98fc0ed264d7cfef2ce746002eb3076a695ec31ba2674c0111ec131",
+      "upstream_path": "FAST25-release/traces/synthetic_trace.jsonl",
+      "url": "https://github.com/kvcache-ai/Mooncake/blob/e4229791f39d1f4cdb00df1b28366130f742deb0/FAST25-release/traces/synthetic_trace.jsonl"
+    }
+  ]
+}

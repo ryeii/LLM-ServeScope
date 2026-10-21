@@ -142,3 +142,14 @@ The native adapter additionally records three source pins, clean tracked-source
 checks, binary/profile/runner hashes, exact command/config/workload, raw CSV/logs,
 actual Chakra DAGs, and wall/RSS watchdog measurements. Its build adaptation is
 isolated and documented in `integration/README.md`.
+
+## Optional cache-aware storage mode
+
+The retained original capacity/fixed-workload descriptions above apply when KV
+tiers are disabled. Tier mode reserves active KV only when memory admission
+grants it, uses actual per-request lengths, restores ready contiguous prefixes,
+and executes remaining query tokens with full attention context. Inclusive
+retained copies use explicit per-tier capacities. Blocking write-through
+publication precedes KV handoff, and active decode KV stays in HBM.
+Local I/O fits and trace-policy hit forecasts have separate calibration evidence;
+forecasts never assign runtime cache hits. Read the [storage methodology and validation](storage-2026-10-20/README.md).

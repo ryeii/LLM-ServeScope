@@ -1,0 +1,6157 @@
+{
+  "kind": "local-measured-storage-path",
+  "date": "2026-10-20",
+  "system": "Darwin",
+  "machine": "arm64",
+  "os_release": "25.5.0",
+  "python": "3.10.16",
+  "source_revision": "7e4fc11ee0fe9553a82a408009ea2b499c76842e",
+  "source_sha256": "eac86c04c7b7367d2ecdb47505c88d663c020961bd0fe855c57bad0da3943527",
+  "protocol": "Archived Mooncake DiskHashTable; single file, 2 slots, fsync=always; serial QD1; warm buffered reads following writes; 2 warmup pairs excluded; 4 shuffled trials x 8 sizes x 12 pairs. No O_DIRECT, cold-cache control, SSD identification or power-loss durability verification. fsync is the OS call, not a device persistence certification.",
+  "observations": [
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.03587495302781463,
+      "bandwidth_MBps": 913.39492415765
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.0029999646358191967,
+      "bandwidth_MBps": 10922.795425237433
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.03520800964906812,
+      "bandwidth_MBps": 930.697313668434
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.00404199818149209,
+      "bandwidth_MBps": 8106.8814305858505
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.03529101377353072,
+      "bandwidth_MBps": 928.5083225514181
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.002708984538912773,
+      "bandwidth_MBps": 12096.045410857585
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.0315000070258975,
+      "bandwidth_MBps": 1040.2537362312341
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.0027080532163381577,
+      "bandwidth_MBps": 12100.205343936721
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.027667032554745674,
+      "bandwidth_MBps": 1184.3698790306069
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.0025830231606960297,
+      "bandwidth_MBps": 12685.910253770327
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.032832962460815907,
+      "bandwidth_MBps": 998.021425544727
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.004791014362126589,
+      "bandwidth_MBps": 6839.470208863089
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.03345799632370472,
+      "bandwidth_MBps": 979.377237147466
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.003834022209048271,
+      "bandwidth_MBps": 8546.638024857473
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.055374985095113516,
+      "bandwidth_MBps": 591.7473376059032
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.0030829687602818012,
+      "bandwidth_MBps": 10628.716197891288
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.03466702764853835,
+      "bandwidth_MBps": 945.22092670329
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.0027500209398567677,
+      "bandwidth_MBps": 11915.545632793142
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.03987498348578811,
+      "bandwidth_MBps": 821.7683654133396
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.003125052899122238,
+      "bandwidth_MBps": 10485.58250300462
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.032334006391465664,
+      "bandwidth_MBps": 1013.4222033384915
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.002541986759752035,
+      "bandwidth_MBps": 12890.704435925716
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.03245897823944688,
+      "bandwidth_MBps": 1009.5203785613181
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.0024170149117708206,
+      "bandwidth_MBps": 13557.218799280225
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.43158303014934063,
+      "bandwidth_MBps": 2429.6043327680454
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.09112502448260784,
+      "bandwidth_MBps": 11507.003767117028
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.41216600220650434,
+      "bandwidth_MBps": 2544.0623301934543
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.09958294685930014,
+      "bandwidth_MBps": 10529.674337530136
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.37995801540091634,
+      "bandwidth_MBps": 2759.715435647765
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.09299995144829154,
+      "bandwidth_MBps": 11275.016638938932
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.4366249777376652,
+      "bandwidth_MBps": 2401.548361784309
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.058375007938593626,
+      "bandwidth_MBps": 17962.75558716887
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.41220796993002295,
+      "bandwidth_MBps": 2543.8033140844122
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.039166014175862074,
+      "bandwidth_MBps": 26772.599205313956
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.39537501288577914,
+      "bandwidth_MBps": 2652.1048772066074
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.06020802538841963,
+      "bandwidth_MBps": 17415.884231966233
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.42195903370156884,
+      "bandwidth_MBps": 2485.01848817297
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.09395898086950183,
+      "bandwidth_MBps": 11159.933731681816
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.42395800119265914,
+      "bandwidth_MBps": 2473.301593672473
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.04795804852619767,
+      "bandwidth_MBps": 21864.442616492255
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.4105410189367831,
+      "bandwidth_MBps": 2554.1321125854765
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.06125000072643161,
+      "bandwidth_MBps": 17119.60796022491
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.42079202830791473,
+      "bandwidth_MBps": 2491.910324956784
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.04579097731038928,
+      "bandwidth_MBps": 22899.183673070325
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.5435420316644013,
+      "bandwidth_MBps": 1929.1534764829767
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.034333032090216875,
+      "bandwidth_MBps": 30541.316515379644
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.37391699152067304,
+      "bandwidth_MBps": 2804.301552961191
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.03408396150916815,
+      "bandwidth_MBps": 30764.499006899376
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.9480830049142241,
+      "bandwidth_MBps": 2211.9919765777636
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.5719160544686019,
+      "bandwidth_MBps": 3666.8877951827685
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 1.9155420013703406,
+      "bandwidth_MBps": 1094.808674777029
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.23637496633455157,
+      "bandwidth_MBps": 8872.14087227753
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.9272909956052899,
+      "bandwidth_MBps": 2261.5899538969234
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.13562501408159733,
+      "bandwidth_MBps": 15462.870283930595
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.846249982714653,
+      "bandwidth_MBps": 2478.1708039421474
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.1646660384722054,
+      "bandwidth_MBps": 12735.789477038923
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.8222080068662763,
+      "bandwidth_MBps": 2550.634368051198
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.11583400191739202,
+      "bandwidth_MBps": 18104.804852513007
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.8220829768106341,
+      "bandwidth_MBps": 2551.022292343461
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.14387501869350672,
+      "bandwidth_MBps": 14576.206620466264
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.8154999813996255,
+      "bandwidth_MBps": 2571.6150188019647
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.1439579646103084,
+      "bandwidth_MBps": 14567.808079788792
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.857166014611721,
+      "bandwidth_MBps": 2446.611233122638
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.2192910178564489,
+      "bandwidth_MBps": 9563.328313669585
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 1.335292006842792,
+      "bandwidth_MBps": 1570.5568439360127
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.19645801512524486,
+      "bandwidth_MBps": 10674.810079207178
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.9974580025300384,
+      "bandwidth_MBps": 2102.496540887539
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.18879200797528028,
+      "bandwidth_MBps": 11108.266830207098
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 1.237875025253743,
+      "bandwidth_MBps": 1694.1548679925263
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.15729200094938278,
+      "bandwidth_MBps": 13332.858551878122
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.9038750431500375,
+      "bandwidth_MBps": 2320.1791175596004
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.18879101844504476,
+      "bandwidth_MBps": 11108.325053135197
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.19004102796316147,
+      "bandwidth_MBps": 2758.8147970954496
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.01837499439716339,
+      "bandwidth_MBps": 28532.688972190168
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.21991698304191232,
+      "bandwidth_MBps": 2384.0268848180767
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.020458013750612736,
+      "bandwidth_MBps": 25627.51234754142
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.18595904111862183,
+      "bandwidth_MBps": 2819.373539711687
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.017916958313435316,
+      "bandwidth_MBps": 29262.10971908409
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.18550001550465822,
+      "bandwidth_MBps": 2826.350168077664
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.018749968148767948,
+      "bandwidth_MBps": 27962.07416674736
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.1799589954316616,
+      "bandwidth_MBps": 2913.3747870864026
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.017834012396633625,
+      "bandwidth_MBps": 29398.207668565115
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.18462497973814607,
+      "bandwidth_MBps": 2839.7457415762406
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.017915968783199787,
+      "bandwidth_MBps": 29263.725916492822
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.1870419946499169,
+      "bandwidth_MBps": 2803.0496626241625
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.020415987819433212,
+      "bandwidth_MBps": 25680.266105025294
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.19583298126235604,
+      "bandwidth_MBps": 2677.220132280043
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.017290993127971888,
+      "bandwidth_MBps": 30321.45094961907
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.1855829614214599,
+      "bandwidth_MBps": 2825.0869367761575
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.018874998204410076,
+      "bandwidth_MBps": 27776.85032454742
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.1943330280482769,
+      "bandwidth_MBps": 2697.8841695903307
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.017207989003509283,
+      "bandwidth_MBps": 30467.708916659594
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.1925000105984509,
+      "bandwidth_MBps": 2723.5738760225245
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.018624996300786734,
+      "bandwidth_MBps": 28149.696866133265
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.20120799308642745,
+      "bandwidth_MBps": 2605.7016520948837
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.02058298559859395,
+      "bandwidth_MBps": 25471.912103743332
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.29341597110033035,
+      "bandwidth_MBps": 893.4210330028789
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.015792029444128275,
+      "bandwidth_MBps": 16599.766415548907
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.1314579858444631,
+      "bandwidth_MBps": 1994.1276166376108
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.0112500274553895,
+      "bandwidth_MBps": 23301.63202174372
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.11258298764005303,
+      "bandwidth_MBps": 2328.451265106936
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.012708012945950031,
+      "bandwidth_MBps": 20628.244644930408
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.13254099758341908,
+      "bandwidth_MBps": 1977.833310293375
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.017666025087237358,
+      "bandwidth_MBps": 14838.878508634254
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.11416699271649122,
+      "bandwidth_MBps": 2296.145267231286
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.012625008821487427,
+      "bandwidth_MBps": 20763.866679747418
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.10791595559567213,
+      "bandwidth_MBps": 2429.1495965821114
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.01229200279340148,
+      "bandwidth_MBps": 21326.386302216153
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.1079590292647481,
+      "bandwidth_MBps": 2428.1804105254023
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.013457960449159145,
+      "bandwidth_MBps": 19478.731639189707
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.10929099516943097,
+      "bandwidth_MBps": 2398.5873638867047
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.010041985660791397,
+      "bandwidth_MBps": 26104.797283622163
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.10229198960587382,
+      "bandwidth_MBps": 2562.7031110649855
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.012208009138703346,
+      "bandwidth_MBps": 21473.11629780146
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.10424997890368104,
+      "bandwidth_MBps": 2514.571252260884
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.009333016350865364,
+      "bandwidth_MBps": 28087.81107253646
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.10120798833668232,
+      "bandwidth_MBps": 2590.1512746992053
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.012041011359542608,
+      "bandwidth_MBps": 21770.92871789782
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.1046249526552856,
+      "bandwidth_MBps": 2505.5590788528457
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.010458985343575478,
+      "bandwidth_MBps": 25063.999172828386
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.19179098308086395,
+      "bandwidth_MBps": 2733.6425914191536
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.02058397512882948,
+      "bandwidth_MBps": 25470.687596473694
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.22012501722201705,
+      "bandwidth_MBps": 2381.77380570608
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.020167033653706312,
+      "bandwidth_MBps": 25997.278975316527
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.18216698663309216,
+      "bandwidth_MBps": 2878.0626483984374
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.017416023183614016,
+      "bandwidth_MBps": 30103.77251296266
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.18487503984943032,
+      "bandwidth_MBps": 2835.904730173426
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.018207996618002653,
+      "bandwidth_MBps": 28794.381446755364
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.1865000231191516,
+      "bandwidth_MBps": 2811.1953619707683
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.019832979887723923,
+      "bandwidth_MBps": 26435.16017098974
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.19583397079259157,
+      "bandwidth_MBps": 2677.2066045439847
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.019874947611242533,
+      "bandwidth_MBps": 26379.339973878945
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.19341701408848166,
+      "bandwidth_MBps": 2710.661223216672
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.01833401620388031,
+      "bandwidth_MBps": 28596.46212645088
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.18516700947657228,
+      "bandwidth_MBps": 2831.433101836286
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.018666964024305344,
+      "bandwidth_MBps": 28086.40972990306
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.18370902398601174,
+      "bandwidth_MBps": 2853.904444236344
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.018250022549182177,
+      "bandwidth_MBps": 28728.07409344787
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.1860000193119049,
+      "bandwidth_MBps": 2818.752395508182
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.019332976080477238,
+      "bandwidth_MBps": 27118.845945784557
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.18762500258162618,
+      "bandwidth_MBps": 2794.3397350356263
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.01791701652109623,
+      "bandwidth_MBps": 29262.014654207735
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.18895900575444102,
+      "bandwidth_MBps": 2774.612397576493
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.020458013750612736,
+      "bandwidth_MBps": 25627.51234754142
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.037416990380734205,
+      "bandwidth_MBps": 437.8759444115
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.0035830307751893997,
+      "bandwidth_MBps": 4572.665161976996
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.04108401481062174,
+      "bandwidth_MBps": 398.7925735963889
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.0030410010367631912,
+      "bandwidth_MBps": 5387.699577188883
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.03520800964906812,
+      "bandwidth_MBps": 465.348656834217
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.0021659652702510357,
+      "bandwidth_MBps": 7564.294878145064
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.0350830378010869,
+      "bandwidth_MBps": 467.00630922822796
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.002667016815394163,
+      "bandwidth_MBps": 6143.19336324791
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.032374984584748745,
+      "bandwidth_MBps": 506.06973903296307
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.0023329630494117737,
+      "bandwidth_MBps": 7022.828760245908
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.03312499029561877,
+      "bandwidth_MBps": 494.6114656573048
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.0022909953258931637,
+      "bandwidth_MBps": 7151.476834031759
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.03666698466986418,
+      "bandwidth_MBps": 446.8324883410897
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.0026249908842146397,
+      "bandwidth_MBps": 6241.545484414839
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.031041039619594812,
+      "bandwidth_MBps": 527.8173734122461
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.002334010787308216,
+      "bandwidth_MBps": 7019.676211049329
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.026958005037158728,
+      "bandwidth_MBps": 607.7601060396127
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.00204198295250535,
+      "bandwidth_MBps": 8023.573350550327
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.0310409814119339,
+      "bandwidth_MBps": 527.8183631687969
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.0024999608285725117,
+      "bandwidth_MBps": 6553.702687155836
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.027125002816319466,
+      "bandwidth_MBps": 604.018370466039
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.002249958924949169,
+      "bandwidth_MBps": 7281.910713267864
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.0344999716617167,
+      "bandwidth_MBps": 474.8989408063978
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.0022919848561286926,
+      "bandwidth_MBps": 7148.3892907013405
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.33008295577019453,
+      "bandwidth_MBps": 3176.7044667705413
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.03612501313909888,
+      "bandwidth_MBps": 29026.314702294283
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.4147079889662564,
+      "bandwidth_MBps": 2528.46829069724
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.04658300895243883,
+      "bandwidth_MBps": 22509.838320461313
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.3523749765008688,
+      "bandwidth_MBps": 2975.7391129543353
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.03712502075359225,
+      "bandwidth_MBps": 28244.455591275026
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.36625005304813385,
+      "bandwidth_MBps": 2863.0057286631777
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.03783300053328276,
+      "bandwidth_MBps": 27715.90900059693
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.35137502709403634,
+      "bandwidth_MBps": 2984.2075251391616
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.03287498839199543,
+      "bandwidth_MBps": 31895.859171019893
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.3612079890444875,
+      "bandwidth_MBps": 2902.97012193397
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.03545801155269146,
+      "bandwidth_MBps": 29572.329470359353
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.3497090074233711,
+      "bandwidth_MBps": 2998.4243406420296
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.03254198236390948,
+      "bandwidth_MBps": 32222.253342590397
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.35433401353657246,
+      "bandwidth_MBps": 2959.2868873475268
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.04050001734867692,
+      "bandwidth_MBps": 25890.75434147328
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.36283303052186966,
+      "bandwidth_MBps": 2889.968420162335
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.034750031773000956,
+      "bandwidth_MBps": 30174.82133108987
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.3449159557931125,
+      "bandwidth_MBps": 3040.091310327658
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.039000005926936865,
+      "bandwidth_MBps": 26886.560016539905
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.3472079988569021,
+      "bandwidth_MBps": 3020.0225900675714
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.037416000850498676,
+      "bandwidth_MBps": 28024.80158661918
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.3700000233948231,
+      "bandwidth_MBps": 2833.989009998185
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.04037498729303479,
+      "bandwidth_MBps": 25970.93077428393
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.045874970965087414,
+      "bandwidth_MBps": 1428.578560842586
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.00566698145121336,
+      "bandwidth_MBps": 11564.534058245074
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.05691696424037218,
+      "bandwidth_MBps": 1151.4317545684244
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.004249974153935909,
+      "bandwidth_MBps": 15420.32907172082
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.04216702654957771,
+      "bandwidth_MBps": 1554.2001739901275
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.0036660348996520042,
+      "bandwidth_MBps": 17876.534674075516
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.05116598913446069,
+      "bandwidth_MBps": 1280.8508368278763
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.005084031727164984,
+      "bandwidth_MBps": 12890.556848775794
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.04370801616460085,
+      "bandwidth_MBps": 1499.4045886959666
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.00404199818149209,
+      "bandwidth_MBps": 16213.762861171701
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.049667025450617075,
+      "bandwidth_MBps": 1319.5072466169959
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.003834022209048271,
+      "bandwidth_MBps": 17093.276049714947
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.04183303099125624,
+      "bandwidth_MBps": 1566.6089319155014
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.003958004526793957,
+      "bandwidth_MBps": 16557.838566467013
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.046042026951909065,
+      "bandwidth_MBps": 1423.3951964897724
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.005208014044910669,
+      "bandwidth_MBps": 12583.683422290791
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.04600000102072954,
+      "bandwidth_MBps": 1424.6956205602412
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.0038750004023313522,
+      "bandwidth_MBps": 16912.514373049093
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.044042011722922325,
+      "bandwidth_MBps": 1488.0337531423618
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.0037919962778687477,
+      "bandwidth_MBps": 17282.717386219017
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.041375053115189075,
+      "bandwidth_MBps": 1583.9496282348282
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.0035840203054249287,
+      "bandwidth_MBps": 18285.61068719445
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.04187499871477485,
+      "bandwidth_MBps": 1565.038854004234
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.0036660348996520042,
+      "bandwidth_MBps": 17876.534674075516
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.05800003418698907,
+      "bandwidth_MBps": 2259.860736933891
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.007875030860304832,
+      "bandwidth_MBps": 16643.998268081246
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.06620900239795446,
+      "bandwidth_MBps": 1979.670365854198
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.005708017852157354,
+      "bandwidth_MBps": 22962.787327383907
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.057958008255809546,
+      "bandwidth_MBps": 2261.4993845455638
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.007875030860304832,
+      "bandwidth_MBps": 16643.998268081246
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.06000004941597581,
+      "bandwidth_MBps": 2184.5315341540427
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.005334033630788326,
+      "bandwidth_MBps": 24572.77345299164
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.058083038311451674,
+      "bandwidth_MBps": 2256.63126121551
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.007915950845927,
+      "bandwidth_MBps": 16557.96031975623
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.059416983276605606,
+      "bandwidth_MBps": 2205.9686098470656
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.005333044100552797,
+      "bandwidth_MBps": 24577.33285693507
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.059790967497974634,
+      "bandwidth_MBps": 2192.170581692627
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.0077500008046627045,
+      "bandwidth_MBps": 16912.514373049093
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.06108300294727087,
+      "bandwidth_MBps": 2145.801510661587
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.005208014044910669,
+      "bandwidth_MBps": 25167.366844581582
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.0588749535381794,
+      "bandwidth_MBps": 2226.2777653828985
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.007916998583823442,
+      "bandwidth_MBps": 16555.76903446912
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.06041704909875989,
+      "bandwidth_MBps": 2169.4538537581498
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.005291018169373274,
+      "bandwidth_MBps": 24772.547703332795
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.05866697756573558,
+      "bandwidth_MBps": 2234.1699783858057
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.0077500008046627045,
+      "bandwidth_MBps": 16912.514373049093
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.05987496115267277,
+      "bandwidth_MBps": 2189.095366020944
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.005082983989268541,
+      "bandwidth_MBps": 25786.42786928426
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.35079201916232705,
+      "bandwidth_MBps": 2989.1672065514617
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.06325001595541835,
+      "bandwidth_MBps": 16578.27249781386
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.44537498615682125,
+      "bandwidth_MBps": 2354.3666182249067
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.05562498699873686,
+      "bandwidth_MBps": 18850.808900392396
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.3978339955210686,
+      "bandwidth_MBps": 2635.712412225137
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.07937499321997166,
+      "bandwidth_MBps": 13210.407427614951
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.4193750210106373,
+      "bandwidth_MBps": 2500.330128086964
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.0624579843133688,
+      "bandwidth_MBps": 16788.502087083172
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.41570799658074975,
+      "bandwidth_MBps": 2522.385926238294
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.059375015553086996,
+      "bandwidth_MBps": 17660.222742383485
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.43395900866016746,
+      "bandwidth_MBps": 2416.301952660091
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.07558299694210291,
+      "bandwidth_MBps": 13873.173100071916
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.4128749715164304,
+      "bandwidth_MBps": 2539.693787077311
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.06908399518579245,
+      "bandwidth_MBps": 15178.276780026847
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.38658402627334,
+      "bandwidth_MBps": 2712.414193903058
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.05666603101417422,
+      "bandwidth_MBps": 18504.48992514957
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.40079100290313363,
+      "bandwidth_MBps": 2616.266314374897
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.04816596629098058,
+      "bandwidth_MBps": 21770.06049593888
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.40970800910145044,
+      "bandwidth_MBps": 2559.3251210775215
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.05729199619963765,
+      "bandwidth_MBps": 18302.31218242369
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.3762909909710288,
+      "bandwidth_MBps": 2786.609366581225
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.07608399027958512,
+      "bandwidth_MBps": 13781.821854332398
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.3827919717878103,
+      "bandwidth_MBps": 2739.284199463953
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.07070798892527819,
+      "bandwidth_MBps": 14829.667989965033
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.03087497316300869,
+      "bandwidth_MBps": 530.6563316994126
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.003541994374245405,
+      "bandwidth_MBps": 4625.6425812337675
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.03525003558024764,
+      "bandwidth_MBps": 464.7938570927507
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.002415967173874378,
+      "bandwidth_MBps": 6781.5490943636105
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.02979201963171363,
+      "bandwidth_MBps": 549.945931915244
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.002167013008147478,
+      "bandwidth_MBps": 7560.637586576486
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.03108399687334895,
+      "bandwidth_MBps": 527.0879438946105
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.002167013008147478,
+      "bandwidth_MBps": 7560.637586576486
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.031957984901964664,
+      "bandwidth_MBps": 512.6731253631942
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.0031249946914613247,
+      "bandwidth_MBps": 5242.88890626513
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.03200001083314419,
+      "bandwidth_MBps": 511.99982666975166
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.002207991201430559,
+      "bandwidth_MBps": 7420.319424001687
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.030458031687885523,
+      "bandwidth_MBps": 537.920511998043
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.0024170149117708206,
+      "bandwidth_MBps": 6778.609399640112
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.03287498839199543,
+      "bandwidth_MBps": 498.3727995471858
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.0024999608285725117,
+      "bandwidth_MBps": 6553.702687155836
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.02741703065112233,
+      "bandwidth_MBps": 597.5847716145479
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.0019170111045241356,
+      "bandwidth_MBps": 8546.638024857473
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.028665992431342602,
+      "bandwidth_MBps": 571.5483264443407
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.0018749851733446121,
+      "bandwidth_MBps": 8738.20243110195
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.026084017008543015,
+      "bandwidth_MBps": 628.1241111993573
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.0018330174498260021,
+      "bandwidth_MBps": 8938.267337037758
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.029834045562893152,
+      "bandwidth_MBps": 549.171246838143
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.002707995008677244,
+      "bandwidth_MBps": 6050.232717379705
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.06129202665761113,
+      "bandwidth_MBps": 2138.483700860358
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.005459005478769541,
+      "bandwidth_MBps": 24010.234191877676
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.06937497528269887,
+      "bandwidth_MBps": 1889.3267992657215
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.005832989700138569,
+      "bandwidth_MBps": 22470.809437034706
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.05870801396667957,
+      "bandwidth_MBps": 2232.6083126298813
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.005375011824071407,
+      "bandwidth_MBps": 24385.434728349486
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.06041600136086345,
+      "bandwidth_MBps": 2169.491476556183
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.005292007699608803,
+      "bandwidth_MBps": 24767.915588952965
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.05829200381413102,
+      "bandwidth_MBps": 2248.541676795571
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.005250039976090193,
+      "bandwidth_MBps": 24965.905135376106
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.06033398676663637,
+      "bandwidth_MBps": 2172.4405600274454
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.005249981768429279,
+      "bandwidth_MBps": 24966.181937659356
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.05829200381413102,
+      "bandwidth_MBps": 2248.541676795571
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.005208014044910669,
+      "bandwidth_MBps": 25167.366844581582
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.06070896051824093,
+      "bandwidth_MBps": 2159.0223071043592
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.005250039976090193,
+      "bandwidth_MBps": 24965.905135376106
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.06070802919566631,
+      "bandwidth_MBps": 2159.055428690422
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.005209003575146198,
+      "bandwidth_MBps": 25162.585916697375
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.059125013649463654,
+      "bandwidth_MBps": 2216.862067501426
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.005208014044910669,
+      "bandwidth_MBps": 25167.366844581582
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.057582976296544075,
+      "bandwidth_MBps": 2276.228295755294
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.005124951712787151,
+      "bandwidth_MBps": 25575.265357713557
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.05987501936033368,
+      "bandwidth_MBps": 2189.0932378860034
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.005165988113731146,
+      "bandwidth_MBps": 25372.1063839872
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.030499999411404133,
+      "bandwidth_MBps": 1074.360676470959
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.0025420449674129486,
+      "bandwidth_MBps": 12890.409265005314
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.03329198807477951,
+      "bandwidth_MBps": 984.2608355619212
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.002834014594554901,
+      "bandwidth_MBps": 11562.396348613867
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.03037502756342292,
+      "bandwidth_MBps": 1078.780914077545
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.0024579931050539017,
+      "bandwidth_MBps": 13331.200943007294
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.043584033846855164,
+      "bandwidth_MBps": 751.8349521097483
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.0025420449674129486,
+      "bandwidth_MBps": 12890.409265005314
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.030207971576601267,
+      "bandwidth_MBps": 1084.7467833749454
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.0024170149117708206,
+      "bandwidth_MBps": 13557.218799280225
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.03241701051592827,
+      "bandwidth_MBps": 1010.8273242500036
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.0024579931050539017,
+      "bandwidth_MBps": 13331.200943007294
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.030666007660329342,
+      "bandwidth_MBps": 1068.5447014477165
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.002374988980591297,
+      "bandwidth_MBps": 13797.11664676516
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.03133405698463321,
+      "bandwidth_MBps": 1045.7630818782907
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.0024589826352894306,
+      "bandwidth_MBps": 13325.836274619765
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.029875023756176233,
+      "bandwidth_MBps": 1096.8359478952946
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.002459040842950344,
+      "bandwidth_MBps": 13325.520840347299
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.03187498077750206,
+      "bandwidth_MBps": 1028.0163062287477
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.002374988980591297,
+      "bandwidth_MBps": 13797.11664676516
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.029958027880638838,
+      "bandwidth_MBps": 1093.7969658936456
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.0023329630494117737,
+      "bandwidth_MBps": 14045.657520491815
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.03191700670868158,
+      "bandwidth_MBps": 1026.662691119056
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.002333021257072687,
+      "bandwidth_MBps": 14045.307088678226
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.05887501174584031,
+      "bandwidth_MBps": 2226.275564340089
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.005125009920448065,
+      "bandwidth_MBps": 25574.974884837055
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.06879103602841496,
+      "bandwidth_MBps": 1905.3645295567164
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.005375011824071407,
+      "bandwidth_MBps": 24385.434728349486
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.05916703958064318,
+      "bandwidth_MBps": 2215.2874460002713
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.00529095996171236,
+      "bandwidth_MBps": 24772.82023460635
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.06129196844995022,
+      "bandwidth_MBps": 2138.4857317322208
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.005334033630788326,
+      "bandwidth_MBps": 24572.77345299164
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.057750032283365726,
+      "bandwidth_MBps": 2269.643752870314
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.005249981768429279,
+      "bandwidth_MBps": 24966.181937659356
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.06062502507120371,
+      "bandwidth_MBps": 2162.011477043626
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.005082983989268541,
+      "bandwidth_MBps": 25786.42786928426
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.058125006034970284,
+      "bandwidth_MBps": 2255.001916406545
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.005165988113731146,
+      "bandwidth_MBps": 25372.1063839872
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.05991599755361676,
+      "bandwidth_MBps": 2187.596057008117
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.005209003575146198,
+      "bandwidth_MBps": 25162.585916697375
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.05829095607623458,
+      "bandwidth_MBps": 2248.582092710579
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.005082983989268541,
+      "bandwidth_MBps": 25786.42786928426
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.0607079709880054,
+      "bandwidth_MBps": 2159.0574988232934
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.005082983989268541,
+      "bandwidth_MBps": 25786.42786928426
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.05845900159329176,
+      "bandwidth_MBps": 2242.1183466643515
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.005459005478769541,
+      "bandwidth_MBps": 24010.234191877676
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.060208956710994244,
+      "bandwidth_MBps": 2176.951855006417
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.005124951712787151,
+      "bandwidth_MBps": 25575.265357713557
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.17216597916558385,
+      "bandwidth_MBps": 3045.2473975462726
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.016000005416572094,
+      "bandwidth_MBps": 32767.988906864106
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.23595901438966393,
+      "bandwidth_MBps": 2221.945202458712
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.017542042769491673,
+      "bandwidth_MBps": 29887.511214590013
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.20274997223168612,
+      "bandwidth_MBps": 2585.884447870042
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.016874982975423336,
+      "bandwidth_MBps": 31068.94986285741
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.22570800501853228,
+      "bandwidth_MBps": 2322.8595722909877
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.019625003915280104,
+      "bandwidth_MBps": 26715.306772081065
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.17733301501721144,
+      "bandwidth_MBps": 2956.5165851892502
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.017250014934688807,
+      "bandwidth_MBps": 30393.48093233742
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.20945799769833684,
+      "bandwidth_MBps": 2503.0698553467696
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.017291982658207417,
+      "bandwidth_MBps": 30319.715810676775
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.1706249895505607,
+      "bandwidth_MBps": 3072.750371331976
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.016250007320195436,
+      "bandwidth_MBps": 32263.8623890598
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.20437495550140738,
+      "bandwidth_MBps": 2565.3241059489287
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.016874982975423336,
+      "bandwidth_MBps": 31068.94986285741
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.22149999858811498,
+      "bandwidth_MBps": 2366.988728405941
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.01675001112744212,
+      "bandwidth_MBps": 31300.755325531747
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.171166961081326,
+      "bandwidth_MBps": 3063.021021626345
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.016083999071270227,
+      "bandwidth_MBps": 32596.868333355018
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.2025419962592423,
+      "bandwidth_MBps": 2588.5397087176975
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.016792037058621645,
+      "bandwidth_MBps": 31222.417993105333
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.17308298265561461,
+      "bandwidth_MBps": 3029.1135035682996
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.015958037693053484,
+      "bandwidth_MBps": 32854.16478419662
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.09945902274921536,
+      "bandwidth_MBps": 2635.6985294435544
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.009207986295223236,
+      "bandwidth_MBps": 28469.199626848993
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.12224999954923987,
+      "bandwidth_MBps": 2144.32720627057
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.010499963536858559,
+      "bandwidth_MBps": 24966.181937659356
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.10320800356566906,
+      "bandwidth_MBps": 2539.9580550281967
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.009000010322779417,
+      "bandwidth_MBps": 29127.077703066865
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.10429200483486056,
+      "bandwidth_MBps": 2513.5579703840917
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.00925001222640276,
+      "bandwidth_MBps": 28339.85443302979
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.09645801037549973,
+      "bandwidth_MBps": 2717.7006759677515
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.009000010322779417,
+      "bandwidth_MBps": 29127.077703066865
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.18279103096574545,
+      "bandwidth_MBps": 1434.1185046936196
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.01229200279340148,
+      "bandwidth_MBps": 21326.386302216153
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.11212500976398587,
+      "bandwidth_MBps": 2337.96189228248
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.010125047992914915,
+      "bandwidth_MBps": 25890.642709391344
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.10200001997873187,
+      "bandwidth_MBps": 2570.0387122929965
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.009374984074383974,
+      "bandwidth_MBps": 27962.07416674736
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.10258401744067669,
+      "bandwidth_MBps": 2555.407816345224
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.010083022061735392,
+      "bandwidth_MBps": 25998.554639171572
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.11608301429077983,
+      "bandwidth_MBps": 2258.2459768260983
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.00925001222640276,
+      "bandwidth_MBps": 28339.85443302979
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.10283297160640359,
+      "bandwidth_MBps": 2549.2212848167446
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.010125047992914915,
+      "bandwidth_MBps": 25890.642709391344
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.10270799975842237,
+      "bandwidth_MBps": 2552.323096707016
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.009208975825458765,
+      "bandwidth_MBps": 28466.14053164166
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.02358300844207406,
+      "bandwidth_MBps": 694.7374861118047
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.0018749851733446121,
+      "bandwidth_MBps": 8738.20243110195
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.029082992114126682,
+      "bandwidth_MBps": 563.3533143944184
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.0019160215742886066,
+      "bandwidth_MBps": 8551.051940050917
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.025874993298202753,
+      "bandwidth_MBps": 633.1982316354073
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.0018749851733446121,
+      "bandwidth_MBps": 8738.20243110195
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.026582973077893257,
+      "bandwidth_MBps": 616.3343713282825
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.0018329592421650887,
+      "bandwidth_MBps": 8938.551181665798
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.02475001383572817,
+      "bandwidth_MBps": 661.9794279205083
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.0017500133253633976,
+      "bandwidth_MBps": 9362.21442576604
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.025416957214474678,
+      "bandwidth_MBps": 644.609024666001
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.0017919810488820076,
+      "bandwidth_MBps": 9142.953833257194
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.023957982193678617,
+      "bandwidth_MBps": 683.8639359337601
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.001708976924419403,
+      "bandwidth_MBps": 9587.022367529156
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.025500019546598196,
+      "bandwidth_MBps": 642.50931141681
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.0017499551177024841,
+      "bandwidth_MBps": 9362.525835240021
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.02470804611220956,
+      "bandwidth_MBps": 663.1038296429192
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.0017079873941838741,
+      "bandwidth_MBps": 9592.57665237556
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.026250025257468224,
+      "bandwidth_MBps": 624.1517804002376
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.0018330174498260021,
+      "bandwidth_MBps": 8938.267337037758
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.02762500662356615,
+      "bandwidth_MBps": 593.0858306482087
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.0016249832697212696,
+      "bandwidth_MBps": 10082.565344079092
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.027667032554745674,
+      "bandwidth_MBps": 592.1849395153034
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.001667009200900793,
+      "bandwidth_MBps": 9828.38006601683
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.054333999287337065,
+      "bandwidth_MBps": 2412.3385305551633
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.005166977643966675,
+      "bandwidth_MBps": 25367.247360369143
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.06375001976266503,
+      "bandwidth_MBps": 2056.030735174169
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.005416979547590017,
+      "bandwidth_MBps": 24196.510038202596
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.05766702815890312,
+      "bandwidth_MBps": 2272.910607406843
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.005040958058089018,
+      "bandwidth_MBps": 26001.406575814326
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.05820899968966842,
+      "bandwidth_MBps": 2251.7480234807076
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.005125009920448065,
+      "bandwidth_MBps": 25574.974884837055
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.05616701673716307,
+      "bandwidth_MBps": 2333.611568037507
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.004916044417768717,
+      "bandwidth_MBps": 26662.086193983305
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.056958000641316175,
+      "bandwidth_MBps": 2301.2043703114646
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.005041016265749931,
+      "bandwidth_MBps": 26001.106342492818
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.05712499842047691,
+      "bandwidth_MBps": 2294.4770875129893
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.004917033948004246,
+      "bandwidth_MBps": 26656.720573019487
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.05670799873769283,
+      "bandwidth_MBps": 2311.3494201458866
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.005040958058089018,
+      "bandwidth_MBps": 26001.406575814326
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.05633296677842736,
+      "bandwidth_MBps": 2326.737033317298
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.004875008016824722,
+      "bandwidth_MBps": 26886.519888304138
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.05512498319149017,
+      "bandwidth_MBps": 2377.7240810158473
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.004916975740343332,
+      "bandwidth_MBps": 26657.03613799969
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.053374969866126776,
+      "bandwidth_MBps": 2455.6828852316016
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.004875008016824722,
+      "bandwidth_MBps": 26886.519888304138
+    },
+    {
+      "operation": "write",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.05512498319149017,
+      "bandwidth_MBps": 2377.7240810158473
+    },
+    {
+      "operation": "read",
+      "bytes": 131072,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.00500003807246685,
+      "bandwidth_MBps": 26214.20039214491
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.025833025574684143,
+      "bandwidth_MBps": 634.226910534862
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.001667009200900793,
+      "bandwidth_MBps": 9828.38006601683
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.027790956664830446,
+      "bandwidth_MBps": 589.5442966428719
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.0017499551177024841,
+      "bandwidth_MBps": 9362.525835240021
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.020667037460952997,
+      "bandwidth_MBps": 792.7599701193217
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.001708976924419403,
+      "bandwidth_MBps": 9587.022367529156
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.022666994482278824,
+      "bandwidth_MBps": 722.8130757612835
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.0017079873941838741,
+      "bandwidth_MBps": 9592.57665237556
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.020166044123470783,
+      "bandwidth_MBps": 812.4548324741116
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.0017079873941838741,
+      "bandwidth_MBps": 9592.57665237556
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.024332955945283175,
+      "bandwidth_MBps": 673.3255111644568
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.001667009200900793,
+      "bandwidth_MBps": 9828.38006601683
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.020167033653706312,
+      "bandwidth_MBps": 812.4149679786415
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.0017079873941838741,
+      "bandwidth_MBps": 9592.57665237556
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.03341701813042164,
+      "bandwidth_MBps": 490.28910766531266
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.0018330174498260021,
+      "bandwidth_MBps": 8938.267337037758
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.026332971174269915,
+      "bandwidth_MBps": 622.185772033537
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.0016660196706652641,
+      "bandwidth_MBps": 9834.217619686115
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.026250025257468224,
+      "bandwidth_MBps": 624.1517804002376
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.001667009200900793,
+      "bandwidth_MBps": 9828.38006601683
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.02500001573935151,
+      "bandwidth_MBps": 655.3595874026034
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.0016249832697212696,
+      "bandwidth_MBps": 10082.565344079092
+    },
+    {
+      "operation": "write",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.02679199678823352,
+      "bandwidth_MBps": 611.5259019139443
+    },
+    {
+      "operation": "read",
+      "bytes": 16384,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.001667009200900793,
+      "bandwidth_MBps": 9828.38006601683
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.09745795978233218,
+      "bandwidth_MBps": 2689.816209835363
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.008458970114588737,
+      "bandwidth_MBps": 30990.061017935757
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.11241703759878874,
+      "bandwidth_MBps": 2331.888525079089
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.009167008101940155,
+      "bandwidth_MBps": 28596.46212645088
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.1147910370491445,
+      "bandwidth_MBps": 2283.662616339728
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.008458038792014122,
+      "bandwidth_MBps": 30993.473362584962
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.09950000094249845,
+      "bandwidth_MBps": 2634.6130403706666
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.008708040695637465,
+      "bandwidth_MBps": 30103.67190076734
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.09758397936820984,
+      "bandwidth_MBps": 2686.3425912450466
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.008416012860834599,
+      "bandwidth_MBps": 31148.24137447952
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.09883404709398746,
+      "bandwidth_MBps": 2652.365330650792
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.00870897201821208,
+      "bandwidth_MBps": 30100.452665573866
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.0991669949144125,
+      "bandwidth_MBps": 2643.4601575478528
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.008457980584353209,
+      "bandwidth_MBps": 30993.686659076964
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.10245799785479903,
+      "bandwidth_MBps": 2558.550874393467
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.008333008736371994,
+      "bandwidth_MBps": 31458.505360229785
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.09737495565786958,
+      "bandwidth_MBps": 2692.1090564708693
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.00825000461190939,
+      "bandwidth_MBps": 31775.0125401844
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.09745900752022862,
+      "bandwidth_MBps": 2689.7872928327256
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.008374976459890604,
+      "bandwidth_MBps": 31300.864098598817
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.09804102592170238,
+      "bandwidth_MBps": 2673.8194295248777
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.00825000461190939,
+      "bandwidth_MBps": 31775.0125401844
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.10079098865389824,
+      "bandwidth_MBps": 2600.867433696526
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.00829098280519247,
+      "bandwidth_MBps": 31617.964499434813
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.04012504359707236,
+      "bandwidth_MBps": 1633.2941755303586
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.003249966539442539,
+      "bandwidth_MBps": 20165.130688158184
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.04458299372345209,
+      "bandwidth_MBps": 1469.9775525735042
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.0036669662222266197,
+      "bandwidth_MBps": 17871.99445764348
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.04025001544505358,
+      "bandwidth_MBps": 1628.2229776896615
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.0032919924706220627,
+      "bandwidth_MBps": 19907.70045340236
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.04179199459031224,
+      "bandwidth_MBps": 1568.1472167684437
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.003374996595084667,
+      "bandwidth_MBps": 19418.093664285883
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.03995798761025071,
+      "bandwidth_MBps": 1640.1226367863324
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.003207998815923929,
+      "bandwidth_MBps": 20428.935221138825
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.0433750101365149,
+      "bandwidth_MBps": 1510.916073419636
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.003207998815923929,
+      "bandwidth_MBps": 20428.935221138825
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.042834028135985136,
+      "bandwidth_MBps": 1529.9985280847961
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.003374996595084667,
+      "bandwidth_MBps": 19418.093664285883
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.044625019654631615,
+      "bandwidth_MBps": 1468.5931907079407
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.003334018401801586,
+      "bandwidth_MBps": 19656.76013203366
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.04129199078306556,
+      "bandwidth_MBps": 1587.1358768896478
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.003207998815923929,
+      "bandwidth_MBps": 20428.935221138825
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.0463749747723341,
+      "bandwidth_MBps": 1413.1759709138814
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.003249966539442539,
+      "bandwidth_MBps": 20165.130688158184
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.04241598071530461,
+      "bandwidth_MBps": 1545.0780317889285
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.003167020622640848,
+      "bandwidth_MBps": 20693.26594575574
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.04208303289487958,
+      "bandwidth_MBps": 1557.3022068942669
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.0032910029403865337,
+      "bandwidth_MBps": 19913.68624918417
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.030541967134922743,
+      "bandwidth_MBps": 1072.884397237529
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.002334010787308216,
+      "bandwidth_MBps": 14039.352422098658
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.03304198617115617,
+      "bandwidth_MBps": 991.7079388104295
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.002500019036233425,
+      "bandwidth_MBps": 13107.100196072455
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.03045797348022461,
+      "bandwidth_MBps": 1075.8430800156557
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.002207991201430559,
+      "bandwidth_MBps": 14840.638848003375
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.032208976335823536,
+      "bandwidth_MBps": 1017.3561450183284
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.0022500171326100826,
+      "bandwidth_MBps": 14563.444662302729
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.03104202914983034,
+      "bandwidth_MBps": 1055.6010962375856
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.0022919848561286926,
+      "bandwidth_MBps": 14296.778581402681
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.03320799442008138,
+      "bandwidth_MBps": 986.7503464823727
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.0024170149117708206,
+      "bandwidth_MBps": 13557.218799280225
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.03158301115036011,
+      "bandwidth_MBps": 1037.5198186138239
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.0022080494090914726,
+      "bandwidth_MBps": 14840.247625383878
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.03704201662912965,
+      "bandwidth_MBps": 884.6170641322864
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.002333021257072687,
+      "bandwidth_MBps": 14045.307088678226
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.03341701813042164,
+      "bandwidth_MBps": 980.5782153306253
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.002207991201430559,
+      "bandwidth_MBps": 14840.638848003375
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.03445905167609453,
+      "bandwidth_MBps": 950.9257627868014
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.002334010787308216,
+      "bandwidth_MBps": 14039.352422098658
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.031292031053453684,
+      "bandwidth_MBps": 1047.1675662095897
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.002207991201430559,
+      "bandwidth_MBps": 14840.638848003375
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.034750031773000956,
+      "bandwidth_MBps": 942.9631665965584
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.0022919848561286926,
+      "bandwidth_MBps": 14296.778581402681
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.678999989759177,
+      "bandwidth_MBps": 3088.589148202791
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.06437505362555385,
+      "bandwidth_MBps": 32577.091309288324
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.8194590336643159,
+      "bandwidth_MBps": 2559.1907756783357
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.08862500544637442,
+      "bandwidth_MBps": 23663.20870094562
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.791250029578805,
+      "bandwidth_MBps": 2650.4289688511576
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.09095895802602172,
+      "bandwidth_MBps": 23056.02488762066
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.7827919907867908,
+      "bandwidth_MBps": 2679.066756792101
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.10295899119228125,
+      "bandwidth_MBps": 20368.808743312762
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.7825419888831675,
+      "bandwidth_MBps": 2679.922649253652
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.07366703357547522,
+      "bandwidth_MBps": 28467.984907406008
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.7474999874830246,
+      "bandwidth_MBps": 2805.5545620295084
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.07558299694210291,
+      "bandwidth_MBps": 27746.34620014383
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.74637500802055,
+      "bandwidth_MBps": 2809.783255687815
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.07387500954791903,
+      "bandwidth_MBps": 28387.840662676084
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.7558329962193966,
+      "bandwidth_MBps": 2774.6235087509426
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.07274997187778354,
+      "bandwidth_MBps": 28826.842758415285
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.7838330348022282,
+      "bandwidth_MBps": 2675.5085673687386
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.09566597873345017,
+      "bandwidth_MBps": 21921.60711430341
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.7726670010015368,
+      "bandwidth_MBps": 2714.173113749721
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.10191596811637282,
+      "bandwidth_MBps": 20577.266141507534
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.8113330113701522,
+      "bandwidth_MBps": 2584.8227184277875
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.1032919972203672,
+      "bandwidth_MBps": 20303.141157449532
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.7933750166557729,
+      "bandwidth_MBps": 2643.330021708896
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.14949997421354055,
+      "bandwidth_MBps": 14027.774994827098
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.026749970857053995,
+      "bandwidth_MBps": 1224.9732971712394
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.0024579931050539017,
+      "bandwidth_MBps": 13331.200943007294
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.03308302257210016,
+      "bandwidth_MBps": 990.4778176959613
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.002833025064319372,
+      "bandwidth_MBps": 11566.43490828855
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.029917049687355757,
+      "bandwidth_MBps": 1095.2951692241625
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.002374988980591297,
+      "bandwidth_MBps": 13797.11664676516
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.029165996238589287,
+      "bandwidth_MBps": 1123.500110606369
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.0024170149117708206,
+      "bandwidth_MBps": 13557.218799280225
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.025708985049277544,
+      "bandwidth_MBps": 1274.5738479053969
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.0022919848561286926,
+      "bandwidth_MBps": 14296.778581402681
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.032582960557192564,
+      "bandwidth_MBps": 1005.6790248535776
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.002333021257072687,
+      "bandwidth_MBps": 14045.307088678226
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.030333991162478924,
+      "bandwidth_MBps": 1080.2403094430838
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.029916991479694843,
+      "bandwidth_MBps": 1095.2973002729966
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.0320419785566628,
+      "bandwidth_MBps": 1022.658446077333
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.0023329630494117737,
+      "bandwidth_MBps": 14045.657520491815
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.02541701542213559,
+      "bandwidth_MBps": 1289.2150968859412
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.0022919848561286926,
+      "bandwidth_MBps": 14296.778581402681
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.027375004719942808,
+      "bandwidth_MBps": 1197.0043598249454
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.002292043063789606,
+      "bandwidth_MBps": 14296.415507055184
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.02579099964350462,
+      "bandwidth_MBps": 1270.5207418454024
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.0022090389393270016,
+      "bandwidth_MBps": 14833.599995291614
+    },
+    {
+      "operation": "write",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.029624963644891977,
+      "bandwidth_MBps": 1106.0941843771664
+    },
+    {
+      "operation": "read",
+      "bytes": 32768,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.0022919848561286926,
+      "bandwidth_MBps": 14296.778581402681
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.819082953967154,
+      "bandwidth_MBps": 2560.365821120601
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.08679099846631289,
+      "bandwidth_MBps": 24163.243159530997
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.8899999666027725,
+      "bandwidth_MBps": 2356.3506502197515
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.13637501979246736,
+      "bandwidth_MBps": 15377.83094874268
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.7308339700102806,
+      "bandwidth_MBps": 2869.532733912874
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.07591699250042439,
+      "bandwidth_MBps": 27624.276606956955
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.7012920104898512,
+      "bandwidth_MBps": 2990.411937724976
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.07404200732707977,
+      "bandwidth_MBps": 28323.813409539987
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.6936250138096511,
+      "bandwidth_MBps": 3023.466510357877
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.07083400851115584,
+      "bandwidth_MBps": 29606.56955718825
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.6713750190101564,
+      "bandwidth_MBps": 3123.6670126510544
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.08045899448916316,
+      "bandwidth_MBps": 26064.854691695913
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.6757500232197344,
+      "bandwidth_MBps": 3103.44347456732
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.07020903285592794,
+      "bandwidth_MBps": 29870.11663162273
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.6735000060871243,
+      "bandwidth_MBps": 3113.8114046708874
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.07208302849903703,
+      "bandwidth_MBps": 29093.561184489026
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.6809579790569842,
+      "bandwidth_MBps": 3079.7083880333025
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.07216702215373516,
+      "bandwidth_MBps": 29059.699810427293
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.6679999642074108,
+      "bandwidth_MBps": 3139.4492700135
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.077791977673769,
+      "bandwidth_MBps": 26958.461048447512
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.6682499661110342,
+      "bandwidth_MBps": 3138.2747569814983
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.07366703357547522,
+      "bandwidth_MBps": 28467.984907406008
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.6700420053675771,
+      "bandwidth_MBps": 3129.881385346173
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.0778749817982316,
+      "bandwidth_MBps": 26929.727000560564
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.3185420064255595,
+      "bandwidth_MBps": 3291.7981894015697
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 0,
+      "latency_ms": 0.02941599814221263,
+      "bandwidth_MBps": 35646.45316234466
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.41408295510336757,
+      "bandwidth_MBps": 2532.2848648485033
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 1,
+      "latency_ms": 0.029999995604157448,
+      "bandwidth_MBps": 34952.53845486187
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.3294590278528631,
+      "bandwidth_MBps": 3182.7204943623387
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 2,
+      "latency_ms": 0.028916983865201473,
+      "bandwidth_MBps": 36261.596468290394
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.3269159933552146,
+      "bandwidth_MBps": 3207.4784388436356
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 3,
+      "latency_ms": 0.029165996238589287,
+      "bandwidth_MBps": 35952.003539403806
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.32579101389274,
+      "bandwidth_MBps": 3218.55408923348
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 4,
+      "latency_ms": 0.02879102248698473,
+      "bandwidth_MBps": 36420.2417775895
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.33662503119558096,
+      "bandwidth_MBps": 3114.9674053524905
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 5,
+      "latency_ms": 0.03883300814777613,
+      "bandwidth_MBps": 27002.183194506128
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.3436249680817127,
+      "bandwidth_MBps": 3051.5128334639894
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 6,
+      "latency_ms": 0.03529101377353072,
+      "bandwidth_MBps": 29712.26632164538
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.3374170046299696,
+      "bandwidth_MBps": 3107.656062414303
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 7,
+      "latency_ms": 0.0332500203512609,
+      "bandwidth_MBps": 31536.10099851371
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.33837498631328344,
+      "bandwidth_MBps": 3098.8579014796887
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 8,
+      "latency_ms": 0.03349996404722333,
+      "bandwidth_MBps": 31300.80971197078
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.344625033903867,
+      "bandwidth_MBps": 3042.6576622187577
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 9,
+      "latency_ms": 0.03816699609160423,
+      "bandwidth_MBps": 27473.369858170736
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.3442080342210829,
+      "bandwidth_MBps": 3046.34376816
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 10,
+      "latency_ms": 0.04479096969589591,
+      "bandwidth_MBps": 23410.433110048933
+    },
+    {
+      "operation": "write",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.35395799204707146,
+      "bandwidth_MBps": 2962.4306374202565
+    },
+    {
+      "operation": "read",
+      "bytes": 1048576,
+      "trial": 0,
+      "repeat": 11,
+      "latency_ms": 0.031333998776972294,
+      "bandwidth_MBps": 33464.48078534458
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.03862503217533231,
+      "bandwidth_MBps": 1696.7235056921002
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 0,
+      "latency_ms": 0.0033750548027455807,
+      "bandwidth_MBps": 19417.758771409277
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.045249995309859514,
+      "bandwidth_MBps": 1448.3095423817729
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 1,
+      "latency_ms": 0.0036669662222266197,
+      "bandwidth_MBps": 17871.99445764348
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.04037498729303479,
+      "bandwidth_MBps": 1623.1831733927456
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 2,
+      "latency_ms": 0.003249966539442539,
+      "bandwidth_MBps": 20165.130688158184
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.04216702654957771,
+      "bandwidth_MBps": 1554.2001739901275
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 3,
+      "latency_ms": 0.003374996595084667,
+      "bandwidth_MBps": 19418.093664285883
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.03933301195502281,
+      "bandwidth_MBps": 1666.1831052994423
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 4,
+      "latency_ms": 0.0032500247471034527,
+      "bandwidth_MBps": 20164.769532419163
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.04116696072742343,
+      "bandwidth_MBps": 1591.956239711986
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 5,
+      "latency_ms": 0.003292050678282976,
+      "bandwidth_MBps": 19907.34845983033
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.03774999640882015,
+      "bandwidth_MBps": 1736.0531452842138
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 6,
+      "latency_ms": 0.003167020622640848,
+      "bandwidth_MBps": 20693.26594575574
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.039792037568986416,
+      "bandwidth_MBps": 1646.962658958641
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 7,
+      "latency_ms": 0.003333028871566057,
+      "bandwidth_MBps": 19662.59595261389
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.040041981264948845,
+      "bandwidth_MBps": 1636.6822502204104
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 8,
+      "latency_ms": 0.0032919924706220627,
+      "bandwidth_MBps": 19907.70045340236
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.046667002607136965,
+      "bandwidth_MBps": 1404.3327477384914
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 9,
+      "latency_ms": 0.0033329706639051437,
+      "bandwidth_MBps": 19662.939344090537
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.03987498348578811,
+      "bandwidth_MBps": 1643.536730826679
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 10,
+      "latency_ms": 0.003167020622640848,
+      "bandwidth_MBps": 20693.26594575574
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.04191603511571884,
+      "bandwidth_MBps": 1563.5066584678827
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 1,
+      "repeat": 11,
+      "latency_ms": 0.0034170225262641907,
+      "bandwidth_MBps": 19179.270694375577
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.040790997445583344,
+      "bandwidth_MBps": 1606.6290138510924
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.005792011506855488,
+      "bandwidth_MBps": 11314.894647987298
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.04558399086818099,
+      "bandwidth_MBps": 1437.6977257106753
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.0034580007195472717,
+      "bandwidth_MBps": 18951.991429481284
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.04033296136185527,
+      "bandwidth_MBps": 1624.8744894288966
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.005749985575675964,
+      "bandwidth_MBps": 11397.593809145448
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.0433750101365149,
+      "bandwidth_MBps": 1510.916073419636
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.0032910029403865337,
+      "bandwidth_MBps": 19913.68624918417
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.04166702274233103,
+      "bandwidth_MBps": 1572.8505587086167
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.005750043783336878,
+      "bandwidth_MBps": 11397.478431367352
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.042166037019342184,
+      "bandwidth_MBps": 1554.2366471370708
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.003249966539442539,
+      "bandwidth_MBps": 20165.130688158184
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.03995798761025071,
+      "bandwidth_MBps": 1640.1226367863324
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.005792011506855488,
+      "bandwidth_MBps": 11314.894647987298
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.04154205089434981,
+      "bandwidth_MBps": 1577.5821989788576
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.0032500247471034527,
+      "bandwidth_MBps": 20164.769532419163
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.04041596548631787,
+      "bandwidth_MBps": 1621.537410065982
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.005665991920977831,
+      "bandwidth_MBps": 11566.553732164495
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.041499966755509377,
+      "bandwidth_MBps": 1579.1819879301395
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.0032090465538203716,
+      "bandwidth_MBps": 20422.26527439415
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.04066701512783766,
+      "bandwidth_MBps": 1611.527174885743
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.005832989700138569,
+      "bandwidth_MBps": 11235.404718517353
+    },
+    {
+      "operation": "write",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.04633399657905102,
+      "bandwidth_MBps": 1414.4257961470732
+    },
+    {
+      "operation": "read",
+      "bytes": 65536,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.0032919924706220627,
+      "bandwidth_MBps": 19907.70045340236
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.13925001258030534,
+      "bandwidth_MBps": 1882.542020230137
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.008707982487976551,
+      "bandwidth_MBps": 30103.87312583051
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.1385000068694353,
+      "bandwidth_MBps": 1892.7363682163896
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.012459000572562218,
+      "bandwidth_MBps": 21040.531981137035
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.1338329748250544,
+      "bandwidth_MBps": 1958.739991714844
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.027917034458369017,
+      "bandwidth_MBps": 9390.109124624949
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.10212499182671309,
+      "bandwidth_MBps": 2566.8937182860104
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.021666986867785454,
+      "bandwidth_MBps": 12098.775044247455
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.10870903497561812,
+      "bandwidth_MBps": 2411.4279007149235
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.008666014764457941,
+      "bandwidth_MBps": 30249.659979248503
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.15158398309722543,
+      "bandwidth_MBps": 1729.3647695737207
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.033125048503279686,
+      "bandwidth_MBps": 7913.76954433879
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.14154199743643403,
+      "bandwidth_MBps": 1852.0580799188444
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.00866700429469347,
+      "bandwidth_MBps": 30246.206311505164
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.13541604857891798,
+      "bandwidth_MBps": 1935.8414512237619
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.008874980267137289,
+      "bandwidth_MBps": 29537.417786795497
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.13095897156745195,
+      "bandwidth_MBps": 2001.726165549335
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.008375034667551517,
+      "bandwidth_MBps": 31300.646553220668
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.1503330422565341,
+      "bandwidth_MBps": 1743.7550392459123
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.009207986295223236,
+      "bandwidth_MBps": 28469.199626848993
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.12024998432025313,
+      "bandwidth_MBps": 2179.9919682471705
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.045708962716162205,
+      "bandwidth_MBps": 5735.0677946430105
+    },
+    {
+      "operation": "write",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.10083295637741685,
+      "bandwidth_MBps": 2599.7849256625714
+    },
+    {
+      "operation": "read",
+      "bytes": 262144,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.008709030225872993,
+      "bandwidth_MBps": 30100.2514862351
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.6810409831814468,
+      "bandwidth_MBps": 3079.333038377905
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 0,
+      "latency_ms": 0.06049999501556158,
+      "bandwidth_MBps": 34663.67227733785
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.7739579887129366,
+      "bandwidth_MBps": 2709.64578256694
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 1,
+      "latency_ms": 0.07304101018235087,
+      "bandwidth_MBps": 28711.979677777534
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.6666250410489738,
+      "bandwidth_MBps": 3145.924426571207
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 2,
+      "latency_ms": 0.07070798892527819,
+      "bandwidth_MBps": 29659.335979930067
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.6766250007785857,
+      "bandwidth_MBps": 3099.430256917536
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 3,
+      "latency_ms": 0.0671250163577497,
+      "bandwidth_MBps": 31242.48028220972
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.6689579458907247,
+      "bandwidth_MBps": 3134.95341954212
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 4,
+      "latency_ms": 0.06791698979213834,
+      "bandwidth_MBps": 30878.164748148978
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.666000007186085,
+      "bandwidth_MBps": 3148.876842900756
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 5,
+      "latency_ms": 0.06708403816446662,
+      "bandwidth_MBps": 31261.56470870934
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.6910419906489551,
+      "bandwidth_MBps": 3034.767826526101
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 6,
+      "latency_ms": 0.06929202936589718,
+      "bandwidth_MBps": 30265.414639914357
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.6678749923594296,
+      "bandwidth_MBps": 3140.036719433534
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 7,
+      "latency_ms": 0.06454100366681814,
+      "bandwidth_MBps": 32493.327975285098
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.6858339766040444,
+      "bandwidth_MBps": 3057.8129278228485
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 8,
+      "latency_ms": 0.06808398757129908,
+      "bandwidth_MBps": 30802.426162301603
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.6617920007556677,
+      "bandwidth_MBps": 3168.8989857921606
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 9,
+      "latency_ms": 0.06237498018890619,
+      "bandwidth_MBps": 33621.68602937677
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.684124999679625,
+      "bandwidth_MBps": 3065.4514905639962
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 10,
+      "latency_ms": 0.06629095878452063,
+      "bandwidth_MBps": 31635.56597237961
+    },
+    {
+      "operation": "write",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.6686249980702996,
+      "bandwidth_MBps": 3136.5144977416835
+    },
+    {
+      "operation": "read",
+      "bytes": 2097152,
+      "trial": 2,
+      "repeat": 11,
+      "latency_ms": 0.07537496276199818,
+      "bandwidth_MBps": 27822.925851677126
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.17150002531707287,
+      "bandwidth_MBps": 3057.072435008014
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 0,
+      "latency_ms": 0.015166995581239462,
+      "bandwidth_MBps": 34567.68990217868
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.20133302314206958,
+      "bandwidth_MBps": 2604.0834822712563
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 1,
+      "latency_ms": 0.018457998521625996,
+      "bandwidth_MBps": 28404.37978070737
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.17262500477954745,
+      "bandwidth_MBps": 3037.1498072920976
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 2,
+      "latency_ms": 0.015290977898985147,
+      "bandwidth_MBps": 34287.40813462275
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.1919579808600247,
+      "bandwidth_MBps": 2731.264403027398
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 3,
+      "latency_ms": 0.02041697734966874,
+      "bandwidth_MBps": 25679.021483976245
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.18350000027567148,
+      "bandwidth_MBps": 2857.1553090592033
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 4,
+      "latency_ms": 0.01650000922381878,
+      "bandwidth_MBps": 31775.0125401844
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.1865000231191516,
+      "bandwidth_MBps": 2811.1953619707683
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 5,
+      "latency_ms": 0.019875005818903446,
+      "bandwidth_MBps": 26379.262717062502
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.18637499306350946,
+      "bandwidth_MBps": 2813.0812582852395
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 6,
+      "latency_ms": 0.016874982975423336,
+      "bandwidth_MBps": 31068.94986285741
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.17837499035522342,
+      "bandwidth_MBps": 2939.2461294933273
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 7,
+      "latency_ms": 0.019041006453335285,
+      "bandwidth_MBps": 27534.678972190777
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.1770000089891255,
+      "bandwidth_MBps": 2962.0789456129983
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 8,
+      "latency_ms": 0.01570803578943014,
+      "bandwidth_MBps": 33377.05662427831
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.17241697059944272,
+      "bandwidth_MBps": 3040.814359382409
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 9,
+      "latency_ms": 0.017915968783199787,
+      "bandwidth_MBps": 29263.725916492822
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.16900000628083944,
+      "bandwidth_MBps": 3102.2957426921807
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 10,
+      "latency_ms": 0.015249999705702066,
+      "bandwidth_MBps": 34379.54164707069
+    },
+    {
+      "operation": "write",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.167582998983562,
+      "bandwidth_MBps": 3128.527375568847
+    },
+    {
+      "operation": "read",
+      "bytes": 524288,
+      "trial": 3,
+      "repeat": 11,
+      "latency_ms": 0.017749960534274578,
+      "bandwidth_MBps": 29537.417786795497
+    }
+  ]
+}

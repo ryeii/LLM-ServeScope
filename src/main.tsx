@@ -36,6 +36,7 @@ import { api, STATIC_PAGES } from "./api";
 import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
 import FormulaValue from "./FormulaValue";
+import StorageView, { StorageControls } from "./StorageView";
 import {
   intervalDerivation,
   explainCalculation,
@@ -97,6 +98,7 @@ const tabs = [
   ["roofline", "Roofline"],
   ["layers", "Layer / chunk"],
   ["boxes", "Box graph"],
+  ["storage", "KV storage"],
   ["graph", "Model graph"],
   ["configuration", "Configuration"],
   ["native", "LLMServingSim 2.0"],
@@ -443,9 +445,9 @@ function MemoryChart({ r }: { r: Obj }) {
         ))}
       </svg>
       <div className="subnote">
-        KV remains resident in HBM; SRAM reduces modeled read traffic. Runtime
-        reservations reduce usable capacity; allocator fragmentation is
-        excluded.
+        {r.storage
+          ? "Active KV is pinned in HBM. Retained prefix copies use a separate per-GPU cache reservation; host/SSD tiers are shown in KV storage. Capacity bars combine peak active and peak retained KV conservatively."
+          : "KV remains resident in HBM; SRAM reduces modeled read traffic. Runtime reservations reduce usable capacity; allocator fragmentation is excluded."}
       </div>
     </Chart>
   );
@@ -762,7 +764,7 @@ function BoxGraph({ r }: { r: Obj }) {
               key={i}
               x={160 + (e.start_ms / max) * 800}
               y={30 + resources.indexOf(e.resource) * 46}
-              width={Math.max(1, (e.duration_ms / max) * 800)}
+              width={Math.max(3, (e.duration_ms / max) * 800)}
               height="26"
               rx="3"
               fill={
@@ -770,7 +772,9 @@ function BoxGraph({ r }: { r: Obj }) {
                   ? "#35a58a"
                   : e.phase === "decode"
                     ? "#6389d0"
-                    : "#ed9c55"
+                    : e.phase === "storage"
+                      ? "#a17ac3"
+                      : "#ed9c55"
               }
               opacity=".8"
             ></FormulaValue>
@@ -811,10 +815,17 @@ function BoxGraph({ r }: { r: Obj }) {
           <i style={{ background: "#ed9c55" }} />
           KV handoff
         </span>
+        {r.storage && (
+          <span>
+            <i style={{ background: "#a17ac3" }} />
+            KV storage / HBM admission
+          </span>
+        )}
       </div>
       <div className="subnote">
         Boxes show modeled resource occupancy, including memory and
-        communication stalls. Hover to inspect an interval.
+        communication stalls. Subpixel intervals use a minimum display width;
+        hover for exact timing.
       </div>
     </Chart>
   );
@@ -1324,6 +1335,72 @@ function App() {
     setConfig((c: Obj | null) => ({ ...c, [k]: v }));
     setDirty(true);
   }
+  function storageChange(k: string, value: any) {
+    setConfig((c: Obj | null) => ({
+      ...c,
+      storage: { ...c!.storage, [k]: value },
+    }));
+    setDirty(true);
+  }
+  function enableStorage(enabled: boolean) {
+    setConfig((c: Obj | null) => ({
+      ...c,
+      storage: { ...c!.storage, enabled },
+      ...(enabled
+        ? {
+            batch_size: 1,
+            prefill: { ...c!.prefill, batch_size: 1, replicas: 1 },
+            decode: { ...c!.decode, batch_size: 1, replicas: 1 },
+          }
+        : {
+            input_tokens: Math.min(c!.input_tokens, 32768),
+            output_tokens: Math.min(c!.output_tokens, 256),
+          }),
+    }));
+    setDirty(true);
+  }
+  function loadCacheDemo() {
+    const c = clone(catalog!.default_config);
+    Object.assign(c, {
+      model_id: "llama8",
+      requests: 8,
+      input_tokens: 1024,
+      output_tokens: 2,
+      arrival_rate: 2,
+      batch_size: 1,
+    });
+    for (const ph of ["prefill", "decode"])
+      Object.assign(c[ph], { tp: 1, pp: 1, ep: 1, replicas: 1, batch_size: 1 });
+    Object.assign(c.storage, {
+      enabled: true,
+      hbm_cache_GB: 0,
+      dram_cache_GB: 0,
+      ssd_cache_GB: 4,
+      source_id: "synthetic-demo",
+      source_label: "Generated repeated-prefix demonstration",
+      workload: [],
+    });
+    setConfig(c);
+    setDirty(true);
+    setTab("storage");
+  }
+  async function loadStorageWorkload(rows: Obj[], source: Obj) {
+    const candidate = {
+      ...config,
+      storage: { ...config!.storage, ...source, enabled: true, workload: rows },
+      batch_size: 1,
+      prefill: { ...config!.prefill, batch_size: 1, replicas: 1 },
+      decode: { ...config!.decode, batch_size: 1, replicas: 1 },
+    };
+    try {
+      const result = await api("validate", candidate);
+      setConfig(result.config);
+      setDirty(true);
+      setError("");
+    } catch (e: any) {
+      setError(e.message);
+    }
+  }
   function pool(k: string, v: any) {
     update(editPhase, { ...config![editPhase], [k]: v });
   }
@@ -1754,37 +1831,56 @@ function App() {
                 ))}
               </select>
             </label>
-            <Field
-              label="Input length"
-              value={config.input_tokens}
-              unit="tokens"
-              min={1}
-              max={32768}
-              step={128}
-              onChange={(n) => update("input_tokens", n)}
-            />
-            <Field
-              label="Output length"
-              value={config.output_tokens}
-              unit="tokens"
-              min={1}
-              max={256}
-              onChange={(n) => update("output_tokens", n)}
-            />
-            <Field
-              label="Requests"
-              value={config.requests}
-              min={1}
-              max={128}
-              onChange={(n) => update("requests", n)}
-            />
-            <Field
-              label="Arrival rate"
-              value={config.arrival_rate}
-              unit="req/s"
-              step={0.5}
-              min={0.01}
-              onChange={(n) => update("arrival_rate", n)}
+            <fieldset
+              className="trace-workload-fields"
+              disabled={
+                !!config.storage?.enabled &&
+                config.storage?.workload?.length > 0
+              }
+            >
+              <Field
+                label="Input length"
+                value={config.input_tokens}
+                unit="tokens"
+                min={1}
+                max={config.storage?.enabled ? 131072 : 32768}
+                step={128}
+                onChange={(n) => update("input_tokens", n)}
+              />
+              <Field
+                label="Output length"
+                value={config.output_tokens}
+                unit="tokens"
+                min={1}
+                max={config.storage?.enabled ? 4096 : 256}
+                onChange={(n) => update("output_tokens", n)}
+              />
+              <Field
+                label="Requests"
+                value={config.requests}
+                min={1}
+                max={128}
+                onChange={(n) => update("requests", n)}
+              />
+              <Field
+                label="Arrival rate"
+                value={config.arrival_rate}
+                unit="req/s"
+                step={0.5}
+                min={0.01}
+                onChange={(n) => update("arrival_rate", n)}
+              />
+            </fieldset>
+          </Section>
+          <Section title="KV storage tiers">
+            <StorageControls
+              storage={config.storage || catalog.default_config.storage}
+              Field={Field}
+              onChange={storageChange}
+              onEnable={enableStorage}
+              onDemo={loadCacheDemo}
+              onWorkload={loadStorageWorkload}
+              onError={setError}
             />
           </Section>
           <Section title="Serving topology" initial>
@@ -2138,6 +2234,9 @@ function App() {
                   <ArrowRight size={13} />
                 </button>
               </div>
+              {tab === "storage" && (
+                <StorageView r={r} onDemo={loadCacheDemo} />
+              )}
               {tab === "overview" && (
                 <>
                   <div

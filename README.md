@@ -100,6 +100,27 @@ The [current serving integration recheck](docs/accuracy-2026-10-19/README.md#ser
 reports 4.83% mean throughput difference from nine native simulator references;
 this is separate evidence from operator CV and from physical GPU serving accuracy.
 
+## KV storage tiers and Mooncake evidence
+
+The **KV storage** view models cold-start retained prefix caches in per-GPU HBM,
+host DRAM and SSD. Ready hits reduce actual prefill query work while preserving
+attention context. Active KV admission, SSD reads/writes and host/GPU transfers
+queue explicitly. This first tier policy uses one replica and single-request
+batches, with concurrent requests and TP/PP/EP supported; publication is blocking
+write-through before handoff. Active decode KV remains in HBM.
+
+Choose **Load cache demo**, then **Run scenario**. The demo is synthetic. Import
+unchanged Mooncake JSONL or load a bundled published trace window; source identity,
+relative arrivals and original token lengths remain in exports. Resulting cache
+and serving intervals are simulated, not original Mooncake hardware events.
+
+The [detailed data-coverage and fitting report](docs/storage-2026-10-20/README.md)
+distinguishes published aggregate Mooncake SSD results from 768 new local buffered
+file-I/O measurements and 1,260 trace-replayed LRU curve targets. Latency and consistent
+bytes/time bandwidth functions use nested leave-size-out validation; bounded hit
+functions use nested held-window validation. Runtime hit decisions use cache state,
+not the fitted forecast. Local path coefficients do not calibrate a customer SSD.
+
 ## Limitations: behavioral, not mechanistic simulation
 
 **LLM-ServeScope is a behavioral simulation, not a mechanistic simulation.**

@@ -6,7 +6,7 @@ const assets = new URL(
 );
 let runtime: Promise<PyodideAPI> | undefined;
 async function source(name: string) {
-  const response = await fetch(new URL(name, assets));
+  const response = await fetch(new URL(name, assets), { cache: "no-cache" });
   if (!response.ok)
     throw new Error(`Could not load the bundled Python asset: ${name}`);
   return response;
@@ -27,6 +27,7 @@ function loadRuntime(): Promise<PyodideAPI> {
       "calibration.py",
       "gpu_functions.py",
       "model.py",
+      "storage.py",
     ];
     const files = await Promise.all(
       modules.map(async (name) => [
@@ -39,6 +40,10 @@ function loadRuntime(): Promise<PyodideAPI> {
     py.FS.writeFile(
       "/servescope/backend/gpu-fit.json",
       await (await source("backend/gpu-fit.json")).text(),
+    );
+    py.FS.writeFile(
+      "/servescope/backend/storage-fit.json",
+      await (await source("backend/storage-fit.json")).text(),
     );
     py.unpackArchive(
       await (await source("simpy-4.1.1-py3-none-any.whl")).arrayBuffer(),

@@ -8,6 +8,7 @@ import simpy
 ROOT = Path(__file__).resolve().parents[1]
 PIN = "b09c7aaab4b072d73136641841cc2688616c49eb"
 from .catalog import MODELS, HARDWARE, BASE
+from .storage import DEFAULT_STORAGE, CacheTiers, validate_storage, workload as storage_workload, fit_dataset as storage_fits
 from .calibration import OPERATOR_NAMES, manifest as calibration_manifest, timing as calibrated_timing
 
 DEFAULT = dict(
@@ -20,6 +21,7 @@ DEFAULT = dict(
     output_tokens=64,
     arrival_rate=8,
     batch_size=4,
+    storage=copy.deepcopy(DEFAULT_STORAGE),
     prefill_chunk=512,
     separated=True,
     prefill=dict(
@@ -103,6 +105,8 @@ def resolve_model(c):
 def validate(config):
     c = copy.deepcopy(config)
     m = resolve_model(c)
+    validate_storage(c, number)
+    tier_mode = c.get("storage", {}).get("enabled", False)
     c["timing_mode"] = c.get("timing_mode", "calibrated")
     if c["timing_mode"] not in ("calibrated", "roofline"):
         raise ValueError("Timing model must be calibrated or roofline.")
@@ -114,8 +118,8 @@ def validate(config):
         raise ValueError("Unsupported engine policy.")
     for name, lo, hi in [
         ("requests", 1, 128),
-        ("input_tokens", 1, 32768),
-        ("output_tokens", 1, 256),
+        ("input_tokens", 1, 131072 if tier_mode else 32768),
+        ("output_tokens", 1, 4096 if tier_mode else 256),
         ("batch_size", 1, 32),
         ("prefill_chunk", 1, 8192),
     ]:
@@ -124,7 +128,8 @@ def validate(config):
     c["kv_precision"] = c.get("kv_precision", "bf16")
     if c["kv_precision"] not in ("bf16", "fp16", "fp8"):
         raise ValueError("Unsupported KV cache precision.")
-    if c["input_tokens"] + c["output_tokens"] - 1 > m["max_context"]:
+    workload_rows = storage_workload(c)
+    if any(row["input_length"] + row["output_length"] - 1 > m["max_context"] for row in workload_rows or []) or (not workload_rows and c["input_tokens"] + c["output_tokens"] - 1 > m["max_context"]):
         raise ValueError(f'Model context limit is {m["max_context"]} tokens.')
     if type(c.get("separated")) is not bool:
         raise ValueError("separated must be a boolean.")
@@ -262,6 +267,8 @@ def validate(config):
         * c["prefill"]["pp"]
         + decode_batches * c["output_tokens"] * c["decode"]["pp"]
     )
+    if workload_rows:
+        budget = sum(math.ceil(row["input_length"] / c["prefill_chunk"]) * c["prefill"]["pp"] + row["output_length"] * c["decode"]["pp"] for row in workload_rows)
     if budget > 40000:
         raise ValueError(
             "Scenario exceeds the interactive limit. Reduce requests, output length, or pipeline depth."
@@ -571,6 +578,8 @@ def percentile(values, p):
 def simulate(config):
     c = validate(config)
     m = resolve_model(c)
+    workload_rows = storage_workload(c)
+    tier_mode = workload_rows is not None
     shared, expert = parameters(m)
     dtype = BYTES[c["precision"]]
     phase_batch = dict(
@@ -616,6 +625,12 @@ def simulate(config):
             if phase == "prefill"
             else max_batch * m["hidden"] * dtype * 8 / p["tp"]
         )
+        cache_reservation = c["storage"]["hbm_cache_GB"] * 1e9 if tier_mode and (phase == "prefill" or not c["separated"]) else 0
+        if tier_mode:
+            # Active requests reserve real per-GPU KV payload on admission. Queued
+            # requests no longer allocate max-context KV in advance.
+            kv = max(2 * (row["input_length"] + row["output_length"] - 1) * max(1, m["kv_heads"] / p["tp"]) * m["head_dim"] * BYTES[c["kv_precision"]] * m["layers"] / p["pp"] for row in workload_rows) + cache_reservation
+            concurrent = 1
         used = weight + kv + activation
         usable_GB = (
             h["main_memory_GB"] * p["memory_utilization"] - p["runtime_reserved_GB"]
@@ -634,6 +649,7 @@ def simulate(config):
             memory_utilization=p["memory_utilization"],
             headroom_GB=(capacity - used) / 1e9,
             gpus=group * p["replicas"],
+            **(dict(retained_cache_reservation_GB=cache_reservation/1e9, active_kv_budget_bytes=capacity-weight-activation-cache_reservation) if tier_mode else {}),
         )
         if used > capacity:
             raise ValueError(
@@ -689,6 +705,35 @@ def simulate(config):
         timeline.append(event)
         last_resource_event[resource] = event["event_id"]
 
+    tiers = CacheTiers(env, c, m, record_interval) if tier_mode else None
+    active_memory = {phase: simpy.Container(env, capacity=memory[phase]["active_kv_budget_bytes"], init=memory[phase]["active_kv_budget_bytes"]) for phase in ("prefill", "decode")} if tier_mode else {}
+    if tier_mode and not c["separated"]:
+        active_memory["decode"] = active_memory["prefill"]
+    active_peak = {phase: 0 for phase in ("prefill", "decode")}
+    memory_ledger = []
+    active_holders = {phase: {} for phase in ("prefill", "decode")}
+    if tier_mode and not c["separated"]:
+        active_holders["decode"] = active_holders["prefill"]
+
+    def kv_allocation(phase, row):
+        p = c[phase]
+        return 2 * (row["input_length"] + row["output_length"] - 1) * max(1, m["kv_heads"] / p["tp"]) * m["head_dim"] * BYTES[c["kv_precision"]] * m["layers"] / p["pp"]
+
+    def reserve_kv(phase, row, identifier):
+        ready = env.now
+        blockers = [dict(value) for value in active_holders[phase].values()]
+        yield active_memory[phase].get(kv_allocation(phase, row))
+        active_holders[phase][(phase,identifier)] = dict(phase=phase,request_id=identifier,bytes=kv_allocation(phase,row),grant_ms=env.now)
+        memory_ledger.append(dict(action="grant",phase=phase,request_id=identifier,time_ms=env.now,bytes=kv_allocation(phase,row),used_bytes=active_memory[phase].capacity-active_memory[phase].level,capacity_bytes=active_memory[phase].capacity))
+        active_peak[phase] = max(active_peak[phase], active_memory[phase].capacity-active_memory[phase].level)
+        if env.now > ready:
+            record_interval(dict(phase="storage",kind="kv_memory_wait",resource="kv_"+phase+"_wait:r"+str(identifier),batch_id=identifier,request_ids=[identifier],chunk=0,batch_size=1,context=row["input_length"],start_ms=ready,end_ms=env.now,duration_ms=env.now-ready,payload_bytes=kv_allocation(phase,row),capacity_bytes=active_memory[phase].capacity,blocking_allocations=blockers,components=dict(Compute=0,Memory=0,Network=0,Launch=0)),ready)
+
+    def release_kv(phase, row, identifier):
+        active_holders[phase].pop((phase,identifier),None)
+        yield active_memory[phase].put(kv_allocation(phase,row))
+        memory_ledger.append(dict(action="release",phase=phase,request_id=identifier,time_ms=env.now,bytes=kv_allocation(phase,row),used_bytes=active_memory[phase].capacity-active_memory[phase].level,capacity_bytes=active_memory[phase].capacity))
+
     timing_records = {}
 
     def remember_timing(phase, name, cost):
@@ -738,7 +783,7 @@ def simulate(config):
                             endpoint_costs.append(dict(name=endpoint, **cost))
                             remember_timing(phase, endpoint, cost)
                 # Original roofline mode retains its separate head approximation.
-                last_prefill = phase == "prefill" and context >= c["input_tokens"]
+                last_prefill = phase == "prefill" and context >= (workload_rows[request_ids[0]]["input_length"] if tier_mode else c["input_tokens"])
                 if stage == p["pp"] - 1 and (phase == "decode" or last_prefill or c["timing_mode"] == "calibrated"):
                     head_flops = 2 * batch * m["hidden"] * m["vocab"] / p["tp"]
                     head_bytes = m["hidden"] * m["vocab"] * dtype / p["tp"]
@@ -865,24 +910,26 @@ def simulate(config):
 
     next_decode_batch = 0
 
-    def finish_decode(ids, prefill_bid, ready_ms, prefill_admitted, prefill_end, first):
+    def finish_decode(ids, prefill_bid, ready_ms, prefill_admitted, prefill_end, first, cache_info=None):
         nonlocal next_decode_batch
         bid = next_decode_batch
         next_decode_batch += 1
         replica = bid % c["decode"]["replicas"]
         times = [first]
         decode_admitted = first
-        if c["output_tokens"] > 1:
+        output_length = workload_rows[ids[0]]["output_length"] if tier_mode else c["output_tokens"]
+        input_length = workload_rows[ids[0]]["input_length"] if tier_mode else c["input_tokens"]
+        if output_length > 1:
             with admissions["decode"][replica].request() as ticket:
                 yield ticket
                 decode_admitted = env.now
-                for step in range(c["output_tokens"] - 1):
+                for step in range(output_length - 1):
                     yield env.process(
                         work(
                             "decode",
                             len(ids),
                             1,
-                            c["input_tokens"] + step + 1,
+                            input_length + step + 1,
                             replica,
                             bid,
                             step,
@@ -891,7 +938,7 @@ def simulate(config):
                     )
                     times.append(env.now)
         for identifier in ids:
-            arrival = identifier / c["arrival_rate"] * 1000
+            arrival = workload_rows[identifier]["arrival_ms"] if tier_mode else identifier / c["arrival_rate"] * 1000
             requests.append(
                 dict(
                     id=identifier,
@@ -905,32 +952,46 @@ def simulate(config):
                     first_token_ms=first,
                     finish_ms=env.now,
                     ttft_ms=first - arrival,
-                    tpot_ms=(env.now - first) / max(1, c["output_tokens"] - 1),
+                    tpot_ms=(env.now - first) / max(1, output_length - 1),
                     latency_ms=env.now - arrival,
                     token_times_ms=list(times),
+                    **(dict(input_tokens=input_length, output_tokens=output_length, cache=cache_info) if tier_mode else {}),
                 )
             )
+        if tier_mode:
+            yield from release_kv("decode", workload_rows[ids[0]], ids[0])
 
     def run_batch(ids, bid):
         batch = len(ids)
-        ready_ms = max(ids) / c["arrival_rate"] * 1000
+        ready_ms = workload_rows[ids[0]]["arrival_ms"] if tier_mode else max(ids) / c["arrival_rate"] * 1000
         yield env.timeout(max(0, ready_ms - env.now))
         replica = bid % c["prefill"]["replicas"]
+        cache_info = None
+        total_input = workload_rows[ids[0]]["input_length"] if tier_mode else c["input_tokens"]
+        if tier_mode:
+            yield from reserve_kv("prefill", workload_rows[ids[0]], ids[0])
+            lookup = env.now
+            cache_info = yield from tiers.restore(workload_rows[ids[0]], ids[0])
+            cache_info.update(memory_ready_ms=lookup, cache_ready_ms=env.now)
         with admissions["prefill"][replica].request() as ticket:
             yield ticket
             prefill_admitted = env.now
-            done = 0
-            while done < c["input_tokens"]:
-                n = min(c["prefill_chunk"], c["input_tokens"] - done)
+            done = cache_info["reused_tokens"] if tier_mode else 0
+            while done < total_input:
+                n = min(c["prefill_chunk"], total_input - done)
                 done += n
                 yield env.process(
                     work("prefill", batch, n, done, replica, bid, done, ids)
                 )
+        if tier_mode:
+            cache_info["gpu_prefill_end_ms"] = env.now
+            yield from tiers.publish(workload_rows[ids[0]], ids[0])
+            cache_info["publication_end_ms"] = env.now
         prefill_end = env.now
         kv_bytes = (
             2
             * batch
-            * c["input_tokens"]
+            * total_input
             * m["kv_heads"]
             * m["head_dim"]
             * BYTES[c["kv_precision"]]
@@ -960,7 +1021,7 @@ def simulate(config):
                         end_ms=env.now,
                         duration_ms=transfer_ms,
                         batch_size=batch,
-                        context=c["input_tokens"],
+                        context=total_input,
                         components={
                             "Compute": 0,
                             "Memory": 0,
@@ -972,6 +1033,11 @@ def simulate(config):
                 traffic["network_bytes"] += kv_bytes
                 component_work["Network"] += transfer_ms
                 phase_traffic["prefill"]["network_bytes"] += kv_bytes
+        if tier_mode:
+            cache_info["handoff_end_ms"] = env.now
+            yield from release_kv("prefill", workload_rows[ids[0]], ids[0])
+            yield from reserve_kv("decode", workload_rows[ids[0]], ids[0])
+            cache_info["decode_memory_ready_ms"] = env.now
         first = env.now
         # Fixed groups may split on decode; no cross-prefill merging or continuous rebatching.
         for offset in range(0, batch, c["decode"]["batch_size"]):
@@ -983,6 +1049,7 @@ def simulate(config):
                     prefill_admitted,
                     prefill_end,
                     first,
+                    cache_info,
                 )
             )
 
@@ -1066,10 +1133,19 @@ def simulate(config):
             layer_rows.append(
                 dict(o, phase=phase, batch=max_batch, tokens=tokens, context=context)
             )
+    output_total = sum(row["output_length"] for row in workload_rows) if tier_mode else c["requests"] * c["output_tokens"]
+    input_total = sum(row["input_length"] for row in workload_rows) if tier_mode else c["requests"] * c["input_tokens"]
+    if tier_mode:
+        for phase in ["prefill", "decode"]:
+            mm=memory[phase]
+            retained=tiers.peaks["hbm"]*tiers.per_gpu_block_bytes if phase=="prefill" or not c["separated"] else 0
+            peak=active_peak[phase] if c["separated"] else max(active_peak.values())
+            mm.update(active_kv_GB=peak/1e9,retained_kv_GB=retained/1e9,kv_GB=(peak+retained)/1e9,total_GB=mm["weights_GB"]+mm["activation_GB"]+(peak+retained)/1e9)
+            mm["headroom_GB"]=mm["capacity_GB"]-mm["total_GB"]
     metrics = dict(
-        throughput_tps=c["requests"] * c["output_tokens"] / (elapsed / 1000),
+        throughput_tps=output_total / (elapsed / 1000),
         request_throughput=c["requests"] / (elapsed / 1000),
-        prompt_tps=c["requests"] * c["input_tokens"] / (elapsed / 1000),
+        prompt_tps=input_total / (elapsed / 1000),
         ttft_mean_ms=statistics.mean(r["ttft_ms"] for r in requests),
         ttft_p95_ms=percentile([r["ttft_ms"] for r in requests], 0.95),
         tpot_mean_ms=statistics.mean(r["tpot_ms"] for r in requests),
@@ -1077,10 +1153,10 @@ def simulate(config):
         elapsed_ms=elapsed,
         gpu_count=n_gpus,
         energy_j=energy_j,
-        tokens_per_joule=c["requests"] * c["output_tokens"] / max(energy_j, 1e-12),
-        tokens_per_gpu_s=c["requests"] * c["output_tokens"] / (elapsed / 1000) / n_gpus,
+        tokens_per_joule=output_total / max(energy_j, 1e-12),
+        tokens_per_gpu_s=output_total / (elapsed / 1000) / n_gpus,
         cost_usd=cost,
-        cost_per_million_tokens=cost / (c["requests"] * c["output_tokens"]) * 1e6,
+        cost_per_million_tokens=cost / output_total * 1e6,
         gpu_utilization=sum(
             v
             * (
@@ -1121,8 +1197,12 @@ def simulate(config):
         warnings.append("Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.")
     else:
         calibration["summary"] = "Original roofline · uncalibrated"
+    if tier_mode:
+        warnings = [w for w in warnings if not w.startswith("Memory utilization and runtime")]
+        warnings.extend(["KV-tier mode: single-request scheduling, cold inclusive LRU copies, write-through publication before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."])
     return dict(
-        schema_version="servescope.behavioral.v3",
+        schema_version="servescope.behavioral.v4" if tier_mode else "servescope.behavioral.v3",
+        **(dict(storage=dict(tiers.summary(workload_rows),active_memory_ledger=memory_ledger),workload_totals=dict(input_tokens=input_total,output_tokens=output_total,computed_prefill_tokens=input_total-tiers.stats["reused_tokens"])) if tier_mode else {}),
         calibration=calibration,
         engine="LLM-ServeScope behavioral / SimPy",
         config=c,
@@ -1162,6 +1242,7 @@ def catalog():
         models=MODELS,
         hardware=HARDWARE,
         default_config=validate(DEFAULT),
+        storage_profiles=storage_fits(),
         upstream_revision=PIN,
         calibration=calibration_manifest(),
     )

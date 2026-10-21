@@ -120,3 +120,19 @@ field becomes an alias for the prefill batch cap.
 H200 prefill pool and A100 decode pool, independent batch caps and engine policies.
 `examples/custom-decoder-scenario.json` demonstrates custom MHA geometry. These
 are strategy examples, not benchmark claims.
+
+## Optional KV storage tiers
+
+Enable **KV storage tiers** to model retained prefix cache in HBM/DRAM/SSD. The
+first implementation requires batch size one and one replica per pool; enabling
+it sets those controls explicitly. Concurrent requests and TP/PP/EP remain supported.
+Import an unchanged Mooncake JSONL window to preserve actual arrivals and token
+lengths; uniform workload fields are disabled while a trace supplies them.
+Selected traces are verified against the pinned source manifest.
+
+HBM cache GB is per prefill GPU; DRAM/SSD GB cover aggregate prefilling shards.
+Active HBM KV is reserved through explicit admission, separately from retained
+copies. Storage publication is write-through before handoff. SSD chunks use a
+fitted local QD1 file-path model or editable uncalibrated affine coefficients.
+No active decode-KV streaming from SSD or numerical-quality model is implied.
+See [data coverage, equations, candidate diagrams and held-out errors](storage-2026-10-20/README.md).

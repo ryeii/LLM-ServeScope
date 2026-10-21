@@ -10,6 +10,10 @@ import {
   operationCalculation,
   quantileCalculation,
 } from "./calculations";
+import {
+  storageEventCalculation,
+  storageRequestCalculation,
+} from "./storageCalculations";
 type Obj = Record<string, any>;
 type Context = {
   metric?: string;
@@ -205,7 +209,8 @@ export function horizonCalculation(r: Obj): Calculation {
     source: "SimPy completion timestamps · actual run",
   };
 }
-function requestCalculation(r: Obj, q: Obj, key: string): Calculation {
+export function requestCalculation(r: Obj, q: Obj, key: string): Calculation {
+  if (q.cache) return storageRequestCalculation(r, q, key);
   const c = r.config;
   if (key === "arrival_ms")
     return {
@@ -592,6 +597,7 @@ const eventLabel = (e: Obj) =>
       ? `${e.phase} pipeline link · chunk ${e.chunk}`
       : `${e.phase} stage ${e.stage ?? ""} · ${e.phase === "decode" ? "token step" : "chunk"} ${e.chunk} · batch ${e.batch_id}`;
 export function eventCalculation(r: Obj, e: Obj): Calculation {
+  if (e.phase === "storage") return storageEventCalculation(r, e);
   return {
     ...calc(
       eventLabel(e),
@@ -712,7 +718,8 @@ function queueCalculation(r: Obj, e: Obj): Calculation {
     summary: `Other work owns or precedes this batch on ${e.resource}. This wait follows FIFO reservations; it is not a fitted GPU-kernel overhead.`,
   };
 }
-function eventService(r: Obj, e: Obj): Calculation {
+export function eventService(r: Obj, e: Obj): Calculation {
+  if (e.phase === "storage") return storageEventCalculation(r, e);
   if (e.phase === "transfer" || e.kind === "pipeline_transfer")
     return {
       ...calc(
