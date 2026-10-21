@@ -1360,9 +1360,6 @@ function App() {
       return {
         ...c,
         storage,
-        batch_size: 1,
-        prefill: { ...c!.prefill, batch_size: 1, replicas: 1 },
-        decode: { ...c!.decode, batch_size: 1, replicas: 1 },
       };
     });
     setDirty(true);
@@ -1371,16 +1368,6 @@ function App() {
     setConfig((c: Obj | null) => ({
       ...c,
       storage: { ...c!.storage, enabled },
-      ...(enabled
-        ? {
-            batch_size: 1,
-            prefill: { ...c!.prefill, batch_size: 1, replicas: 1 },
-            decode: { ...c!.decode, batch_size: 1, replicas: 1 },
-          }
-        : {
-            input_tokens: Math.min(c!.input_tokens, 32768),
-            output_tokens: Math.min(c!.output_tokens, 256),
-          }),
     }));
     setDirty(true);
   }
@@ -1414,9 +1401,6 @@ function App() {
     const candidate = {
       ...config,
       storage: { ...config!.storage, ...source, enabled: true, workload: rows },
-      batch_size: 1,
-      prefill: { ...config!.prefill, batch_size: 1, replicas: 1 },
-      decode: { ...config!.decode, batch_size: 1, replicas: 1 },
     };
     try {
       const result = await api("validate", candidate);
@@ -1859,17 +1843,18 @@ function App() {
             </label>
             <fieldset
               className="trace-workload-fields"
-              disabled={
-                !!config.storage?.enabled &&
-                config.storage?.workload?.length > 0
-              }
+              disabled={config.storage?.workload?.length > 0}
             >
               <Field
                 label="Input length"
                 value={config.input_tokens}
                 unit="tokens"
                 min={1}
-                max={config.storage?.enabled ? 131072 : 32768}
+                max={
+                  config.storage?.enabled || config.storage?.workload?.length
+                    ? 131072
+                    : 32768
+                }
                 step={128}
                 onChange={(n) => update("input_tokens", n)}
               />
@@ -1878,7 +1863,11 @@ function App() {
                 value={config.output_tokens}
                 unit="tokens"
                 min={1}
-                max={config.storage?.enabled ? 4096 : 256}
+                max={
+                  config.storage?.enabled || config.storage?.workload?.length
+                    ? 4096
+                    : 256
+                }
                 onChange={(n) => update("output_tokens", n)}
               />
               <Field

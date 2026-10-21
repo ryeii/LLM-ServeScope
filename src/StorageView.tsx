@@ -32,7 +32,7 @@ export function StorageControls({
     [start, setStart] = useState(0),
     [count, setCount] = useState(4),
     [busy, setBusy] = useState(false);
-  const layout = layouts[s.placement || "inclusive"];
+  const layout = layouts[s.enabled ? s.placement || "inclusive" : "none"];
   const tiers: string[] = layout.tiers;
   const hasSSD = tiers.includes("ssd");
   async function parse(
@@ -104,13 +104,13 @@ export function StorageControls({
   return (
     <div className="storage-controls">
       <label className="field vertical">
-        <span>KV cache layout</span>
+        <span>Retained prefix cache layout</span>
         <select
-          aria-label="KV cache layout"
+          aria-label="Retained prefix cache layout"
           value={s.enabled ? s.placement || "inclusive" : "disabled"}
           onChange={(e) => onLayout(e.target.value)}
         >
-          <option value="disabled">Disabled</option>
+          <option value="disabled">Off · active KV in HBM</option>
           {Object.entries(layouts).map(([id, item]: [string, any]) => (
             <option key={id} value={id}>
               {item.label}
@@ -125,13 +125,22 @@ export function StorageControls({
       </p>
       <p className="fine">
         Arrows show primary placement → eviction destination. These are retained
-        prefix caches; active attention KV stays in GPU HBM. Tier mode uses one
-        replica and batch size one per pool.
+        prefix caches. Selecting a layout preserves batch sizes, replicas and
+        workload. Fixed uniform batches are supported with one replica per pool;
+        variable-length replay requires batch size one.
       </p>
+      <div className="server-policy prefix-scope">
+        <h3>Active attention KV: GPU HBM</h3>
+        <p className="fine">
+          All layouts keep active attention KV in HBM during decoding. SSD/DRAM
+          choices store reusable prompt prefixes between requests. Active-KV
+          offload and per-token SSD attention reads are not implemented.
+        </p>
+      </div>
       <button className="secondary" onClick={onDemo}>
         Load cache demo
       </button>
-      {s.enabled && (
+      {(s.enabled || s.workload?.length > 0) && (
         <>
           {hasSSD && (
             <>
@@ -287,10 +296,12 @@ export function StorageControls({
               </button>
             )}
             <p className="fine">
-              Replay creates simulated cache and serving outcomes. The published
-              dumps remain unchanged. Anonymized agent traces contain no
-              tool-call dependency graph. Interactive limit: 128 requests and
-              40,000 GPU work intervals; long output windows can be large.
+              Replay preserves configured batch and replica counts.
+              Variable-length windows require batch size one. Replay creates
+              simulated cache and serving outcomes. The published dumps remain
+              unchanged. Anonymized agent traces contain no tool-call dependency
+              graph. Interactive limit: 128 requests and 40,000 GPU work
+              intervals; long output windows can be large.
             </p>
           </div>
         </>
@@ -378,6 +389,16 @@ export default function StorageView({
             : "fitted local file path, QD1"}{" "}
           · cold start
         </span>
+      </div>
+      <div className="card prefix-scope">
+        <h3>Active attention KV remains in GPU HBM</h3>
+        <p className="storage-note">
+          This layout controls retained prompt prefixes. SSD reads restore ready
+          prefixes before prefill; decoding does not stream its attention KV
+          from SSD. Prefill / decode batch caps: {r.config.prefill.batch_size} /{" "}
+          {r.config.decode.batch_size}. Layout selection preserves these
+          settings.
+        </p>
       </div>
       <div className="economics-grid storage-kpis">
         {[

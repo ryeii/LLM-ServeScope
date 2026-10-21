@@ -125,6 +125,24 @@ export async function storageScenario(page: Page) {
   expect(replay.requests[1].arrival_ms).toBe(10000);
   expect(replay.requests[1].cache.reused_tokens).toBe(1024);
   expect(replay.storage.workload_source.source_file_sha256).toHaveLength(64);
+  await page
+    .getByLabel("Retained prefix cache layout", { exact: true })
+    .selectOption("disabled");
+  await page.getByRole("button", { name: "Run scenario", exact: true }).click();
+  await expect(
+    page.getByText("Results match scenario", { exact: true }),
+  ).toBeVisible();
+  const off = await exported(page);
+  expect(off.workload_totals.output_tokens).toBe(4);
+  expect(off.requests[1].arrival_ms).toBe(10000);
+  expect(off.requests[1].input_tokens).toBe(1536);
+  expect(off.storage.retention_enabled).toBe(false);
+  expect(off.storage.stats.reused_tokens || 0).toBe(0);
+  await expect(page.getByLabel("Input length", { exact: true })).toBeDisabled();
+  await page
+    .getByLabel("Retained prefix cache layout", { exact: true })
+    .selectOption("ssd-only");
+
   // Load a real published window, preserving its original lengths instead of clipping them.
   await page.getByLabel("Trace window requests", { exact: true }).fill("1");
   await page
@@ -172,7 +190,9 @@ export async function storageLayoutsScenario(page: Page) {
     .getByRole("complementary")
     .getByText("KV storage tiers", { exact: true })
     .click();
-  const layout = page.getByLabel("KV cache layout", { exact: true });
+  const layout = page.getByLabel("Retained prefix cache layout", {
+    exact: true,
+  });
   await expect(layout).toHaveValue("ssd-only");
   await expect(layout.locator("option")).toHaveCount(13);
   for (const tier of ["hbm", "dram", "ssd"]) {
@@ -302,4 +322,69 @@ export async function storageLayoutsScenario(page: Page) {
     page.getByText("Results match scenario", { exact: true }),
   ).toBeVisible();
   expect((await exported(page)).storage).toBeUndefined();
+}
+
+export async function prefixBaselineScenario(page: Page) {
+  await page.goto("./");
+  await expect(
+    page.getByText("Generation throughput", { exact: true }),
+  ).toBeVisible({ timeout: 60000 });
+  const baseline = await exported(page);
+  const withoutStorage = (config: any) => {
+    const { storage, ...rest } = config;
+    return rest;
+  };
+  expect(baseline.config.prefill.batch_size).toBe(4);
+  expect(baseline.config.decode.batch_size).toBe(4);
+  expect(baseline.metrics.throughput_tps).toBeCloseTo(186.63494412484803, 9);
+  await page.getByRole("button", { name: "KV storage", exact: true }).click();
+  await page
+    .getByRole("complementary")
+    .getByText("KV storage tiers", { exact: true })
+    .click();
+  const layout = page.getByLabel("Retained prefix cache layout", {
+    exact: true,
+  });
+  await expect(page.getByRole("complementary")).toContainText(
+    "Active-KV offload and per-token SSD attention reads are not implemented",
+  );
+  const references = JSON.parse(
+    await readFile("examples/prefix-layout-comparison.json", "utf8"),
+  );
+  for (const id of ["none", "hbm-only", "ssd-only", "disabled"]) {
+    await layout.selectOption(id);
+    await page
+      .getByRole("button", { name: "Run scenario", exact: true })
+      .click();
+    await expect(
+      page.getByText("Results match scenario", { exact: true }),
+    ).toBeVisible();
+    const run = await exported(page);
+    expect(withoutStorage(run.config)).toEqual(withoutStorage(baseline.config));
+    if (id === "none" || id === "disabled")
+      expect(run.metrics).toEqual(baseline.metrics);
+    else
+      expect(run.metrics.throughput_tps).toBeCloseTo(
+        references.layouts[id].metrics.throughput_tps,
+        9,
+      );
+    if (id !== "disabled") {
+      expect(run.storage.active_kv_location).toBe("hbm");
+      expect(run.storage.active_kv_offload).toBe(false);
+      await expect(
+        page.getByRole("heading", {
+          name: "Active attention KV remains in GPU HBM",
+          exact: true,
+        }),
+      ).toBeVisible();
+      for (const e of run.timeline.filter(
+        (e: any) => e.kind === "storage_io",
+      )) {
+        const request = run.requests.find(
+          (q: any) => q.id === e.request_ids[0],
+        );
+        expect(e.end_ms).toBeLessThanOrEqual(request.first_token_ms + 1e-9);
+      }
+    }
+  }
 }

@@ -186,11 +186,64 @@ class StorageTests(unittest.TestCase):
   self.assertEqual(r['workload_totals']['computed_prefill_tokens'],8192)
   self.assertFalse(any(e.get('kind')=='storage_io' for e in r['timeline']))
 
+ def test_no_retention_preserves_original_batched_schedule_and_all_metrics(self):
+  for prefill,decode,separated in [(4,4,True),(4,1,True),(2,2,False),(4,2,False),(8,4,True)]:
+   c=copy.deepcopy(DEFAULT);c['prefill']['batch_size']=prefill;c['decode']['batch_size']=decode;c['separated']=separated
+   baseline=simulate(c);c['storage'].update(enabled=True,placement='none');r=simulate(c)
+   self.assertEqual(r['metrics'],baseline['metrics'])
+   self.assertEqual(r['traffic'],baseline['traffic'])
+   self.assertEqual([(q['arrival_ms'],q['batch_ready_ms'],q['token_times_ms']) for q in r['requests']],[(q['arrival_ms'],q['batch_ready_ms'],q['token_times_ms']) for q in baseline['requests']])
+   self.assertEqual(len(r['requests']),c['requests'])
+   self.assertEqual(sum(e['bytes'] if e['action']=='grant' else -e['bytes'] for e in r['storage']['active_memory_ledger']),0)
+
+ def test_batched_prefix_uses_common_floor_and_preserves_actual_context(self):
+  c=scenario();c['prefill']['batch_size']=2;c['decode']['batch_size']=2;c['storage'].update(placement='hbm-only',hbm_cache_GB=2,ssd_cache_GB=0)
+  c['storage']['workload']=[dict(timestamp=t,input_length=1024,output_length=2,hash_ids=[h,h+1]) for t,h in [(0,10),(1,20),(5000,10),(5001,30),(10000,10),(10001,20)]]
+  r=simulate(c)
+  self.assertEqual(r['requests'][2]['cache']['available_reused_tokens'],1023)
+  self.assertEqual(r['requests'][2]['cache']['reused_tokens'],0)
+  self.assertEqual(r['requests'][3]['cache']['reused_tokens'],0)
+  self.assertEqual(r['storage']['stats']['batch_recomputed_restored_tokens'],1023)
+  for q in r['requests'][4:]:
+   self.assertEqual(q['cache']['reused_tokens'],1023)
+   e=next(e for e in r['timeline'] if e['phase']=='prefill' and q['id'] in e['request_ids'])
+   shape=r['execution_shapes'][e['shape_id']]
+   self.assertEqual((shape['batch'],shape['tokens'],shape['context']),(2,1,1024))
+  self.assertEqual(r['requests'][0]['batch_ready_ms'],1)
+  self.assertEqual(r['workload_totals']['computed_prefill_tokens'],4*1024+2)
+
+ def test_atomic_microbatch_must_fit_hbm_before_admission(self):
+  c=scenario();c['prefill']['batch_size']=2;c['storage'].update(placement='none')
+  m=resolve_model(c);shared,expert=parameters(m);weight=(shared+expert)*2
+  activation=2*512*m['hidden']*2*8
+  kv=2*(1024+2-1)*m['kv_heads']*m['head_dim']*2*m['layers']
+  c['prefill']['hardware']['main_memory_GB']=(weight+activation+kv*1.1)/1e9
+  with self.assertRaisesRegex(ValueError,'Prefill requires'):simulate(c)
+
+ def test_prefix_ssd_does_not_add_per_token_decode_io(self):
+  c=scenario();c['storage']['placement']='ssd-only';c['output_tokens']=8;r=simulate(c)
+  self.assertEqual(r['storage']['active_kv_location'],'hbm')
+  self.assertFalse(r['storage']['active_kv_offload'])
+  for e in r['timeline']:
+   if e.get('kind')=='storage_io':self.assertIn(e['cause'],['restore','publish','spill'])
+
+ def test_turning_retention_off_preserves_imported_arrivals_and_lengths(self):
+  c=scenario();c['storage'].update(placement='none',workload=[dict(timestamp=5000,input_length=1024,output_length=1,hash_ids=[1,2]),dict(timestamp=15000,input_length=1536,output_length=3,hash_ids=[1,2,3])])
+  control=simulate(c);c['storage'].update(enabled=False,placement='ssd-only');off=simulate(c)
+  self.assertEqual(off['metrics'],control['metrics'])
+  self.assertEqual(off['workload_totals'],control['workload_totals'])
+  self.assertEqual(off['storage']['capacity_blocks'],dict(hbm=0,dram=0,ssd=0))
+  self.assertFalse(off['storage']['retention_enabled'])
+  self.assertEqual([q['arrival_ms'] for q in off['requests']],[0,10000])
+  self.assertEqual([q['output_tokens'] for q in off['requests']],[1,3])
+
  def test_invalid_combinations_fail_explicitly(self):
   c=scenario();c['storage']['placement']='unknown'
   with self.assertRaisesRegex(ValueError,'layout'):simulate(c)
-  c=scenario();c['prefill']['batch_size']=2
-  with self.assertRaisesRegex(ValueError,'batch size 1'):simulate(c)
+  c=scenario();c['prefill']['replicas']=2
+  with self.assertRaisesRegex(ValueError,'one replica'):simulate(c)
+  c=scenario();c['prefill']['batch_size']=2;c['storage']['workload']=[dict(timestamp=0,input_length=512,output_length=1,hash_ids=[1]),dict(timestamp=1,input_length=1024,output_length=1,hash_ids=[1,2])]
+  with self.assertRaisesRegex(ValueError,'Variable-length.*batch size 1'):simulate(c)
   c=scenario();c['storage']['workload']=[dict(timestamp=10,input_length=4,output_length=1,hash_ids=[1,2])]
   with self.assertRaisesRegex(ValueError,'prefix hash'):simulate(c)
 

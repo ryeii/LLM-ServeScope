@@ -211,8 +211,10 @@ assumptions. Cache hit curves do not decide runtime cache hits.
 
 ### Scope and exclusions
 
-- One replica and batch size one per pool; concurrent requests and TP/PP/EP remain
-  supported. No continuous batching, cache-aware routing or multi-replica cache placement.
+- One replica per pool; fixed uniform-length batching, concurrent requests and TP/PP/EP
+  are supported. A prefill group uses its minimum restored prefix; excess restored tokens
+  are recomputed. Variable-length replay requires batch size one. No continuous/ragged
+  batching, cache-aware routing or multi-replica cache placement.
 - GQA/MHA/MQA KV geometry only. MLA layout source is audited, not imported as compute support.
 - No active attention-KV streaming from SSD, weight offload, remote object-store tier,
   NAND/FTL simulation, filesystem simulator, cold-device service or automatic durability inference.
@@ -235,9 +237,12 @@ Open **KV storage**, choose **Load cache demo**, then **Run scenario**. The demo
 explicitly synthetic and deliberately sparse so fills can finish before reuse.
 Its finite-run throughput may be arrival-limited; compare per-request TTFT as well. The sidebar’s **KV storage tiers** controls can load an
 unchanged Mooncake trace and select a contiguous request window. Loading a trace
-sets batch/replica counts to one. Invalid contexts or excessive work are rejected,
+preserves batch/replica counts. Variable-length replay requires batch size one;
+unsupported configurations, invalid contexts or excessive work are rejected,
 not silently truncated. Storage rows, timeline I/O and throughput have cascading
-formula explanations. The browser uses the same Python model through Pyodide.
+formula explanations. The browser uses the same Python model through Pyodide. See the
+[controlled default comparison](../prefix-layout-comparison.md) for the batching
+regression fix and the distinction between retained prefixes and active attention KV.
 
 Artifacts: [I/O measurements](io-observations.json), [policy-replay observations](hit-observations.json),
 [held-out predictions](held-out-predictions.json), [candidate scores and outer selections](validation.json),

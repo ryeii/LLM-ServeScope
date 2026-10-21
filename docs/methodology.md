@@ -155,3 +155,5 @@ Local I/O fits and trace-policy hit forecasts have separate calibration evidence
 forecasts never assign runtime cache hits. Read the [storage methodology and validation](storage-2026-10-20/README.md).
 
 Cache placement now follows the selected [single-tier, exclusive-spill or inclusive-copy policy](configuration.md#cache-layouts-and-eviction-spill). Spill transfer costs and readiness are scheduled explicitly. Active attention KV remains pinned in HBM; hit-fit residuals remain single-LRU replay validation, with no new multi-tier calibration claim.
+
+Fixed uniform-length prefix-cache microbatches preserve the configured prefill/decode caps and use a common restored-prefix floor. Group HBM admission is atomic. [Controlled baseline comparisons](prefix-layout-comparison.md) distinguish retained prefixes from unsupported active attention-KV offload.

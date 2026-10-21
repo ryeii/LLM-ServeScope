@@ -26,7 +26,7 @@ CACHE_LAYOUTS = {
 }
 
 def cache_capacity_GB(s, tier):
-    return s[tier+'_cache_GB'] if tier in CACHE_LAYOUTS[s.get('placement','inclusive')]['tiers'] else 0
+    return s[tier+'_cache_GB'] if s.get('enabled') and tier in CACHE_LAYOUTS[s.get('placement','inclusive')]['tiers'] else 0
 
 DEFAULT_STORAGE=dict(enabled=False,placement='inclusive',profile='manual',hbm_cache_GB=0.125,dram_cache_GB=0.25,ssd_cache_GB=4,
                      ssd_read_GBps=3,ssd_write_GBps=2,ssd_read_latency_us=100,ssd_write_latency_us=200,
@@ -71,11 +71,11 @@ def validate_storage(c,number):
         s[k]=number(s[k],k,0,1e6)
     s['io_chunk_KiB']=number(s['io_chunk_KiB'],'I/O chunk KiB',16,2048,True)
     if s['block_tokens']!=512:raise ValueError('Prefix storage currently uses 512-token blocks.')
-    if not s['enabled']:return
-    for phase in ['prefill','decode']:
-        p=c[phase]
-        if p.get('batch_size',c['batch_size'])!=1 or p['replicas']!=1:
-            raise ValueError('KV-tier mode currently requires batch size 1 and one replica in each pool; TP/PP/EP and concurrent requests remain supported.')
+    if not s['enabled'] and not s.get('workload'):return
+    phases=['prefill','decode'] if c.get('separated',True) else ['prefill']
+    for phase in phases:
+        if number(c[phase].get('replicas'),phase+'.replicas',1,64,True)!=1:
+            raise ValueError('Retained prefix mode currently supports one replica per pool. Change replicas explicitly; selecting a layout never changes scheduling.')
     if s['profile']=='local-mooncake-path' and not fit_dataset():raise ValueError('Local storage fit unavailable.')
     rows=s.get('workload',[])
     if not isinstance(rows,list) or len(rows)>128:raise ValueError('Workload must contain at most 128 request records.')
@@ -92,13 +92,17 @@ def validate_storage(c,number):
             normalized.append(dict(timestamp=timestamp,input_length=length,output_length=output,hash_ids=keys,source_line=row.get('source_line',i+1)))
         if any(normalized[i]['timestamp']<normalized[i-1]['timestamp'] for i in range(1,len(normalized))):raise ValueError('Replay records must be in timestamp order; tied arrivals retain source order.')
         s['workload']=normalized;c['requests']=len(rows);c['input_tokens']=max(r['input_length'] for r in rows);c['output_tokens']=max(r['output_length'] for r in rows)
+    if rows and len({(r['input_length'],r['output_length']) for r in s['workload']})>1:
+        for phase in phases:
+            if number(c[phase].get('batch_size',c['batch_size']),phase+'.batch_size',1,32,True)!=1:
+                raise ValueError('Variable-length replay currently requires batch size 1 per pool. Set it explicitly; uniform-length requests support fixed batching.')
     for key in ['source_id','source_label']:
         if not isinstance(s[key],str) or len(s[key])>200:raise ValueError('Invalid workload source label.')
     s['source_sha256']=hashlib.sha256(json.dumps(s['workload'],sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def workload(c):
     s=c.get('storage',{})
-    if not s.get('enabled'):return None
+    if not s.get('enabled') and not s.get('workload'):return None
     if s['workload']:
         origin=s['workload'][0]['timestamp']
         return [dict(row,arrival_ms=row['timestamp']-origin) for row in s['workload']]
@@ -110,7 +114,8 @@ class CacheTiers:
         p=c['prefill'];d={'bf16':2,'fp16':2,'fp8':1}[c['kv_precision']]
         self.per_gpu_block_bytes=2*512*max(1,m['kv_heads']/p['tp'])*m['head_dim']*d*m['layers']/p['pp']
         self.block_bytes=self.per_gpu_block_bytes*p['tp']*p['pp']*p['ep']
-        self.layout=CACHE_LAYOUTS[self.s['placement']]
+        self.placement=self.s['placement'] if self.s['enabled'] else 'none'
+        self.layout=CACHE_LAYOUTS[self.placement]
         self.capacity={tier:int(cache_capacity_GB(self.s,tier)*1e9/(self.per_gpu_block_bytes if tier=='hbm' else self.block_bytes)) for tier in ['hbm','dram','ssd']}
         self.placement_lock=simpy.Resource(env,1)
         self.transitions=[]
@@ -251,4 +256,4 @@ class CacheTiers:
         effective_capacity=max(self.capacity.values()) if self.layout['kind']=='inclusive' else sum(self.capacity.values())
         if dataset and source in dataset['hit']:
             f=dataset['hit'][source];forecast=dict(fit=f,working_set_blocks=unique,effective_capacity_blocks=effective_capacity,prediction=hit_prediction(f,effective_capacity,unique,potential),max_hit_fraction=potential,scope='Instantaneous-publication single-LRU trace-window approximation; uses summed exclusive-tier capacity or the largest inclusive-tier capacity. This does not validate the selected multi-tier replacement policy. Runtime queues, pending fills and short trace slices can differ; forecast is not used for cache decisions.',outside_request_range=not f['min_requests']<=len(rows)<=f['max_requests'])
-        return dict(enabled=True,placement=self.s['placement'],layout=self.layout,spill_transitions=self.transitions,policy=self.layout['description']+' Cold start; active KV separately pinned; blocking publication/spill before handoff. Exclusive spill layouts keep one retained copy and do not promote hits; only ready contiguous prefixes can be reused. Last prompt token recomputed for logits.',profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),limitations=['Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.','One replica and batch size one per pool. TP/PP/EP and concurrent requests are supported; no cross-request continuous batching.','HBM cache is explicitly reserved per GPU; retained copies and active request KV are separate allocations. Host/SSD capacities cover aggregate prefilling shard payloads.','Cache copies are not a NAND, NVMe or filesystem simulator. I/O chunks reserve a FIFO path; reads/writes share one SSD path; no packet or channel model.','GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry.'])
+        return dict(enabled=True,retention_enabled=self.s['enabled'],active_kv_location='hbm',active_kv_offload=False,retained_scope='prompt-prefix-reuse-between-requests',batching_policy='Fixed uniform microbatches use the minimum restored prefix of their members; excess restored tokens are recomputed.',placement=self.placement,layout=self.layout,spill_transitions=self.transitions,policy=self.layout['description']+' Cold start; active KV separately pinned; blocking publication/spill before handoff. Exclusive spill layouts keep one retained copy and do not promote hits; only ready contiguous prefixes can be reused. Last prompt token recomputed for logits.',profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),limitations=['Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.','One replica per pool. Fixed batching supports uniform input/output lengths; each prefill microbatch uses its minimum restored prefix length. Variable-length replay requires batch size one. No continuous/ragged batching.','HBM cache is explicitly reserved per GPU; retained copies and active request KV are separate allocations. Host/SSD capacities cover aggregate prefilling shard payloads.','Cache copies are not a NAND, NVMe or filesystem simulator. I/O chunks reserve a FIFO path; reads/writes share one SSD path; no packet or channel model.','GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry.'])

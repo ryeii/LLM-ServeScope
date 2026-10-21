@@ -105,8 +105,10 @@ this is separate evidence from operator CV and from physical GPU serving accurac
 The **KV storage** view models cold-start retained prefix caches in per-GPU HBM,
 host DRAM and SSD. Ready hits reduce actual prefill query work while preserving
 attention context. Active KV admission, SSD reads/writes and host/GPU transfers
-queue explicitly. Tier mode uses one replica and single-request
-batches, with concurrent requests and TP/PP/EP supported; publication and required spill moves block before handoff. Active decode KV remains in HBM.
+queue explicitly. Prefix mode preserves fixed uniform-length batching, with one replica per pool,
+concurrent requests and TP/PP/EP supported; publication and required spill moves block before handoff. Active decode KV remains in HBM. SSD layouts retain reusable prefixes; they do not
+stream active attention KV from SSD on each generated token. See the
+[controlled default comparison and batching fix](docs/prefix-layout-comparison.md).
 
 Choose **KV cache layout** for HBM-only, DRAM-only, SSD-only, directed two-tier
 spill, HBM → DRAM → SSD, or the original inclusive-copy policy. Spill layouts move
@@ -130,7 +132,7 @@ not the fitted forecast. Local path coefficients do not calibrate a customer SSD
 It abstracts hardware and serving behavior into operation costs and discrete-event
 resource reservations. It does not reproduce individual GPU instructions,
 cycle-level execution, page-level memory accesses, memory-controller transactions,
-cache replacement or physical network packets. Its box graph contains modeled
+hardware cache replacement or physical network packets. Its box graph contains modeled
 scheduling intervals, not a captured hardware execution trace.
 
 - Peak specifications, efficiency policies, ideal KV SRAM reuse, uniform MoE

@@ -205,7 +205,7 @@ function span(
               "ms",
             ),
             summary:
-              "This is the recorded elapsed gap. It can include phase/placement admission and waiting for another request to finish a coalesced cache publication. Parallel requests are not summed into this request’s latency.",
+              "This is the recorded elapsed gap. It can include phase/placement admission and waiting for another request to finish a coalesced cache publication. Microbatch members can also wait for one another’s restore/publication barrier. Parallel requests are not summed into this request’s latency.",
           }),
         ),
       ],
@@ -223,7 +223,23 @@ export function storageRequestCalculation(
 ): Calculation {
   const k = q.cache,
     L = q.output_tokens;
-  if (key === "arrival_ms" || key === "batch_ready_ms")
+  if (key === "batch_ready_ms")
+    return calc(
+      `Request #${q.id} microbatch readiness`,
+      "Batch_ready_ms = max(arrival_ms of microbatch members)",
+      (k.batch_request_ids || [q.id]).map((id: number) =>
+        v(
+          "request_" + id,
+          `Request #${id} arrival`,
+          r.requests.find((row: Obj) => row.id === id).arrival_ms,
+          "ms",
+        ),
+      ),
+      q.batch_ready_ms,
+      "ms",
+      "Fixed groups wait for their last member before memory admission and prefix restoration.",
+    );
+  if (key === "arrival_ms")
     return {
       ...calc(
         `Request #${q.id} arrival`,
@@ -275,9 +291,16 @@ export function storageRequestCalculation(
   const first = key !== "finish_ms";
   const parts: [string, string, number, number, (e: Obj) => boolean][] = [
     [
+      "batch_wait",
+      "Fixed microbatch formation",
+      q.arrival_ms,
+      q.batch_ready_ms,
+      () => false,
+    ],
+    [
       "memory_wait",
       "Active HBM admission",
-      q.arrival_ms,
+      q.batch_ready_ms,
       k.memory_ready_ms,
       (e) => e.kind === "kv_memory_wait" && e.resource.includes("prefill"),
     ],
@@ -334,7 +357,7 @@ export function storageRequestCalculation(
   return {
     ...calc(
       `Request #${q.id} ${release ? "prefill KV release" : first ? "first token" : "completion"}`,
-      `${release ? "handoff_end" : first ? "first_token" : "finish"} = arrival + memory_wait + restore + prefill + publication + handoff${release ? "" : " + decode_memory"}${first ? "" : " + decode"}`,
+      `${release ? "handoff_end" : first ? "first_token" : "finish"} = arrival + batch_wait + memory_wait + restore + prefill + publication + handoff${release ? "" : " + decode_memory"}${first ? "" : " + decode"}`,
       [
         v("arrival", "Request arrival", q.arrival_ms, "ms", () =>
           storageRequestCalculation(r, q, "arrival_ms"),
@@ -357,9 +380,39 @@ export function cacheDecisionCalculation(r: Obj, q: Obj): Calculation {
   return {
     ...calc(
       "Prefix reuse decision",
-      "Reused_tokens = min(matched_blocks × 512, input_tokens−1)\nComputed_tokens = input_tokens − Reused_tokens",
+      "Available_prefix = min(matched_blocks × 512, input_tokens−1)\nReused_tokens = min(available_prefix of fixed microbatch members)\nComputed_tokens = input_tokens − Reused_tokens",
       [
         v("matched_blocks", "Ready contiguous prefix blocks", k.matched_blocks),
+        v(
+          "available_prefix",
+          "This request’s restored prefix",
+          k.available_reused_tokens ?? k.reused_tokens,
+          "tokens",
+        ),
+        v(
+          "batch_prefix_floor",
+          "Uniform microbatch prefix floor",
+          k.batch_prefix_floor_tokens ?? k.reused_tokens,
+          "tokens",
+          () =>
+            calc(
+              "Fixed microbatch prefix floor",
+              "Used_prefix = min(restored_prefix_i)",
+              Object.entries(
+                k.batch_available_prefixes || { [q.id]: k.reused_tokens },
+              ).map(([id, n]) =>
+                v(
+                  "request_" + id,
+                  `Request #${id} restored prefix`,
+                  Number(n),
+                  "tokens",
+                ),
+              ),
+              k.reused_tokens,
+              "tokens",
+              "A fixed rectangular prefill batch uses one query/context shape. Members with more cached tokens recompute the excess; ragged batching is outside this scheduler.",
+            ),
+        ),
         v(
           "input_tokens",
           "This request’s prompt length",
@@ -381,7 +434,7 @@ export function cacheDecisionCalculation(r: Obj, q: Obj): Calculation {
       "tokens",
     ),
     summary:
-      "A prefix stops at its first missing or unfinished block. Data selected for restore is pinned against eviction until the read finishes; current compute uses the full context but only the uncached query suffix.",
+      "A prefix stops at its first missing or unfinished block. Data selected for restore is pinned against eviction until the read finishes; current compute uses the full context and the query suffix after the batch-common restored prefix. Higher-hit members can recompute extra tokens to preserve a uniform fixed batch.",
   };
 }
 export function storageMetricCalculation(r: Obj, key: string): Calculation {

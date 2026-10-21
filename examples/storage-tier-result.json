@@ -2,6 +2,11 @@
   "schema_version": "servescope.behavioral.v4",
   "storage": {
     "enabled": true,
+    "retention_enabled": true,
+    "active_kv_location": "hbm",
+    "active_kv_offload": false,
+    "retained_scope": "prompt-prefix-reuse-between-requests",
+    "batching_policy": "Fixed uniform microbatches use the minimum restored prefix of their members; excess restored tokens are recomputed.",
     "placement": "ssd-only",
     "layout": {
       "label": "SSD only",
@@ -31,6 +36,7 @@
       "eligible_blocks": 16,
       "hit_blocks": 8,
       "reused_tokens": 4092,
+      "batch_recomputed_restored_tokens": 0,
       "pcie_write_bytes": 536870912.0,
       "pcie_service_ms": 44.89924266666666,
       "pcie_queue_ms": 0.0,
@@ -187,8 +193,8 @@
       },
       "scope": "Local warm buffered macOS storage path, QD1 fsync(always) writes; hit functions approximate policy replay, not observed production cache hits.",
       "training_script_sha256": "efd4716d6ddbc3393f1ba71a0d957156b0e7746df2f530513ff288e5ff9b7394",
-      "runtime_sha256": "79dd838951e318147a42fe3640abec6b50e295232d34892ffeb7bf5dc187be14",
-      "payload_sha256": "b0a5f412f267d2a10b4996cd3ebf15db18c144207edab5b326ead68965636f89"
+      "runtime_sha256": "69802289176bfcd62bf2a41174e1ded118448623b21577f5f41be88cb85bf3e1",
+      "payload_sha256": "1cd4485b3368f15c4fd28bcb83c7856906776245823ea7f72cda2c4d59ad3469"
     },
     "workload_source": {
       "id": "synthetic-demo",
@@ -201,7 +207,7 @@
     },
     "limitations": [
       "Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.",
-      "One replica and batch size one per pool. TP/PP/EP and concurrent requests are supported; no cross-request continuous batching.",
+      "One replica per pool. Fixed batching supports uniform input/output lengths; each prefill microbatch uses its minimum restored prefix length. Variable-length replay requires batch size one. No continuous/ragged batching.",
       "HBM cache is explicitly reserved per GPU; retained copies and active request KV are separate allocations. Host/SSD capacities cover aggregate prefilling shard payloads.",
       "Cache copies are not a NAND, NVMe or filesystem simulator. I/O chunks reserve a FIFO path; reads/writes share one SSD path; no packet or channel model.",
       "GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry."
@@ -4617,6 +4623,14 @@
         "computed_tokens": 1024,
         "memory_ready_ms": 0,
         "cache_ready_ms": 0,
+        "available_reused_tokens": 0,
+        "batch_request_ids": [
+          0
+        ],
+        "batch_available_prefixes": {
+          "0": 0
+        },
+        "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 27.89080559059347,
         "publication_end_ms": 80.30842382099256,
         "handoff_end_ms": 85.68713294099256,
@@ -4651,6 +4665,14 @@
         "computed_tokens": 1024,
         "memory_ready_ms": 500.0,
         "cache_ready_ms": 500.0,
+        "available_reused_tokens": 0,
+        "batch_request_ids": [
+          1
+        ],
+        "batch_available_prefixes": {
+          "1": 0
+        },
+        "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 527.8908055905935,
         "publication_end_ms": 580.3084238209925,
         "handoff_end_ms": 585.6871329409926,
@@ -4685,6 +4707,14 @@
         "computed_tokens": 1024,
         "memory_ready_ms": 1000.0,
         "cache_ready_ms": 1000.0,
+        "available_reused_tokens": 0,
+        "batch_request_ids": [
+          2
+        ],
+        "batch_available_prefixes": {
+          "2": 0
+        },
+        "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 1027.8908055905936,
         "publication_end_ms": 1080.3084238209926,
         "handoff_end_ms": 1085.6871329409926,
@@ -4719,6 +4749,14 @@
         "computed_tokens": 1024,
         "memory_ready_ms": 1500.0,
         "cache_ready_ms": 1500.0,
+        "available_reused_tokens": 0,
+        "batch_request_ids": [
+          3
+        ],
+        "batch_available_prefixes": {
+          "3": 0
+        },
+        "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 1527.8908055905936,
         "publication_end_ms": 1580.3084238209926,
         "handoff_end_ms": 1585.6871329409926,
@@ -4755,6 +4793,14 @@
         "computed_tokens": 1,
         "memory_ready_ms": 2000.0,
         "cache_ready_ms": 2010.5460365698273,
+        "available_reused_tokens": 1023,
+        "batch_request_ids": [
+          4
+        ],
+        "batch_available_prefixes": {
+          "4": 1023
+        },
+        "batch_prefix_floor_tokens": 1023,
         "gpu_prefill_end_ms": 2017.1305803286846,
         "publication_end_ms": 2017.1305803286846,
         "handoff_end_ms": 2022.5092894486845,
@@ -4791,6 +4837,14 @@
         "computed_tokens": 1,
         "memory_ready_ms": 2500.0,
         "cache_ready_ms": 2510.5460365698273,
+        "available_reused_tokens": 1023,
+        "batch_request_ids": [
+          5
+        ],
+        "batch_available_prefixes": {
+          "5": 1023
+        },
+        "batch_prefix_floor_tokens": 1023,
         "gpu_prefill_end_ms": 2517.1305803286846,
         "publication_end_ms": 2517.1305803286846,
         "handoff_end_ms": 2522.5092894486847,
@@ -4827,6 +4881,14 @@
         "computed_tokens": 1,
         "memory_ready_ms": 3000.0,
         "cache_ready_ms": 3010.5460365698273,
+        "available_reused_tokens": 1023,
+        "batch_request_ids": [
+          6
+        ],
+        "batch_available_prefixes": {
+          "6": 1023
+        },
+        "batch_prefix_floor_tokens": 1023,
         "gpu_prefill_end_ms": 3017.1305803286846,
         "publication_end_ms": 3017.1305803286846,
         "handoff_end_ms": 3022.5092894486847,
@@ -4863,6 +4925,14 @@
         "computed_tokens": 1,
         "memory_ready_ms": 3500.0,
         "cache_ready_ms": 3510.5460365698273,
+        "available_reused_tokens": 1023,
+        "batch_request_ids": [
+          7
+        ],
+        "batch_available_prefixes": {
+          "7": 1023
+        },
+        "batch_prefix_floor_tokens": 1023,
         "gpu_prefill_end_ms": 3517.1305803286846,
         "publication_end_ms": 3517.1305803286846,
         "handoff_end_ms": 3522.5092894486847,
@@ -14918,7 +14988,7 @@
     "GPU operator service times use nested-CV selected shape-informed functions fitted to KAIST BF16 or Vidur FP16 profiles; no runtime timing-table lookup, GPU-ID correction or exact-match override. Profiled configurations also have prediction error.",
     "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
     "Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.",
-    "KV-tier mode: single-request scheduling, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.",
+    "Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.",
     "Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."
   ],
   "provenance": {

@@ -124,8 +124,9 @@ are strategy examples, not benchmark claims.
 ## Optional KV storage tiers
 
 Enable **KV storage tiers** to model retained prefix cache in HBM/DRAM/SSD. The
-first implementation requires batch size one and one replica per pool; enabling
-it sets those controls explicitly. Concurrent requests and TP/PP/EP remain supported.
+implementation supports fixed uniform-length batches and one replica per pool.
+Layout selection preserves all batch and replica settings. Unsupported configurations
+are rejected explicitly. Concurrent requests and TP/PP/EP remain supported.
 Import an unchanged Mooncake JSONL window to preserve actual arrivals and token
 lengths; uniform workload fields are disabled while a trace supplies them.
 Selected traces are verified against the pinned source manifest.
@@ -150,7 +151,7 @@ capacity settings retained when switching layouts:
 | SSD → HBM / SSD → DRAM | Place on SSD; move LRU victims to the named spill tier. |
 | HBM → DRAM → SSD | Cascade evictions through the three tiers. |
 | Custom inclusive copies | Original policy: publish copies to every tier with nonzero capacity. |
-| No retained prefix cache | Same tier-mode single-request scheduler and active-HBM admission, without prefix retention; useful comparison baseline. |
+| No retained prefix cache | Same configured fixed batching and explicit active-HBM admission, without prefix retention; useful comparison baseline. |
 | Disabled | Return to the original serving mode; tier-mode scheduling/admission is disabled too. |
 
 Arrows mean **primary placement → eviction destination**, including the explicitly
@@ -175,3 +176,19 @@ uses summed exclusive-tier capacity (largest capacity for inclusive copies) as a
 approximate capacity feature. Its archived error does **not** validate these new
 multi-tier replacement policies. Runtime hits always come from the executed cache
 state. I/O fit coefficients/data are unchanged.
+
+### Fair layout comparisons and active KV scope
+
+Selecting a retained-prefix layout preserves batch sizes, replicas, model and workload.
+Uniform-length requests support fixed microbatches, including the default 4/4 caps.
+Each prefill group uses the minimum restored prefix across its members so its GPU
+query/context shape stays uniform; excess restored tokens are recomputed. Active KV
+admission reserves the whole microbatch atomically. Variable-length replay requires
+batch size one. Loading a trace does not change caps or replicas automatically.
+
+All current layouts keep active attention KV in HBM throughout decoding. “SSD only”
+means **SSD-only retained prompt prefixes**, not per-token active-KV streaming.
+See the [controlled default comparison](prefix-layout-comparison.md) for the original
+batching regression, corrected numbers, exact baseline-equivalence checks and scope.
+
+Turning prefix retention off preserves imported request records and their relative arrivals; only retained-cache placement is disabled. Uniform fields remain locked while records supply the workload. Use generated requests to return to uniform inputs.
