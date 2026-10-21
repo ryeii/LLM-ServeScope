@@ -106,7 +106,7 @@ def validate(config):
     c = copy.deepcopy(config)
     m = resolve_model(c)
     validate_storage(c, number)
-    tier_mode = c.get("storage", {}).get("enabled", False)
+    tier_mode = bool(c.get("storage", {}).get("enabled", False) or c.get("storage", {}).get("workload"))
     c["timing_mode"] = c.get("timing_mode", "calibrated")
     if c["timing_mode"] not in ("calibrated", "roofline"):
         raise ValueError("Timing model must be calibrated or roofline.")
@@ -630,7 +630,10 @@ def simulate(config):
             # Active requests reserve real per-GPU KV payload on admission. Queued
             # requests no longer allocate max-context KV in advance.
             kv = max(2 * (row["input_length"] + row["output_length"] - 1) * max(1, m["kv_heads"] / p["tp"]) * m["head_dim"] * BYTES[c["kv_precision"]] * m["layers"] / p["pp"] for row in workload_rows) + cache_reservation
-            concurrent = 1
+            # A prefill group reserves atomically, including all decode subgroups
+            # whose KV is handed off together. A group must fit before admission.
+            concurrent = min(c['requests'], c['prefill']['batch_size'])
+            kv = (kv-cache_reservation)*concurrent+cache_reservation
         used = weight + kv + activation
         usable_GB = (
             h["main_memory_GB"] * p["memory_utilization"] - p["runtime_reserved_GB"]
@@ -719,20 +722,26 @@ def simulate(config):
         p = c[phase]
         return 2 * (row["input_length"] + row["output_length"] - 1) * max(1, m["kv_heads"] / p["tp"]) * m["head_dim"] * BYTES[c["kv_precision"]] * m["layers"] / p["pp"]
 
-    def reserve_kv(phase, row, identifier):
+    def reserve_kv(phase, ids):
         ready = env.now
+        amount = sum(kv_allocation(phase, workload_rows[i]) for i in ids)
         blockers = [dict(value) for value in active_holders[phase].values()]
-        yield active_memory[phase].get(kv_allocation(phase, row))
-        active_holders[phase][(phase,identifier)] = dict(phase=phase,request_id=identifier,bytes=kv_allocation(phase,row),grant_ms=env.now)
-        memory_ledger.append(dict(action="grant",phase=phase,request_id=identifier,time_ms=env.now,bytes=kv_allocation(phase,row),used_bytes=active_memory[phase].capacity-active_memory[phase].level,capacity_bytes=active_memory[phase].capacity))
+        # Atomic admission prevents partially resident microbatches deadlocking
+        # while each waits for enough KV memory to admit its remaining members.
+        yield active_memory[phase].get(amount)
+        for identifier in ids:
+            payload = kv_allocation(phase, workload_rows[identifier])
+            active_holders[phase][(phase,identifier)] = dict(phase=phase,request_id=identifier,bytes=payload,grant_ms=env.now)
+            memory_ledger.append(dict(action="grant",phase=phase,request_id=identifier,time_ms=env.now,bytes=payload,used_bytes=active_memory[phase].capacity-active_memory[phase].level,capacity_bytes=active_memory[phase].capacity))
         active_peak[phase] = max(active_peak[phase], active_memory[phase].capacity-active_memory[phase].level)
         if env.now > ready:
-            record_interval(dict(phase="storage",kind="kv_memory_wait",resource="kv_"+phase+"_wait:r"+str(identifier),batch_id=identifier,request_ids=[identifier],chunk=0,batch_size=1,context=row["input_length"],start_ms=ready,end_ms=env.now,duration_ms=env.now-ready,payload_bytes=kv_allocation(phase,row),capacity_bytes=active_memory[phase].capacity,blocking_allocations=blockers,components=dict(Compute=0,Memory=0,Network=0,Launch=0)),ready)
+            record_interval(dict(phase="storage",kind="kv_memory_wait",resource="kv_"+phase+"_wait:b"+str(ids[0]),batch_id=ids[0],request_ids=list(ids),chunk=0,batch_size=len(ids),context=max(workload_rows[i]['input_length'] for i in ids),start_ms=ready,end_ms=env.now,duration_ms=env.now-ready,payload_bytes=amount,capacity_bytes=active_memory[phase].capacity,blocking_allocations=blockers,components=dict(Compute=0,Memory=0,Network=0,Launch=0)),ready)
 
-    def release_kv(phase, row, identifier):
-        active_holders[phase].pop((phase,identifier),None)
-        yield active_memory[phase].put(kv_allocation(phase,row))
-        memory_ledger.append(dict(action="release",phase=phase,request_id=identifier,time_ms=env.now,bytes=kv_allocation(phase,row),used_bytes=active_memory[phase].capacity-active_memory[phase].level,capacity_bytes=active_memory[phase].capacity))
+    def release_kv(phase, ids):
+        for identifier in ids:active_holders[phase].pop((phase,identifier),None)
+        yield active_memory[phase].put(sum(kv_allocation(phase, workload_rows[i]) for i in ids))
+        for identifier in ids:
+            memory_ledger.append(dict(action="release",phase=phase,request_id=identifier,time_ms=env.now,bytes=kv_allocation(phase,workload_rows[identifier]),used_bytes=active_memory[phase].capacity-active_memory[phase].level,capacity_bytes=active_memory[phase].capacity))
 
     timing_records = {}
 
@@ -955,28 +964,40 @@ def simulate(config):
                     tpot_ms=(env.now - first) / max(1, output_length - 1),
                     latency_ms=env.now - arrival,
                     token_times_ms=list(times),
-                    **(dict(input_tokens=input_length, output_tokens=output_length, cache=cache_info) if tier_mode else {}),
+                    **(dict(input_tokens=input_length, output_tokens=output_length, cache=cache_info[identifier]) if tier_mode else {}),
                 )
             )
         if tier_mode:
-            yield from release_kv("decode", workload_rows[ids[0]], ids[0])
+            yield from release_kv("decode", ids)
 
     def run_batch(ids, bid):
         batch = len(ids)
-        ready_ms = workload_rows[ids[0]]["arrival_ms"] if tier_mode else max(ids) / c["arrival_rate"] * 1000
+        ready_ms = max(workload_rows[i]["arrival_ms"] for i in ids) if tier_mode else max(ids) / c["arrival_rate"] * 1000
         yield env.timeout(max(0, ready_ms - env.now))
         replica = bid % c["prefill"]["replicas"]
         cache_info = None
         total_input = workload_rows[ids[0]]["input_length"] if tier_mode else c["input_tokens"]
         if tier_mode:
-            yield from reserve_kv("prefill", workload_rows[ids[0]], ids[0])
+            yield from reserve_kv("prefill", ids)
             lookup = env.now
-            cache_info = yield from tiers.restore(workload_rows[ids[0]], ids[0])
-            cache_info.update(memory_ready_ms=lookup, cache_ready_ms=env.now)
+            restores = {i:env.process(tiers.restore(workload_rows[i],i)) for i in ids}
+            restored = yield env.all_of(list(restores.values()))
+            cache_info = {i:restored[process] for i,process in restores.items()}
+            # Fixed rectangular microbatches use one query/context shape. Reuse
+            # only their common prefix floor; extra restored tokens are recomputed.
+            common = min(info['reused_tokens'] for info in cache_info.values())
+            available = {i:info['reused_tokens'] for i,info in cache_info.items()}
+            tiers.stats['batch_recomputed_restored_tokens'] += sum(available.values())-common*batch
+            tiers.stats['reused_tokens'] -= sum(available.values())-common*batch
+            for i,info in cache_info.items():
+                info.update(memory_ready_ms=lookup,cache_ready_ms=env.now,
+                            available_reused_tokens=available[i],reused_tokens=common,
+                            computed_tokens=total_input-common,batch_request_ids=list(ids),
+                            batch_available_prefixes=available,batch_prefix_floor_tokens=common)
         with admissions["prefill"][replica].request() as ticket:
             yield ticket
             prefill_admitted = env.now
-            done = cache_info["reused_tokens"] if tier_mode else 0
+            done = cache_info[ids[0]]["reused_tokens"] if tier_mode else 0
             while done < total_input:
                 n = min(c["prefill_chunk"], total_input - done)
                 done += n
@@ -984,9 +1005,9 @@ def simulate(config):
                     work("prefill", batch, n, done, replica, bid, done, ids)
                 )
         if tier_mode:
-            cache_info["gpu_prefill_end_ms"] = env.now
-            yield from tiers.publish(workload_rows[ids[0]], ids[0])
-            cache_info["publication_end_ms"] = env.now
+            for info in cache_info.values():info['gpu_prefill_end_ms']=env.now
+            yield env.all_of([env.process(tiers.publish(workload_rows[i],i)) for i in ids])
+            for info in cache_info.values():info['publication_end_ms']=env.now
         prefill_end = env.now
         kv_bytes = (
             2
@@ -1034,10 +1055,10 @@ def simulate(config):
                 component_work["Network"] += transfer_ms
                 phase_traffic["prefill"]["network_bytes"] += kv_bytes
         if tier_mode:
-            cache_info["handoff_end_ms"] = env.now
-            yield from release_kv("prefill", workload_rows[ids[0]], ids[0])
-            yield from reserve_kv("decode", workload_rows[ids[0]], ids[0])
-            cache_info["decode_memory_ready_ms"] = env.now
+            for info in cache_info.values():info['handoff_end_ms']=env.now
+            yield from release_kv("prefill", ids)
+            yield from reserve_kv("decode", ids)
+            for info in cache_info.values():info['decode_memory_ready_ms']=env.now
         first = env.now
         # Fixed groups may split on decode; no cross-prefill merging or continuous rebatching.
         for offset in range(0, batch, c["decode"]["batch_size"]):
@@ -1199,7 +1220,7 @@ def simulate(config):
         calibration["summary"] = "Original roofline · uncalibrated"
     if tier_mode:
         warnings = [w for w in warnings if not w.startswith("Memory utilization and runtime")]
-        warnings.extend(["KV-tier mode: single-request scheduling, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."])
+        warnings.extend(["Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."])
     return dict(
         schema_version="servescope.behavioral.v4" if tier_mode else "servescope.behavioral.v3",
         **(dict(storage=dict(tiers.summary(workload_rows),active_memory_ledger=memory_ledger),workload_totals=dict(input_tokens=input_total,output_tokens=output_total,computed_prefill_tokens=input_total-tiers.stats["reused_tokens"])) if tier_mode else {}),
