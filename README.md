@@ -21,6 +21,7 @@ is not. Hardware inputs and assumptions remain visible and exportable.
 [Browser edition](https://ryeii.github.io/LLM-ServeScope/) ·
 [Configuration guide](docs/configuration.md) ·
 [Methodology](docs/methodology.md) ·
+[How results are calculated](docs/how-results-are-calculated.md) ·
 [Third-party credits](THIRD_PARTY_NOTICES.md)
 
 ![LLM-ServeScope overview](https://ryeii.github.io/LLM-ServeScope/docs/screenshots/github-pages.png)
