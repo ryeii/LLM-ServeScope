@@ -2553,3 +2553,6 @@ footer {
 @media(max-width:560px) { .storage-kpis {grid-template-columns: 1fr 1fr;} }
 .storage-view { min-width: 0; }
 .storage-view .table-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
+
+.storage-spill-table { max-height: 320px; overflow: auto; }
+.storage-spill-table th { position: sticky; top: 0; background: #f7fafb; z-index: 1; }

@@ -232,15 +232,16 @@ simulated reuse differ from the instantaneous-publication reference.
 5. Compute only uncached query tokens, using **full context length** in attention.
    Always recompute at least the final prompt token for logits. Do not multiply
    full-prefill time by a cache-hit fraction. Actual shapes and coefficients are exported.
-6. Publish complete known prompt blocks as retained copies. The initial policy is
-   **blocking write-through before KV handoff**, rather than an unmodeled promise
-   of free asynchronous writes. Concurrent duplicate publication waits on one fill.
+6. Publish complete known prompt blocks using the selected layout: single-tier,
+   inclusive copies or exclusive LRU spill. Publication and required eviction moves
+   are **blocking before KV handoff**. Concurrent duplicate publication waits on one fill.
 7. Transfer the complete prompt KV to decode when disaggregated. Release prefill
    active KV, reserve decode active KV, then release the first token. Decode keeps
    active KV in HBM through its remaining token iterations.
 
 HBM retained-cache capacity is per prefill GPU; aggregate DRAM/SSD payload includes
-prefill TP/PP/EP shard replication. Inclusive tiers can hold the same block, but
+prefill TP/PP/EP shard replication. Inclusive tiers can hold the same block; exclusive spill layouts retain one copy
+and move LRU victims along their selected chain. Inactive tiers reserve no capacity. In all layouts,
 one block consumes space only once within each retained tier. Active-request KV
 and retained cache are deliberately separate copies; we do not claim cross-request
 physical page aliasing. Cache reservation reduces available active HBM.
@@ -262,6 +263,15 @@ assumptions. Cache hit curves do not decide runtime cache hits.
 - GPU energy includes the changed timeline but excludes SSD/CPU/NIC power.
 - The tier model does not reproduce the published four-tier RDMA Mooncake experiment.
   No end-to-end customer accuracy is claimed without separate serving measurements.
+
+## Selectable cache policies
+
+The UI offers HBM only, DRAM only, SSD only, all six directed two-tier spill
+combinations, HBM → DRAM → SSD spill, the original custom inclusive-copy policy,
+and a no-retention baseline. [Configuration details](../configuration.md#cache-layouts-and-eviction-spill)
+explain arrows, capacity accounting, pinning, transfer costs and the no-promotion policy.
+The hit-fit error above remains a single-LRU replay result; it does not validate
+multi-tier replacement behavior. Runtime decisions use actual ready cache state.
 
 ## UI, artifacts and reproduction
 

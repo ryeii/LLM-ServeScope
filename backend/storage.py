@@ -1,6 +1,7 @@
 """Behavioral prefix-KV tier model. No random hits or fabricated device measurements.
 
-Retained caches are inclusive LRU copies, separate from pinned active-request KV.
+Retained caches use explicit single-tier, exclusive spill or inclusive-copy layouts,
+separate from pinned active-request KV.
 Publication is write-through before handoff; cache I/O shares explicit FIFO links.
 """
 from collections import OrderedDict, Counter
@@ -9,7 +10,25 @@ from pathlib import Path
 import copy, hashlib, json, math
 import simpy
 
-DEFAULT_STORAGE=dict(enabled=False,profile='manual',hbm_cache_GB=0.125,dram_cache_GB=0.25,ssd_cache_GB=4,
+CACHE_LAYOUTS = {
+    'none': dict(label='No retained prefix cache', tiers=[], kind='single', description='Compute every prompt; retain no prefix blocks. Active request KV stays in HBM.'),
+    'hbm-only': dict(label='HBM only', tiers=['hbm'], kind='single', description='Retain prefixes in GPU HBM; discard least-recently-used blocks when full.'),
+    'dram-only': dict(label='DRAM only', tiers=['dram'], kind='single', description='Retain prefixes in host DRAM; restores and publication use the host–GPU link.'),
+    'ssd-only': dict(label='SSD only', tiers=['ssd'], kind='single', description='Retain prefixes on SSD; charge SSD service and host–GPU transfers.'),
+    'hbm-dram': dict(label='HBM → DRAM spill', tiers=['hbm','dram'], kind='spill', description='Place new blocks in HBM; spill LRU victims to DRAM, then discard when DRAM is full.'),
+    'dram-hbm': dict(label='DRAM → HBM spill', tiers=['dram','hbm'], kind='spill', description='Place new blocks in DRAM; spill LRU victims to HBM, then discard when HBM is full.'),
+    'hbm-ssd': dict(label='HBM → SSD spill', tiers=['hbm','ssd'], kind='spill', description='Place new blocks in HBM; spill LRU victims to SSD, then discard when SSD is full.'),
+    'dram-ssd': dict(label='DRAM → SSD spill', tiers=['dram','ssd'], kind='spill', description='Place new blocks in DRAM; spill LRU victims to SSD, then discard when SSD is full.'),
+    'ssd-hbm': dict(label='SSD → HBM spill', tiers=['ssd','hbm'], kind='spill', description='Place new blocks on SSD; spill LRU victims to HBM, then discard when HBM is full.'),
+    'ssd-dram': dict(label='SSD → DRAM spill', tiers=['ssd','dram'], kind='spill', description='Place new blocks on SSD; spill LRU victims to DRAM, then discard when DRAM is full.'),
+    'hbm-dram-ssd': dict(label='HBM → DRAM → SSD spill', tiers=['hbm','dram','ssd'], kind='spill', description='Place new blocks in HBM; cascade LRU victims through DRAM to SSD.'),
+    'inclusive': dict(label='Custom inclusive copies · original policy', tiers=['hbm','dram','ssd'], kind='inclusive', description='Write every new block to every tier with nonzero capacity; restore from the fastest ready copy. This is replication, not spill.'),
+}
+
+def cache_capacity_GB(s, tier):
+    return s[tier+'_cache_GB'] if tier in CACHE_LAYOUTS[s.get('placement','inclusive')]['tiers'] else 0
+
+DEFAULT_STORAGE=dict(enabled=False,placement='inclusive',profile='manual',hbm_cache_GB=0.125,dram_cache_GB=0.25,ssd_cache_GB=4,
                      ssd_read_GBps=3,ssd_write_GBps=2,ssd_read_latency_us=100,ssd_write_latency_us=200,
                      pcie_GBps=24,pcie_latency_us=10,io_chunk_KiB=1024,block_tokens=512,
                      source_id='synthetic-demo',source_label='Generated repeated-prefix workload',workload=[])
@@ -42,6 +61,7 @@ def validate_storage(c,number):
     if not isinstance(raw,dict):raise ValueError('storage must be an object.')
     s=dict(copy.deepcopy(DEFAULT_STORAGE),**raw);c['storage']=s
     if type(s['enabled']) is not bool:raise ValueError('KV storage enabled must be boolean.')
+    if s['placement'] not in CACHE_LAYOUTS:raise ValueError('Unknown KV cache layout.')
     if s['profile'] not in ('manual','local-mooncake-path'):raise ValueError('Unknown storage profile.')
     for k in ['hbm_cache_GB','dram_cache_GB','ssd_cache_GB']:
         s[k]=number(s[k],k,0,1e6)
@@ -90,11 +110,14 @@ class CacheTiers:
         p=c['prefill'];d={'bf16':2,'fp16':2,'fp8':1}[c['kv_precision']]
         self.per_gpu_block_bytes=2*512*max(1,m['kv_heads']/p['tp'])*m['head_dim']*d*m['layers']/p['pp']
         self.block_bytes=self.per_gpu_block_bytes*p['tp']*p['pp']*p['ep']
-        self.capacity={'hbm':int(self.s['hbm_cache_GB']*1e9/self.per_gpu_block_bytes),'dram':int(self.s['dram_cache_GB']*1e9/self.block_bytes),'ssd':int(self.s['ssd_cache_GB']*1e9/self.block_bytes)}
+        self.layout=CACHE_LAYOUTS[self.s['placement']]
+        self.capacity={tier:int(cache_capacity_GB(self.s,tier)*1e9/(self.per_gpu_block_bytes if tier=='hbm' else self.block_bytes)) for tier in ['hbm','dram','ssd']}
+        self.placement_lock=simpy.Resource(env,1)
+        self.transitions=[]
         self.caches={k:OrderedDict() for k in self.capacity};self.pins={k:Counter() for k in self.capacity};self.pending={}
         self.links={k:simpy.Resource(env,1) for k in ['ssd','pcie','hbm']}
         self.stats=Counter();self.peaks=Counter();self.evictions=Counter();self.drops=Counter();self.events=[];self.snapshots=[]
-        self.fit=fit_dataset() if self.s['profile']=='local-mooncake-path' else None
+        self.fit=fit_dataset() if self.s['profile']=='local-mooncake-path' and self.capacity['ssd'] else None
 
     def keys(self,row):
         parent='';keys=[]
@@ -137,7 +160,7 @@ class CacheTiers:
     def restore(self,row,identifier):
         keys=self.keys(row);selected=[]
         for key in keys:
-            tier=next((t for t in ['hbm','dram','ssd'] if key in self.caches[t]),None)
+            tier=next((t for t in self.layout['tiers'] if key in self.caches[t]),None)
             if tier is None:break
             selected.append((key,tier));self.pins[tier][key]+=1
             for t in self.caches:
@@ -156,12 +179,59 @@ class CacheTiers:
         self.stats['reused_tokens']+=reused
         return dict(matched_blocks=len(selected),eligible_blocks=len(keys),reused_tokens=reused,hit_tiers=dict(counts),computed_tokens=row['input_length']-reused)
 
+    def _copy_between(self,source,destination,identifier,cause):
+        # Source 'active' denotes the pinned request's computed GPU KV.
+        if source=='ssd':yield from self._io('ssd','read',self.block_bytes,identifier,cause)
+        if destination=='hbm':
+            if source in ('dram','ssd'):yield from self._io('pcie','read',self.block_bytes,identifier,cause)
+            else:yield from self._io('hbm','write',self.block_bytes,identifier,cause)
+        elif source in ('active','hbm'):
+            yield from self._io('pcie','write',self.block_bytes,identifier,cause)
+        if destination=='ssd':yield from self._io('ssd','write',self.block_bytes,identifier,cause)
+        if cause=='spill':
+            self.stats['spill_blocks']+=1
+            self.stats[source+'_to_'+destination+'_spill_blocks']+=1
+            self.transitions.append(dict(time_ms=self.env.now,source=source,destination=destination,request_id=identifier))
+
+    def _admit_exclusive(self,key,index,identifier,source='active'):
+        chain=self.layout['tiers']
+        if index>=len(chain):
+            self.stats['discarded_blocks']+=1
+            return
+        tier=chain[index]
+        if not self.capacity[tier]:
+            yield from self._admit_exclusive(key,index+1,identifier,source)
+            return
+        cache=self.caches[tier]
+        if len(cache)>=self.capacity[tier]:
+            victim=next((k for k in cache if not self.pins[tier][k]),None)
+            if victim is None:
+                self.drops[tier]+=1
+                yield from self._admit_exclusive(key,index+1,identifier,source)
+                return
+            # Remove from lookup before moving. In-flight victims cannot be hit
+            # until their destination copy finishes; pinned restores are skipped.
+            cache.pop(victim);self.evictions[tier]+=1
+            self.snapshots.append(dict(time_ms=self.env.now,tier=tier,blocks=len(cache),request_id=identifier))
+            yield from self._admit_exclusive(victim,index+1,identifier,tier)
+        yield from self._copy_between(source,tier,identifier,'publish' if source=='active' else 'spill')
+        cache[key]=None
+        self.peaks[tier]=max(self.peaks[tier],len(cache))
+        self.snapshots.append(dict(time_ms=self.env.now,tier=tier,blocks=len(cache),request_id=identifier))
+
     def publish(self,row,identifier):
         for key in self.keys(row):
             if key in self.pending:
                 self.stats['coalesced_publications']+=1;yield self.pending[key];continue
             done=self.env.event();self.pending[key]=done
             try:
+                if self.layout['kind']!='inclusive':
+                    with self.placement_lock.request() as ticket:
+                        yield ticket
+                        existing=next((t for t in self.layout['tiers'] if key in self.caches[t]),None)
+                        if existing:self.caches[existing].move_to_end(key)
+                        elif self.layout['tiers']:yield from self._admit_exclusive(key,0,identifier)
+                    continue
                 if self.capacity['hbm'] and key not in self.caches['hbm']:
                     yield from self._io('hbm','write',self.block_bytes,identifier,'publish')
                 self._put('hbm',key,identifier)
@@ -178,6 +248,7 @@ class CacheTiers:
         st=dict(self.stats);st['hit_fraction']=st.get('hit_blocks',0)/max(1,st.get('eligible_blocks',0));st['reused_fraction']=st.get('reused_tokens',0)/sum(r['input_length'] for r in rows)
         dataset=fit_dataset();source=self.s['source_id'];unique=len({key for row in rows for key in self.keys(row)});references=sum(len(self.keys(row)) for row in rows);potential=max(0,(references-unique)/max(1,references))
         forecast=None
+        effective_capacity=max(self.capacity.values()) if self.layout['kind']=='inclusive' else sum(self.capacity.values())
         if dataset and source in dataset['hit']:
-            f=dataset['hit'][source];forecast=dict(fit=f,working_set_blocks=unique,effective_capacity_blocks=max(self.capacity.values()),prediction=hit_prediction(f,max(self.capacity.values()),unique,potential),max_hit_fraction=potential,scope='Instantaneous-publication single-LRU trace-window approximation; not used for cache decisions. Runtime queues, pending fills and short trace slices can differ.',outside_request_range=not f['min_requests']<=len(rows)<=f['max_requests'])
-        return dict(enabled=True,policy='Inclusive retained LRU copies; cold start; active KV separately pinned; write-through publication before handoff; cache lookup uses ready contiguous prefixes only; last prompt token recomputed for logits.',profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),limitations=['Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.','One replica and batch size one per pool. TP/PP/EP and concurrent requests are supported; no cross-request continuous batching.','HBM cache is explicitly reserved per GPU; retained copies and active request KV are separate allocations. Host/SSD capacities cover aggregate prefilling shard payloads.','Cache copies are not a NAND, NVMe or filesystem simulator. I/O chunks reserve a FIFO path; reads/writes share one SSD path; no packet or channel model.','GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry.'])
+            f=dataset['hit'][source];forecast=dict(fit=f,working_set_blocks=unique,effective_capacity_blocks=effective_capacity,prediction=hit_prediction(f,effective_capacity,unique,potential),max_hit_fraction=potential,scope='Instantaneous-publication single-LRU trace-window approximation; uses summed exclusive-tier capacity or the largest inclusive-tier capacity. This does not validate the selected multi-tier replacement policy. Runtime queues, pending fills and short trace slices can differ; forecast is not used for cache decisions.',outside_request_range=not f['min_requests']<=len(rows)<=f['max_requests'])
+        return dict(enabled=True,placement=self.s['placement'],layout=self.layout,spill_transitions=self.transitions,policy=self.layout['description']+' Cold start; active KV separately pinned; blocking publication/spill before handoff. Exclusive spill layouts keep one retained copy and do not promote hits; only ready contiguous prefixes can be reused. Last prompt token recomputed for logits.',profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),limitations=['Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.','One replica and batch size one per pool. TP/PP/EP and concurrent requests are supported; no cross-request continuous batching.','HBM cache is explicitly reserved per GPU; retained copies and active request KV are separate allocations. Host/SSD capacities cover aggregate prefilling shard payloads.','Cache copies are not a NAND, NVMe or filesystem simulator. I/O chunks reserve a FIFO path; reads/writes share one SSD path; no packet or channel model.','GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry.'])

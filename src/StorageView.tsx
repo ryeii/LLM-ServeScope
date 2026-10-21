@@ -13,7 +13,8 @@ export function StorageControls({
   storage: s,
   Field,
   onChange,
-  onEnable,
+  onLayout,
+  layouts,
   onDemo,
   onWorkload,
   onError,
@@ -21,7 +22,8 @@ export function StorageControls({
   storage: Obj;
   Field: ComponentType<any>;
   onChange: (k: string, v: any) => void;
-  onEnable: (on: boolean) => void;
+  onLayout: (id: string) => void;
+  layouts: Obj;
   onDemo: () => void;
   onWorkload: (rows: Obj[], source: Obj) => Promise<void>;
   onError: (message: string) => void;
@@ -30,6 +32,9 @@ export function StorageControls({
     [start, setStart] = useState(0),
     [count, setCount] = useState(4),
     [busy, setBusy] = useState(false);
+  const layout = layouts[s.placement || "inclusive"];
+  const tiers: string[] = layout.tiers;
+  const hasSSD = tiers.includes("ssd");
   async function parse(
     raw: string,
     id: string,
@@ -98,44 +103,60 @@ export function StorageControls({
   }
   return (
     <div className="storage-controls">
-      <label className="check-field">
-        <span>Enable KV storage tiers</span>
-        <input
-          type="checkbox"
-          aria-label="Enable KV storage tiers"
-          checked={!!s.enabled}
-          onChange={(e) => onEnable(e.target.checked)}
-        />
+      <label className="field vertical">
+        <span>KV cache layout</span>
+        <select
+          aria-label="KV cache layout"
+          value={s.enabled ? s.placement || "inclusive" : "disabled"}
+          onChange={(e) => onLayout(e.target.value)}
+        >
+          <option value="disabled">Disabled</option>
+          {Object.entries(layouts).map(([id, item]: [string, any]) => (
+            <option key={id} value={id}>
+              {item.label}
+            </option>
+          ))}
+        </select>
       </label>
       <p className="fine">
-        Concurrent requests, one replica and batch size one per pool. Enabling
-        sets batch and replica counts to one.
+        {s.enabled
+          ? layout.description
+          : "Choose a single tier or a directed spill layout to model prefix retention."}
+      </p>
+      <p className="fine">
+        Arrows show primary placement → eviction destination. These are retained
+        prefix caches; active attention KV stays in GPU HBM. Tier mode uses one
+        replica and batch size one per pool.
       </p>
       <button className="secondary" onClick={onDemo}>
         Load cache demo
       </button>
       {s.enabled && (
         <>
-          <label className="field vertical">
-            <span>SSD service model</span>
-            <select
-              aria-label="SSD service model"
-              value={s.profile}
-              onChange={(e) => onChange("profile", e.target.value)}
-            >
-              <option value="manual">
-                Configured affine function · uncalibrated
-              </option>
-              <option value="local-mooncake-path">
-                Fitted local Mooncake file path · QD1
-              </option>
-            </select>
-          </label>
-          <p className="fine">
-            The local fit uses warm buffered reads and fsync writes on a
-            recorded macOS development host, not measurements of the selected
-            GPU server or customer SSD.
-          </p>
+          {hasSSD && (
+            <>
+              <label className="field vertical">
+                <span>SSD service model</span>
+                <select
+                  aria-label="SSD service model"
+                  value={s.profile}
+                  onChange={(e) => onChange("profile", e.target.value)}
+                >
+                  <option value="manual">
+                    Configured affine function · uncalibrated
+                  </option>
+                  <option value="local-mooncake-path">
+                    Fitted local Mooncake file path · QD1
+                  </option>
+                </select>
+              </label>
+              <p className="fine">
+                The local fit uses warm buffered reads and fsync writes on a
+                recorded macOS development host, not measurements of the
+                selected GPU server or customer SSD.
+              </p>
+            </>
+          )}
           {(
             [
               ["hbm_cache_GB", "Retained HBM / GPU", "GB"],
@@ -145,18 +166,27 @@ export function StorageControls({
               ["pcie_GBps", "Host–GPU aggregate link", "GB/s"],
               ["pcie_latency_us", "Host–GPU latency", "µs"],
             ] as string[][]
-          ).map(([key, label, unit]) => (
-            <Field
-              key={key}
-              label={label}
-              value={s[key]}
-              unit={unit}
-              min={key.includes("cache") ? 0 : undefined}
-              step={key.includes("cache") ? 0.125 : 1}
-              onChange={(n: number) => onChange(key, n)}
-            />
-          ))}
-          {s.profile === "manual" &&
+          )
+            .filter(([key]) =>
+              key.includes("cache")
+                ? tiers.includes(key.split("_")[0])
+                : key === "io_chunk_KiB"
+                  ? hasSSD
+                  : tiers.some((t) => t !== "hbm"),
+            )
+            .map(([key, label, unit]) => (
+              <Field
+                key={key}
+                label={label}
+                value={s[key]}
+                unit={unit}
+                min={key.includes("cache") ? 0 : undefined}
+                step={key.includes("cache") ? 0.125 : 1}
+                onChange={(n: number) => onChange(key, n)}
+              />
+            ))}
+          {hasSSD &&
+            s.profile === "manual" &&
             (
               [
                 ["ssd_read_GBps", "SSD read bandwidth", "GB/s"],
@@ -341,6 +371,7 @@ export default function StorageView({
             : "trace replay"}
         </strong>
         <span>
+          {s.layout?.label || "Custom inclusive copies"} ·{" "}
           {s.workload_source.label} · {s.workload_source.requests} requests ·{" "}
           {s.profile === "manual"
             ? "configured affine I/O assumptions"
@@ -401,6 +432,8 @@ export default function StorageView({
       <div className="card">
         <h3>Capacity and residency</h3>
         <p className="storage-note">
+          {s.policy}
+          <br />
           HBM cache capacity is reserved per prefill GPU. DRAM and SSD hold the
           aggregate prefill shard payload. Active request KV is pinned
           separately and waits for HBM admission; no active decode KV is
@@ -411,17 +444,27 @@ export default function StorageView({
             <thead>
               <tr>
                 <th>Tier</th>
+                <th>Placement role</th>
                 <th>Cache capacity</th>
                 <th>Peak retained</th>
                 <th>Prefix blocks served</th>
                 <th>Evictions</th>
-                <th>Insertion drops (pinned)</th>
+                <th>Pinned-tier bypass / drops</th>
               </tr>
             </thead>
             <tbody>
               {["hbm", "dram", "ssd"].map((t) => (
                 <tr key={t}>
                   <td>{t.toUpperCase()}</td>
+                  <td>
+                    {!s.layout?.tiers.includes(t)
+                      ? "Unused"
+                      : s.layout.kind === "inclusive"
+                        ? "Retained copy"
+                        : s.layout.tiers.indexOf(t) === 0
+                          ? "Primary"
+                          : `Spill ${s.layout.tiers.indexOf(t)}`}
+                  </td>
                   <td>{format(s.capacity_blocks[t], 0)} blocks</td>
                   <td>{format(s.peak_blocks[t], 0)} blocks</td>
                   <td>{format(stats[t + "_hit_blocks"], 0)}</td>
@@ -439,13 +482,62 @@ export default function StorageView({
           lanes.
         </p>
       </div>
+      {s.layout?.kind === "spill" && (
+        <div className="card">
+          <h3>Eviction spill transfers</h3>
+          <p className="storage-note">
+            {s.stats.spill_blocks || 0} completed block moves ·{" "}
+            {s.stats.discarded_blocks || 0} blocks discarded after exhausting
+            placement capacity. One retained copy per block; hits stay in their
+            current tier. A victim is unavailable while its spill copy is in
+            flight.
+          </p>
+          <div className="table-scroll storage-spill-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Completed ms</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Triggered by request</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(s.spill_transitions || [])
+                  .slice(-100)
+                  .map((move: Obj, i: number) => (
+                    <tr key={i}>
+                      <td>{format(move.time_ms)}</td>
+                      <td>{move.source.toUpperCase()}</td>
+                      <td>{move.destination.toUpperCase()}</td>
+                      <td>#{move.request_id}</td>
+                    </tr>
+                  ))}
+                {!s.spill_transitions?.length && (
+                  <tr>
+                    <td colSpan={4}>
+                      No spills in this run. Reduce the primary cache capacity
+                      to exercise the spill tier.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <p className="storage-note">
+            Last 100 moves shown; the export retains all moves. Transfer and SSD
+            service intervals appear in the box graph and request latency
+            explanations.
+          </p>
+        </div>
+      )}
       <div className="card">
         <h3>Request paths and actual compute</h3>
         <p className="storage-note">
           Only a ready contiguous prefix can be reused. The final prompt token
-          is computed for logits. Publication is write-through before handoff;
-          the first token follows publication, handoff and decode-memory
-          admission.
+          is computed for logits. Publication and eviction spill complete before
+          handoff; the first token follows publication, handoff and
+          decode-memory admission.
         </p>
         <div className="table-scroll storage-request-table">
           <table>
@@ -573,9 +665,16 @@ export default function StorageView({
           </>
         ) : (
           <p className="storage-note">
-            This run uses configured affine coefficients. Choose “Fitted local
-            Mooncake file path” to use the measured-path fit. Its calibration
-            applies only to the documented local file-I/O conditions.
+            {s.capacity_blocks.ssd === 0 ? (
+              "The selected layout performs no SSD I/O. SSD calibration is inactive."
+            ) : (
+              <>
+                This run uses configured affine coefficients. Choose “Fitted
+                local Mooncake file path” to use the measured-path fit. Its
+                calibration applies only to the documented local file-I/O
+                conditions.
+              </>
+            )}
           </p>
         )}
         <p className="storage-note">

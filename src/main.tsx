@@ -1342,6 +1342,31 @@ function App() {
     }));
     setDirty(true);
   }
+  function selectStorageLayout(id: string) {
+    if (id === "disabled") {
+      enableStorage(false);
+      return;
+    }
+    const tiers: string[] = catalog!.storage_layouts[id].tiers;
+    setConfig((c: Obj | null) => {
+      const storage = { ...c!.storage, enabled: true, placement: id };
+      for (const tier of tiers) {
+        const key = tier + "_cache_GB";
+        if (!storage[key])
+          storage[key] = { hbm: 1, dram: 4, ssd: 32 }[
+            tier as "hbm" | "dram" | "ssd"
+          ];
+      }
+      return {
+        ...c,
+        storage,
+        batch_size: 1,
+        prefill: { ...c!.prefill, batch_size: 1, replicas: 1 },
+        decode: { ...c!.decode, batch_size: 1, replicas: 1 },
+      };
+    });
+    setDirty(true);
+  }
   function enableStorage(enabled: boolean) {
     setConfig((c: Obj | null) => ({
       ...c,
@@ -1373,6 +1398,7 @@ function App() {
       Object.assign(c[ph], { tp: 1, pp: 1, ep: 1, replicas: 1, batch_size: 1 });
     Object.assign(c.storage, {
       enabled: true,
+      placement: "ssd-only",
       hbm_cache_GB: 0,
       dram_cache_GB: 0,
       ssd_cache_GB: 4,
@@ -1877,7 +1903,8 @@ function App() {
               storage={config.storage || catalog.default_config.storage}
               Field={Field}
               onChange={storageChange}
-              onEnable={enableStorage}
+              onLayout={selectStorageLayout}
+              layouts={catalog.storage_layouts}
               onDemo={loadCacheDemo}
               onWorkload={loadStorageWorkload}
               onError={setError}

@@ -2,7 +2,7 @@ import copy,json,math,unittest
 from pathlib import Path
 import simpy
 from backend.model import DEFAULT,simulate,parameters,resolve_model,validate
-from backend.storage import CacheTiers,fit_dataset,latency_ms,hit_prediction
+from backend.storage import CacheTiers,fit_dataset,latency_ms,hit_prediction,CACHE_LAYOUTS
 ROOT=Path(__file__).resolve().parents[1]
 
 def scenario():
@@ -117,7 +117,78 @@ class StorageTests(unittest.TestCase):
    for entry in ledger:self.assertLessEqual(entry['used_bytes'],entry['capacity_bytes']+1e-5)
    for q in r['requests']:self.assertEqual(q['cache']['computed_tokens']+q['cache']['reused_tokens'],q['input_tokens'])
 
+ def test_single_tier_layouts_mask_unused_capacity_and_io(self):
+  for tier in ['hbm','dram','ssd']:
+   c=scenario();c['storage'].update(placement=tier+'-only',hbm_cache_GB=4,dram_cache_GB=4,ssd_cache_GB=4)
+   r=simulate(c)
+   self.assertEqual(r['storage']['placement'],tier+'-only')
+   for other in {'hbm','dram','ssd'}-{tier}:self.assertEqual(r['storage']['capacity_blocks'][other],0)
+   paths={e['tier'] for e in r['timeline'] if e.get('kind')=='storage_io'}
+   self.assertEqual(paths,{'hbm'} if tier=='hbm' else {'pcie'} if tier=='dram' else {'ssd','pcie'})
+   self.assertEqual(r['requests'][4]['cache']['hit_tiers'],{tier:2})
+   if tier!='hbm':self.assertEqual(r['memory']['prefill']['retained_cache_reservation_GB'],0)
+  c=scenario();c['storage'].update(placement='dram-only',hbm_cache_GB=100000,dram_cache_GB=4)
+  self.assertEqual(simulate(c)['memory']['prefill']['retained_cache_reservation_GB'],0)
+
+ def test_all_directed_spill_layouts_move_only_evicted_blocks(self):
+  for placement,layout in CACHE_LAYOUTS.items():
+   if layout['kind']!='spill' or len(layout['tiers'])!=2:continue
+   c=validate(scenario());c['storage']['placement']=placement
+   env=simpy.Environment();t=CacheTiers(env,c,resolve_model(c),lambda e,r:None)
+   primary,secondary=layout['tiers'];t.capacity[primary]=1;t.capacity[secondary]=2
+   a=dict(input_length=512,hash_ids=[100]);b=dict(input_length=512,hash_ids=[200]);result={}
+   def run():
+    yield from t.publish(a,0)
+    self.assertEqual(t.stats['spill_blocks'],0)
+    self.assertEqual(len(t.caches[secondary]),0)
+    yield from t.publish(b,1)
+    self.assertEqual(list(t.caches[primary]),t.keys(b))
+    self.assertEqual(list(t.caches[secondary]),t.keys(a))
+    result.update((yield from t.restore(a,2)))
+   env.process(run());env.run()
+   self.assertEqual(t.stats['spill_blocks'],1)
+   self.assertEqual(t.stats[primary+'_to_'+secondary+'_spill_blocks'],1)
+   self.assertEqual(result['hit_tiers'],{secondary:1})
+   self.assertEqual(result['reused_tokens'],511)
+   self.assertTrue(any(e['cause']=='spill' for e in t.events))
+   self.assertFalse(set(t.caches[primary]) & set(t.caches[secondary]))
+
+ def test_three_tier_cascade_discards_only_after_last_tier_fills(self):
+  c=validate(scenario());c['storage']['placement']='hbm-dram-ssd'
+  env=simpy.Environment();t=CacheTiers(env,c,resolve_model(c),lambda e,r:None)
+  t.capacity=dict(hbm=1,dram=1,ssd=1)
+  rows=[dict(input_length=512,hash_ids=[i]) for i in range(4)]
+  def run():
+   for i,row in enumerate(rows):yield from t.publish(row,i)
+  env.process(run());env.run()
+  for tier,row in zip(['hbm','dram','ssd'],rows[:0:-1]):self.assertEqual(list(t.caches[tier]),t.keys(row))
+  self.assertEqual(t.stats['discarded_blocks'],1)
+  self.assertEqual(t.stats['hbm_to_dram_spill_blocks'],3)
+  self.assertEqual(t.stats['dram_to_ssd_spill_blocks'],2)
+  self.assertTrue(all(len(cache)<=t.capacity[tier] for tier,cache in t.caches.items()))
+
+ def test_spill_skips_pinned_primary_without_corrupting_restore_source(self):
+  c=validate(scenario());c['storage']['placement']='hbm-ssd'
+  env=simpy.Environment();t=CacheTiers(env,c,resolve_model(c),lambda e,r:None)
+  t.capacity.update(hbm=1,ssd=1)
+  a=dict(input_length=512,hash_ids=[10]);b=dict(input_length=512,hash_ids=[20])
+  def run():
+   yield from t.publish(a,0)
+   key=t.keys(a)[0];t.pins['hbm'][key]=1
+   yield from t.publish(b,1)
+   self.assertIn(key,t.caches['hbm'])
+   self.assertIn(t.keys(b)[0],t.caches['ssd'])
+  env.process(run());env.run();self.assertEqual(t.drops['hbm'],1)
+
+ def test_no_retention_keeps_tier_scheduler_without_cache_io(self):
+  c=scenario();c['storage']['placement']='none';r=simulate(c)
+  self.assertEqual(r['storage']['capacity_blocks'],dict(hbm=0,dram=0,ssd=0))
+  self.assertEqual(r['workload_totals']['computed_prefill_tokens'],8192)
+  self.assertFalse(any(e.get('kind')=='storage_io' for e in r['timeline']))
+
  def test_invalid_combinations_fail_explicitly(self):
+  c=scenario();c['storage']['placement']='unknown'
+  with self.assertRaisesRegex(ValueError,'layout'):simulate(c)
   c=scenario();c['prefill']['batch_size']=2
   with self.assertRaisesRegex(ValueError,'batch size 1'):simulate(c)
   c=scenario();c['storage']['workload']=[dict(timestamp=10,input_length=4,output_length=1,hash_ids=[1,2])]

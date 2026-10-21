@@ -105,9 +105,12 @@ this is separate evidence from operator CV and from physical GPU serving accurac
 The **KV storage** view models cold-start retained prefix caches in per-GPU HBM,
 host DRAM and SSD. Ready hits reduce actual prefill query work while preserving
 attention context. Active KV admission, SSD reads/writes and host/GPU transfers
-queue explicitly. This first tier policy uses one replica and single-request
-batches, with concurrent requests and TP/PP/EP supported; publication is blocking
-write-through before handoff. Active decode KV remains in HBM.
+queue explicitly. Tier mode uses one replica and single-request
+batches, with concurrent requests and TP/PP/EP supported; publication and required spill moves block before handoff. Active decode KV remains in HBM.
+
+Choose **KV cache layout** for HBM-only, DRAM-only, SSD-only, directed two-tier
+spill, HBM → DRAM → SSD, or the original inclusive-copy policy. Spill layouts move
+LRU victims with explicit transfer costs; see [cache policy details](docs/configuration.md#cache-layouts-and-eviction-spill).
 
 Choose **Load cache demo**, then **Run scenario**. The demo is synthetic. Import
 unchanged Mooncake JSONL or load a bundled published trace window; source identity,

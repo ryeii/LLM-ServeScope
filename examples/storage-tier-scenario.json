@@ -24,7 +24,8 @@
     "block_tokens": 512,
     "source_id": "synthetic-demo",
     "source_label": "Generated repeated-prefix demonstration",
-    "workload": []
+    "workload": [],
+    "placement": "ssd-only"
   },
   "prefill_chunk": 512,
   "separated": true,

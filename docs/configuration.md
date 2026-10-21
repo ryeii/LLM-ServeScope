@@ -136,3 +136,42 @@ copies. Storage publication is write-through before handoff. SSD chunks use a
 fitted local QD1 file-path model or editable uncalibrated affine coefficients.
 No active decode-KV streaming from SSD or numerical-quality model is implied.
 See [data coverage, equations, candidate diagrams and held-out errors](storage-2026-10-20/README.md).
+
+### Cache layouts and eviction spill
+
+The **KV cache layout** selector controls placement and executed I/O, with independent
+capacity settings retained when switching layouts:
+
+| Layout | Placement behavior |
+| --- | --- |
+| HBM only / DRAM only / SSD only | Retain in the selected tier; discard LRU victims at capacity. |
+| HBM → DRAM / HBM → SSD | Place in HBM; move LRU victims to the named spill tier. |
+| DRAM → HBM / DRAM → SSD | Place in DRAM; move LRU victims to the named spill tier. |
+| SSD → HBM / SSD → DRAM | Place on SSD; move LRU victims to the named spill tier. |
+| HBM → DRAM → SSD | Cascade evictions through the three tiers. |
+| Custom inclusive copies | Original policy: publish copies to every tier with nonzero capacity. |
+| No retained prefix cache | Same tier-mode single-request scheduler and active-HBM admission, without prefix retention; useful comparison baseline. |
+| Disabled | Return to the original serving mode; tier-mode scheduling/admission is disabled too. |
+
+Arrows mean **primary placement → eviction destination**, including the explicitly
+supported DRAM-primary/HBM-spill policy. Spill layouts are exclusive: one retained
+copy per block, separate from active request KV. Hits update their tier's LRU order
+and stay in that tier; there is no automatic promotion. Pinned restore sources
+cannot be evicted. If all candidates are pinned, insertion bypasses that tier.
+Zero-capacity tiers are bypassed. Inactive capacities allocate no cache space or HBM
+reservation, even though their configured values are preserved for later selection.
+
+Spill copies become reusable only when their transfer completes. Publication waits
+for required eviction moves; outgoing victims are unavailable to new lookups while
+in flight. Host↔GPU moves use the PCIe queue, SSD→host moves read SSD, and host→SSD
+moves write SSD. Cascades charge each actual move; the last tier discards its LRU
+victim. These are retained prefix cache policies: **active attention KV stays in GPU HBM**.
+The result exports the selected layout, spill direction/counts, transitions, queue
+intervals and resulting latency. The UI shows primary/spill/unused roles and the
+last 100 completed moves; exports retain every move.
+
+The fitted hit-rate forecast still represents a single-LRU policy reference. It
+uses summed exclusive-tier capacity (largest capacity for inclusive copies) as an
+approximate capacity feature. Its archived error does **not** validate these new
+multi-tier replacement policies. Runtime hits always come from the executed cache
+state. I/O fit coefficients/data are unchanged.

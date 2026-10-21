@@ -2,7 +2,17 @@
   "schema_version": "servescope.behavioral.v4",
   "storage": {
     "enabled": true,
-    "policy": "Inclusive retained LRU copies; cold start; active KV separately pinned; write-through publication before handoff; cache lookup uses ready contiguous prefixes only; last prompt token recomputed for logits.",
+    "placement": "ssd-only",
+    "layout": {
+      "label": "SSD only",
+      "tiers": [
+        "ssd"
+      ],
+      "kind": "single",
+      "description": "Retain prefixes on SSD; charge SSD service and host\u2013GPU transfers."
+    },
+    "spill_transitions": [],
+    "policy": "Retain prefixes on SSD; charge SSD service and host\u2013GPU transfers. Cold start; active KV separately pinned; blocking publication/spill before handoff. Exclusive spill layouts keep one retained copy and do not promote hits; only ready contiguous prefixes can be reused. Last prompt token recomputed for logits.",
     "profile": "local-mooncake-path",
     "block_tokens": 512,
     "block_bytes": 67108864.0,
@@ -177,8 +187,8 @@
       },
       "scope": "Local warm buffered macOS storage path, QD1 fsync(always) writes; hit functions approximate policy replay, not observed production cache hits.",
       "training_script_sha256": "efd4716d6ddbc3393f1ba71a0d957156b0e7746df2f530513ff288e5ff9b7394",
-      "runtime_sha256": "c6a86add7816507eb3c7f4a78cec90101d1012e0e26cf1dc5075f185de428221",
-      "payload_sha256": "ec462b93e1eb31bc1edfe0b86bd0a7e249f5944ac4fb1bbab8059041ee5fa0e5"
+      "runtime_sha256": "79dd838951e318147a42fe3640abec6b50e295232d34892ffeb7bf5dc187be14",
+      "payload_sha256": "b0a5f412f267d2a10b4996cd3ebf15db18c144207edab5b326ead68965636f89"
     },
     "workload_source": {
       "id": "synthetic-demo",
@@ -1547,6 +1557,7 @@
     "batch_size": 1,
     "storage": {
       "enabled": true,
+      "placement": "ssd-only",
       "profile": "local-mooncake-path",
       "hbm_cache_GB": 0.0,
       "dram_cache_GB": 0.0,
@@ -14907,7 +14918,7 @@
     "GPU operator service times use nested-CV selected shape-informed functions fitted to KAIST BF16 or Vidur FP16 profiles; no runtime timing-table lookup, GPU-ID correction or exact-match override. Profiled configurations also have prediction error.",
     "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
     "Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.",
-    "KV-tier mode: single-request scheduling, cold inclusive LRU copies, write-through publication before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.",
+    "KV-tier mode: single-request scheduling, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.",
     "Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."
   ],
   "provenance": {
@@ -14916,7 +14927,7 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-8B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "62fb68f935c85fed8f95590554e675e5b3555e02303b5c46aac33ef88c36cde3",
+    "config_sha256": "413f3e2a2865de61d4431e2c63134ac1d0ea1ec61b02fa69b4b7f1b6cc4fb467",
     "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }

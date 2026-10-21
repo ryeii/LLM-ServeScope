@@ -153,3 +153,5 @@ retained copies use explicit per-tier capacities. Blocking write-through
 publication precedes KV handoff, and active decode KV stays in HBM.
 Local I/O fits and trace-policy hit forecasts have separate calibration evidence;
 forecasts never assign runtime cache hits. Read the [storage methodology and validation](storage-2026-10-20/README.md).
+
+Cache placement now follows the selected [single-tier, exclusive-spill or inclusive-copy policy](configuration.md#cache-layouts-and-eviction-spill). Spill transfer costs and readiness are scheduled explicitly. Active attention KV remains pinned in HBM; hit-fit residuals remain single-LRU replay validation, with no new multi-tier calibration claim.

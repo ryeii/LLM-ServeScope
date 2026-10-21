@@ -61,7 +61,10 @@ export async function storageScenario(page: Page) {
       "storage-tiers.png",
     fullPage: true,
   });
-  await page.getByText("KV storage tiers", { exact: true }).click();
+  await page
+    .getByRole("complementary")
+    .getByText("KV storage tiers", { exact: true })
+    .click();
   await page
     .getByLabel("SSD service model", { exact: true })
     .selectOption("local-mooncake-path");
@@ -154,4 +157,149 @@ export async function storageScenario(page: Page) {
     await page.evaluate(() => document.documentElement.scrollWidth),
   ).toBeLessThanOrEqual(391);
   expect(errors).toEqual([]);
+}
+
+export async function storageLayoutsScenario(page: Page) {
+  await page.goto("./");
+  await expect(
+    page.getByLabel("Operator timing model", { exact: true }),
+  ).toBeVisible({ timeout: 60000 });
+  await page.getByRole("button", { name: "KV storage", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Load cache demo", exact: true })
+    .click();
+  await page
+    .getByRole("complementary")
+    .getByText("KV storage tiers", { exact: true })
+    .click();
+  const layout = page.getByLabel("KV cache layout", { exact: true });
+  await expect(layout).toHaveValue("ssd-only");
+  await expect(layout.locator("option")).toHaveCount(13);
+  for (const tier of ["hbm", "dram", "ssd"]) {
+    await layout.selectOption(tier + "-only");
+    await expect(
+      page.getByLabel("Retained HBM / GPU", { exact: true }),
+    ).toHaveCount(tier === "hbm" ? 1 : 0);
+    await expect(
+      page.getByLabel("SSD service model", { exact: true }),
+    ).toHaveCount(tier === "ssd" ? 1 : 0);
+    await page
+      .getByRole("button", { name: "Run scenario", exact: true })
+      .click();
+    await expect(
+      page.getByText("Results match scenario", { exact: true }),
+    ).toBeVisible();
+    const run = await exported(page);
+    expect(run.storage.placement).toBe(tier + "-only");
+    for (const other of ["hbm", "dram", "ssd"].filter((t) => t !== tier))
+      expect(run.storage.capacity_blocks[other]).toBe(0);
+    expect(run.requests[4].cache.hit_tiers).toEqual({ [tier]: 2 });
+    const paths = [
+      ...new Set(
+        run.timeline
+          .filter((e: any) => e.kind === "storage_io")
+          .map((e: any) => e.tier),
+      ),
+    ].sort();
+    expect(paths).toEqual(
+      tier === "hbm" ? ["hbm"] : tier === "dram" ? ["pcie"] : ["pcie", "ssd"],
+    );
+  }
+  for (const id of ["hbm-ssd", "dram-hbm", "hbm-dram-ssd"]) {
+    await layout.selectOption(id);
+    const primary =
+      id === "dram-hbm" ? "Host DRAM cache" : "Retained HBM / GPU";
+    await page.getByLabel(primary, { exact: true }).fill("0.067108864");
+    if (id === "dram-hbm")
+      await page.getByLabel("Retained HBM / GPU", { exact: true }).fill("1");
+    if (id === "hbm-dram-ssd")
+      await page
+        .getByLabel("Host DRAM cache", { exact: true })
+        .fill("0.067108864");
+    await page
+      .getByRole("button", { name: "Run scenario", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", {
+        name: "Eviction spill transfers",
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Results match scenario", { exact: true }),
+    ).toBeVisible();
+    const run = await exported(page);
+    expect(run.storage.stats.spill_blocks).toBeGreaterThan(0);
+    expect(run.timeline.some((e: any) => e.cause === "spill")).toBe(true);
+    if (id === "dram-hbm") {
+      expect(run.storage.stats.dram_to_hbm_spill_blocks).toBeGreaterThan(0);
+      expect(run.timeline.some((e: any) => e.tier === "ssd")).toBe(false);
+    }
+    if (id === "hbm-dram-ssd") {
+      expect(run.storage.stats.hbm_to_dram_spill_blocks).toBeGreaterThan(0);
+      expect(run.storage.stats.dram_to_ssd_spill_blocks).toBeGreaterThan(0);
+      const python = JSON.parse(
+        await readFile("examples/storage-spill-result.json", "utf8"),
+      );
+      expect(run.metrics.elapsed_ms).toBeCloseTo(python.metrics.elapsed_ms, 9);
+      expect(run.storage.stats.ssd_service_ms).toBeCloseTo(
+        python.storage.stats.ssd_service_ms,
+        9,
+      );
+      expect(run.storage.spill_transitions).toEqual(
+        python.storage.spill_transitions,
+      );
+      await page.locator('[data-formula-key="storage.request.3.ttft"]').hover();
+      await page
+        .locator('[data-cascade-depth="0"]')
+        .getByRole("button", {
+          name: "Explain First token release",
+          exact: true,
+        })
+        .focus();
+      await page
+        .locator('[data-cascade-depth="1"]')
+        .getByRole("button", {
+          name: "Explain Cache publication and eviction spill",
+          exact: true,
+        })
+        .focus();
+      await expect(page.locator('[data-cascade-depth="2"]')).toContainText(
+        "ssd write",
+      );
+      await page
+        .locator('[data-cascade-depth="2"]')
+        .getByRole("button", { name: "Close explanations", exact: true })
+        .click();
+    }
+  }
+  await layout.scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({
+    path:
+      "docs/screenshots/" +
+      (page.url().includes("/LLM-ServeScope/") ? "pages-" : "") +
+      "storage-layouts.png",
+    fullPage: true,
+  });
+  await layout.selectOption("none");
+  await page.getByRole("button", { name: "Run scenario", exact: true }).click();
+  await expect(
+    page.getByText("Results match scenario", { exact: true }),
+  ).toBeVisible();
+  const baseline = await exported(page);
+  expect(baseline.storage.stats.reused_tokens || 0).toBe(0);
+  expect(baseline.timeline.some((e: any) => e.kind === "storage_io")).toBe(
+    false,
+  );
+  expect(baseline.config.prefill.batch_size).toBe(1);
+  await layout.selectOption("disabled");
+  await expect(
+    page.getByLabel("SSD service model", { exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Run scenario", exact: true }).click();
+  await expect(
+    page.getByText("Results match scenario", { exact: true }),
+  ).toBeVisible();
+  expect((await exported(page)).storage).toBeUndefined();
 }

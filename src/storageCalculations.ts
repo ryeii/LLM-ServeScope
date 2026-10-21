@@ -138,7 +138,7 @@ export function storageEventCalculation(r: Obj, e: Obj): Calculation {
       e.end_ms,
       "ms",
     ),
-    summary: `${e.payload_bytes.toLocaleString()} bytes. ${e.cause === "restore" ? "The request cannot compute its suffix until restoration finishes." : "Write-through publication completes before this request hands off to decode."}`,
+    summary: `${e.payload_bytes.toLocaleString()} bytes. ${e.cause === "restore" ? "The request cannot compute its suffix until restoration finishes." : e.cause === "spill" ? "An LRU victim moves to its spill tier. The destination becomes ready only after this transfer completes; the triggering publication waits." : "Cache publication completes before this request hands off to decode."}`,
     source: "Executed storage reservation · " + e.resource,
   };
 }
@@ -178,7 +178,7 @@ function span(
         ),
         v(
           "remaining_wait_ms",
-          "Resource, admission or shared-fill wait",
+          "Resource, placement admission or shared-fill wait",
           wait,
           "ms",
           () => ({
@@ -205,7 +205,7 @@ function span(
               "ms",
             ),
             summary:
-              "This is the recorded elapsed gap. It can include phase admission and waiting for another request to finish a coalesced cache publication. Parallel requests are not summed into this request’s latency.",
+              "This is the recorded elapsed gap. It can include phase/placement admission and waiting for another request to finish a coalesced cache publication. Parallel requests are not summed into this request’s latency.",
           }),
         ),
       ],
@@ -268,7 +268,7 @@ export function storageRequestCalculation(
         "ms",
       ),
       summary:
-        "The first token is released after write-through cache publication, handoff and decode-memory admission. Only subsequent token iterations contribute to TPOT.",
+        "The first token is released after cache publication and any required spill, handoff and decode-memory admission. Only subsequent token iterations contribute to TPOT.",
     };
   }
   const release = key === "prefill_release_ms";
@@ -297,10 +297,10 @@ export function storageRequestCalculation(
     ],
     [
       "publication",
-      "Write-through cache publication",
+      "Cache publication and eviction spill",
       k.gpu_prefill_end_ms,
       k.publication_end_ms,
-      (e) => e.kind === "storage_io" && e.cause === "publish",
+      (e) => e.kind === "storage_io" && ["publish", "spill"].includes(e.cause),
     ],
     [
       "handoff",
