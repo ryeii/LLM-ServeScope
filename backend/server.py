@@ -110,7 +110,7 @@ def native_job(identifier, config):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "LLM-ServeScope/0.1"
+    server_version = "LLM-ServeScope/0.1.1"
 
     def log_message(self, fmt, *args):
         pass

@@ -142,6 +142,7 @@ writeFileSync(
   JSON.stringify(
     {
       project: "LLM-ServeScope",
+      version: JSON.parse(readFileSync("package.json", "utf8")).version,
       gpu_fit_payload_sha256: JSON.parse(
         readFileSync("backend/gpu-fit.json", "utf8"),
       ).payload_sha256,
