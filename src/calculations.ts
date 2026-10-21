@@ -394,9 +394,9 @@ function memoryBase(r: Obj, phase: string, key: string): Calculation {
     return calc(
       `${phase} ${key}`,
       key === "kv_GB"
-        ? "KV_GB = peak_active_GB + peak_retained_GB"
+        ? "KV_GB = peak_active_GB + peak_retained_GB + staging_GB"
         : key === "total_GB"
-          ? "Total_GB = weights_GB + activation_GB + peak_active_GB + peak_retained_GB"
+          ? "Total_GB = weights_GB + activation_GB + peak_active_GB + peak_retained_GB + staging_GB"
           : "Headroom_GB = usable_capacity_GB − total_GB",
       [
         v(
@@ -409,6 +409,12 @@ function memoryBase(r: Obj, phase: string, key: string): Calculation {
           "peak_retained_GB",
           "Peak retained prefix copies",
           mem.retained_kv_GB,
+          "GB",
+        ),
+        v(
+          "staging_GB",
+          "Reserved active KV staging",
+          mem.staging_GB || 0,
           "GB",
         ),
         v("weights_GB", "Model weights", mem.weights_GB, "GB"),

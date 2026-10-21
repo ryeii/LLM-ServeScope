@@ -1112,6 +1112,13 @@
       "source_label": "Generated repeated-prefix workload",
       "workload": []
     },
+    "active_kv": {
+      "placement": "hbm",
+      "hbm_resident_GB": 1.0,
+      "staging_GB": 0.0625,
+      "dram_total_GB": 128.0,
+      "ssd_total_GB": 1024.0
+    },
     "prefill_chunk": 512,
     "separated": true,
     "prefill": {
@@ -129363,7 +129370,7 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-70B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "984c9707f0a3872964a76970ed605734c9cefdb348dd2d095395c42ae106c334",
+    "config_sha256": "b6cc5fc3a5aa59b955ab997690210e7b92f9cb199c6894f1a1c9a53f84e841b7",
     "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }

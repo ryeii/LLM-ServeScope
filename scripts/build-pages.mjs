@@ -50,6 +50,7 @@ for (const name of [
   "gpu_functions.py",
   "gpu-fit.json",
   "storage.py",
+  "active_kv.py",
   "storage-fit.json",
 ])
   copy(`backend/${name}`, `${output}/python/backend/${name}`);

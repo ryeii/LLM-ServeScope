@@ -63,11 +63,15 @@ export async function storageScenario(page: Page) {
   });
   await page
     .getByRole("complementary")
-    .getByText("KV storage tiers", { exact: true })
+    .getByText("KV I/O paths", { exact: true })
     .click();
   await page
     .getByLabel("SSD service model", { exact: true })
     .selectOption("local-mooncake-path");
+  await page
+    .getByRole("complementary")
+    .getByText("Retained prefixes", { exact: true })
+    .click();
   await page.getByRole("button", { name: "Run scenario", exact: true }).click();
   await expect(
     page.getByRole("columnheader", { name: "Latency MAPE", exact: true }),
@@ -188,7 +192,7 @@ export async function storageLayoutsScenario(page: Page) {
     .click();
   await page
     .getByRole("complementary")
-    .getByText("KV storage tiers", { exact: true })
+    .getByText("Retained prefixes", { exact: true })
     .click();
   const layout = page.getByLabel("Retained prefix cache layout", {
     exact: true,
@@ -202,7 +206,7 @@ export async function storageLayoutsScenario(page: Page) {
     ).toHaveCount(tier === "hbm" ? 1 : 0);
     await expect(
       page.getByLabel("SSD service model", { exact: true }),
-    ).toHaveCount(tier === "ssd" ? 1 : 0);
+    ).toHaveCount(1);
     await page
       .getByRole("button", { name: "Run scenario", exact: true })
       .click();
@@ -316,7 +320,7 @@ export async function storageLayoutsScenario(page: Page) {
   await layout.selectOption("disabled");
   await expect(
     page.getByLabel("SSD service model", { exact: true }),
-  ).toHaveCount(0);
+  ).toHaveCount(1);
   await page.getByRole("button", { name: "Run scenario", exact: true }).click();
   await expect(
     page.getByText("Results match scenario", { exact: true }),
@@ -340,13 +344,13 @@ export async function prefixBaselineScenario(page: Page) {
   await page.getByRole("button", { name: "KV storage", exact: true }).click();
   await page
     .getByRole("complementary")
-    .getByText("KV storage tiers", { exact: true })
+    .getByText("Retained prefixes", { exact: true })
     .click();
   const layout = page.getByLabel("Retained prefix cache layout", {
     exact: true,
   });
   await expect(page.getByRole("complementary")).toContainText(
-    "Active-KV offload and per-token SSD attention reads are not implemented",
+    "Active decode KV",
   );
   const references = JSON.parse(
     await readFile("examples/prefix-layout-comparison.json", "utf8"),
@@ -373,7 +377,7 @@ export async function prefixBaselineScenario(page: Page) {
       expect(run.storage.active_kv_offload).toBe(false);
       await expect(
         page.getByRole("heading", {
-          name: "Active attention KV remains in GPU HBM",
+          name: "Active decode KV · HBM only",
           exact: true,
         }),
       ).toBeVisible();

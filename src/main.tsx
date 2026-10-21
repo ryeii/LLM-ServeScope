@@ -37,6 +37,10 @@ import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
 import FormulaValue from "./FormulaValue";
 import StorageView, { StorageControls } from "./StorageView";
+import ActiveKVView, {
+  ActiveKVControls,
+  KVDeviceControls,
+} from "./ActiveKVView";
 import {
   intervalDerivation,
   explainCalculation,
@@ -445,9 +449,11 @@ function MemoryChart({ r }: { r: Obj }) {
         ))}
       </svg>
       <div className="subnote">
-        {r.storage
-          ? "Active KV is pinned in HBM. Retained prefix copies use a separate per-GPU cache reservation; host/SSD tiers are shown in KV storage. Capacity bars combine peak active and peak retained KV conservatively."
-          : "KV remains resident in HBM; SRAM reduces modeled read traffic. Runtime reservations reduce usable capacity; allocator fragmentation is excluded."}
+        {r.active_kv
+          ? "HBM bars include active resident allocations, reserved staging and retained-prefix copies. Active backing storage is reported separately in KV storage. Peak components are combined conservatively."
+          : r.storage
+            ? "Active KV is pinned in HBM. Retained prefix copies use a separate per-GPU cache reservation; host/SSD tiers are shown in KV storage. Capacity bars combine peak active and peak retained KV conservatively."
+            : "KV remains resident in HBM; SRAM reduces modeled read traffic. Runtime reservations reduce usable capacity; allocator fragmentation is excluded."}
       </div>
     </Chart>
   );
@@ -1335,6 +1341,13 @@ function App() {
     setConfig((c: Obj | null) => ({ ...c, [k]: v }));
     setDirty(true);
   }
+  function activeKVChange(k: string, value: any) {
+    setConfig((c: Obj | null) => ({
+      ...c,
+      active_kv: { ...c!.active_kv, [k]: value },
+    }));
+    setDirty(true);
+  }
   function storageChange(k: string, value: any) {
     setConfig((c: Obj | null) => ({
       ...c,
@@ -1887,7 +1900,15 @@ function App() {
               />
             </fieldset>
           </Section>
-          <Section title="KV storage tiers">
+          <Section title="Active decode KV">
+            <ActiveKVControls
+              active={config.active_kv}
+              placements={catalog.active_kv_placements}
+              Field={Field}
+              onChange={activeKVChange}
+            />
+          </Section>
+          <Section title="Retained prefixes">
             <StorageControls
               storage={config.storage || catalog.default_config.storage}
               Field={Field}
@@ -1897,6 +1918,13 @@ function App() {
               onDemo={loadCacheDemo}
               onWorkload={loadStorageWorkload}
               onError={setError}
+            />
+          </Section>
+          <Section title="KV I/O paths">
+            <KVDeviceControls
+              storage={config.storage}
+              Field={Field}
+              onChange={storageChange}
             />
           </Section>
           <Section title="Serving topology" initial>
@@ -2251,7 +2279,10 @@ function App() {
                 </button>
               </div>
               {tab === "storage" && (
-                <StorageView r={r} onDemo={loadCacheDemo} />
+                <>
+                  <ActiveKVView r={r} />
+                  <StorageView r={r} onDemo={loadCacheDemo} />
+                </>
               )}
               {tab === "overview" && (
                 <>

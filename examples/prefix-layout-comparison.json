@@ -47,6 +47,13 @@
         "source_label": "Generated repeated-prefix workload",
         "workload": []
       },
+      "active_kv": {
+        "placement": "hbm",
+        "hbm_resident_GB": 1.0,
+        "staging_GB": 0.0625,
+        "dram_total_GB": 128.0,
+        "ssd_total_GB": 1024.0
+      },
       "prefill_chunk": 512,
       "separated": true,
       "prefill": {
@@ -209,6 +216,13 @@
         "source_id": "synthetic-demo",
         "source_label": "Generated repeated-prefix workload",
         "workload": []
+      },
+      "active_kv": {
+        "placement": "hbm",
+        "hbm_resident_GB": 1.0,
+        "staging_GB": 0.0625,
+        "dram_total_GB": 128.0,
+        "ssd_total_GB": 1024.0
       },
       "prefill_chunk": 512,
       "separated": true,
@@ -375,6 +389,13 @@
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
         },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
+        },
         "prefill_chunk": 512,
         "separated": true,
         "prefill": {
@@ -538,6 +559,13 @@
           "source_label": "Generated repeated-prefix workload",
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
         },
         "prefill_chunk": 512,
         "separated": true,
@@ -703,6 +731,13 @@
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
         },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
+        },
         "prefill_chunk": 512,
         "separated": true,
         "prefill": {
@@ -866,6 +901,13 @@
           "source_label": "Generated repeated-prefix workload",
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
         },
         "prefill_chunk": 512,
         "separated": true,
@@ -1031,6 +1073,13 @@
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
         },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
+        },
         "prefill_chunk": 512,
         "separated": true,
         "prefill": {
@@ -1194,6 +1243,13 @@
           "source_label": "Generated repeated-prefix workload",
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
         },
         "prefill_chunk": 512,
         "separated": true,
@@ -1359,6 +1415,13 @@
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
         },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
+        },
         "prefill_chunk": 512,
         "separated": true,
         "prefill": {
@@ -1522,6 +1585,13 @@
           "source_label": "Generated repeated-prefix workload",
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
         },
         "prefill_chunk": 512,
         "separated": true,
@@ -1687,6 +1757,13 @@
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
         },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
+        },
         "prefill_chunk": 512,
         "separated": true,
         "prefill": {
@@ -1850,6 +1927,13 @@
           "source_label": "Generated repeated-prefix workload",
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
         },
         "prefill_chunk": 512,
         "separated": true,
@@ -2015,6 +2099,13 @@
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
         },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
+        },
         "prefill_chunk": 512,
         "separated": true,
         "prefill": {
@@ -2178,6 +2269,13 @@
           "source_label": "Generated repeated-prefix workload",
           "workload": [],
           "source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "active_kv": {
+          "placement": "hbm",
+          "hbm_resident_GB": 1.0,
+          "staging_GB": 0.0625,
+          "dram_total_GB": 128.0,
+          "ssd_total_GB": 1024.0
         },
         "prefill_chunk": 512,
         "separated": true,

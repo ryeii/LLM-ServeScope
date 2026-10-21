@@ -129,87 +129,27 @@ export function StorageControls({
         workload. Fixed uniform batches are supported with one replica per pool;
         variable-length replay requires batch size one.
       </p>
-      <div className="server-policy prefix-scope">
-        <h3>Active attention KV: GPU HBM</h3>
-        <p className="fine">
-          All layouts keep active attention KV in HBM during decoding. SSD/DRAM
-          choices store reusable prompt prefixes between requests. Active-KV
-          offload and per-token SSD attention reads are not implemented.
-        </p>
-      </div>
       <button className="secondary" onClick={onDemo}>
         Load cache demo
       </button>
       {(s.enabled || s.workload?.length > 0) && (
         <>
-          {hasSSD && (
-            <>
-              <label className="field vertical">
-                <span>SSD service model</span>
-                <select
-                  aria-label="SSD service model"
-                  value={s.profile}
-                  onChange={(e) => onChange("profile", e.target.value)}
-                >
-                  <option value="manual">
-                    Configured affine function · uncalibrated
-                  </option>
-                  <option value="local-mooncake-path">
-                    Fitted local Mooncake file path · QD1
-                  </option>
-                </select>
-              </label>
-              <p className="fine">
-                The local fit uses warm buffered reads and fsync writes on a
-                recorded macOS development host, not measurements of the
-                selected GPU server or customer SSD.
-              </p>
-            </>
-          )}
           {(
             [
-              ["hbm_cache_GB", "Retained HBM / GPU", "GB"],
-              ["dram_cache_GB", "Host DRAM cache", "GB"],
-              ["ssd_cache_GB", "SSD cache capacity", "GB"],
-              ["io_chunk_KiB", "Storage I/O chunk", "KiB"],
-              ["pcie_GBps", "Host–GPU aggregate link", "GB/s"],
-              ["pcie_latency_us", "Host–GPU latency", "µs"],
+              ["hbm_cache_GB", "Retained HBM / GPU"],
+              ["dram_cache_GB", "Host DRAM cache"],
+              ["ssd_cache_GB", "SSD cache capacity"],
             ] as string[][]
           )
-            .filter(([key]) =>
-              key.includes("cache")
-                ? tiers.includes(key.split("_")[0])
-                : key === "io_chunk_KiB"
-                  ? hasSSD
-                  : tiers.some((t) => t !== "hbm"),
-            )
-            .map(([key, label, unit]) => (
+            .filter(([key]) => tiers.includes(key.split("_")[0]))
+            .map(([key, label]) => (
               <Field
                 key={key}
                 label={label}
                 value={s[key]}
-                unit={unit}
-                min={key.includes("cache") ? 0 : undefined}
-                step={key.includes("cache") ? 0.125 : 1}
-                onChange={(n: number) => onChange(key, n)}
-              />
-            ))}
-          {hasSSD &&
-            s.profile === "manual" &&
-            (
-              [
-                ["ssd_read_GBps", "SSD read bandwidth", "GB/s"],
-                ["ssd_write_GBps", "SSD write bandwidth", "GB/s"],
-                ["ssd_read_latency_us", "SSD read latency", "µs"],
-                ["ssd_write_latency_us", "SSD write latency", "µs"],
-              ] as string[][]
-            ).map(([key, label, unit]) => (
-              <Field
-                key={key}
-                label={label}
-                value={s[key]}
-                unit={unit}
-                step={key.includes("GBps") ? 0.5 : 10}
+                unit="GB"
+                min={0}
+                step={0.125}
                 onChange={(n: number) => onChange(key, n)}
               />
             ))}
@@ -391,13 +331,12 @@ export default function StorageView({
         </span>
       </div>
       <div className="card prefix-scope">
-        <h3>Active attention KV remains in GPU HBM</h3>
+        <h3>Retained prompt prefixes</h3>
         <p className="storage-note">
-          This layout controls retained prompt prefixes. SSD reads restore ready
-          prefixes before prefill; decoding does not stream its attention KV
-          from SSD. Prefill / decode batch caps: {r.config.prefill.batch_size} /{" "}
-          {r.config.decode.batch_size}. Layout selection preserves these
-          settings.
+          This policy controls reuse between requests. Active decode KV has its
+          own placement above. Prefill / decode batch caps:{" "}
+          {r.config.prefill.batch_size} / {r.config.decode.batch_size}. Layout
+          changes preserve them.
         </p>
       </div>
       <div className="economics-grid storage-kpis">
@@ -411,22 +350,17 @@ export default function StorageView({
           ],
           [
             "ssd_read_bytes",
-            "SSD reads",
+            "Prefix SSD reads",
             (stats.ssd_read_bytes || 0) / 1e9,
             "GB",
           ],
           [
             "ssd_write_bytes",
-            "SSD writes",
+            "Prefix SSD writes",
             (stats.ssd_write_bytes || 0) / 1e9,
             "GB",
           ],
-          [
-            "ssd_queue_ms",
-            "Aggregate SSD waiting",
-            stats.ssd_queue_ms || 0,
-            "ms",
-          ],
+          ["ssd_queue_ms", "Prefix SSD waiting", stats.ssd_queue_ms || 0, "ms"],
         ].map(([key, label, value, unit]) => (
           <div className="card" key={String(key)}>
             <span>{label}</span>
@@ -457,8 +391,8 @@ export default function StorageView({
           <br />
           HBM cache capacity is reserved per prefill GPU. DRAM and SSD hold the
           aggregate prefill shard payload. Active request KV is pinned
-          separately and waits for HBM admission; no active decode KV is
-          streamed from SSD.
+          separately. Active decode backing and its per-token traffic are
+          reported above; these counters cover retained-prefix operations only.
         </p>
         <div className="table-scroll">
           <table>
@@ -687,7 +621,7 @@ export default function StorageView({
         ) : (
           <p className="storage-note">
             {s.capacity_blocks.ssd === 0 ? (
-              "The selected layout performs no SSD I/O. SSD calibration is inactive."
+              "The retained-prefix layout performs no SSD I/O. Active decode KV has a separate policy and uses the shared I/O configuration."
             ) : (
               <>
                 This run uses configured affine coefficients. Choose “Fitted

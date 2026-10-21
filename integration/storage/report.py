@@ -191,9 +191,11 @@ simulated reuse differ from the instantaneous-publication reference.
 6. Publish complete known prompt blocks using the selected layout: single-tier,
    inclusive copies or exclusive LRU spill. Publication and required eviction moves
    are **blocking before KV handoff**. Concurrent duplicate publication waits on one fill.
-7. Transfer the complete prompt KV to decode when disaggregated. Release prefill
-   active KV, reserve decode active KV, then release the first token. Decode keeps
-   active KV in HBM through its remaining token iterations.
+7. In the HBM-only decode reference, transfer prompt KV to decode when
+   disaggregated, release prefill KV after handoff and release the first token.
+   Active decode placement is independently configurable; offload adds backing
+   admission, staged initialization and per-step reads/appends. See the
+   [active-KV model](../active-kv-model.md) for those separate assumptions.
 
 HBM retained-cache capacity is per prefill GPU; aggregate DRAM/SSD payload includes
 prefill TP/PP/EP shard replication. Inclusive tiers can hold the same block; exclusive spill layouts retain one copy
@@ -216,7 +218,8 @@ assumptions. Cache hit curves do not decide runtime cache hits.
   are recomputed. Variable-length replay requires batch size one. No continuous/ragged
   batching, cache-aware routing or multi-replica cache placement.
 - GQA/MHA/MQA KV geometry only. MLA layout source is audited, not imported as compute support.
-- No active attention-KV streaming from SSD, weight offload, remote object-store tier,
+- Active decode streaming is a separate unvalidated composition, not covered by
+  this study. Prefill working KV remains in HBM. No weight offload, remote object-store tier,
   NAND/FTL simulation, filesystem simulator, cold-device service or automatic durability inference.
 - GPU energy includes the changed timeline but excludes SSD/CPU/NIC power.
 - The tier model does not reproduce the published four-tier RDMA Mooncake experiment.

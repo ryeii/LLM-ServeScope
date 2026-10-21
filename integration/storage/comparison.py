@@ -58,16 +58,17 @@ this regression proves equality for the documented setup, not every possible pol
 
 ## What SSD selection means
 
-Every current layout keeps **active attention KV in GPU HBM**. The layout controls
+This controlled comparison holds **active attention KV in GPU HBM**. The layout controls
 retained prompt prefixes used between requests. A hit restores ready prefix blocks
 before prefill; new retained blocks and evicted blocks incur publication/spill work.
 Decode does not stream its working KV from SSD at each output token. Thus SSD prefix
 retention is not a simulation of active attention-KV offload.
 
-A real active-offload model would need per-step working-set transfers, GPU staging
-capacity, dependency/overlap and cache residency rules. The current UI and export
-explicitly identify that unsupported capability. No active-offload performance claim
-is inferred from the storage-path or prefix-cache experiments.
+Active decode placement is now a separate control, with explicit per-step reads,
+append writes, staging capacity and shared I/O queues. See the
+[active-KV model](active-kv-model.md) for equations and its unvalidated serialized
+streaming assumptions. No active-offload accuracy claim is inferred from these
+prefix-cache experiments or from local file-I/O calibration.
 
 A prefix layout can have a modest effect when decoding dominates, few ready prefixes
 are reused, capacity is small or arrival rate limits the finite run. Prefix reuse also

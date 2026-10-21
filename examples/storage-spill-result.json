@@ -1848,7 +1848,14 @@
       "spine_latency_us": 10.0,
       "handoff_channels": 1
     },
-    "kv_precision": "bf16"
+    "kv_precision": "bf16",
+    "active_kv": {
+      "placement": "hbm",
+      "hbm_resident_GB": 1.0,
+      "staging_GB": 0.0625,
+      "dram_total_GB": 128.0,
+      "ssd_total_GB": 1024.0
+    }
   },
   "model": {
     "name": "Llama 3.1 8B",
@@ -1901,6 +1908,9 @@
       "gpus": 1,
       "retained_cache_reservation_GB": 0.067108864,
       "active_kv_budget_bytes": 63838814208.0,
+      "active_decode_resident_budget_bytes": 0,
+      "active_decode_reservation_GB": 0.0,
+      "staging_GB": 0,
       "active_kv_GB": 0.1343488,
       "retained_kv_GB": 0.067108864
     },
@@ -1919,6 +1929,9 @@
       "gpus": 1,
       "retained_cache_reservation_GB": 0.0,
       "active_kv_budget_bytes": 63939411968.0,
+      "active_decode_resident_budget_bytes": 0,
+      "active_decode_reservation_GB": 0.0,
+      "staging_GB": 0,
       "active_kv_GB": 0.1343488,
       "retained_kv_GB": 0.0
     }
@@ -5686,6 +5699,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 2,
       "ready_ms": 27.89080559059347,
       "previous_resource_event": null,
@@ -5727,6 +5742,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 3,
       "ready_ms": 27.910838087309887,
       "previous_resource_event": null,
@@ -5768,6 +5785,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 4,
       "ready_ms": 30.717040753976555,
       "previous_resource_event": 2,
@@ -6664,6 +6683,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 9,
       "ready_ms": 527.8908055905935,
       "previous_resource_event": null,
@@ -6705,6 +6726,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 10,
       "ready_ms": 574.2452375905934,
       "previous_resource_event": 3,
@@ -6746,6 +6769,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 11,
       "ready_ms": 577.0514402572601,
       "previous_resource_event": 4,
@@ -6787,6 +6812,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 12,
       "ready_ms": 577.0714727539765,
       "previous_resource_event": 9,
@@ -6828,6 +6855,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 13,
       "ready_ms": 623.4259047539765,
       "previous_resource_event": 10,
@@ -6869,6 +6898,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 14,
       "ready_ms": 626.2321074206432,
       "previous_resource_event": 11,
@@ -7765,6 +7796,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 19,
       "ready_ms": 1027.8908055905936,
       "previous_resource_event": 12,
@@ -7806,6 +7839,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 20,
       "ready_ms": 1074.2452375905937,
       "previous_resource_event": 13,
@@ -7847,6 +7882,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 21,
       "ready_ms": 1077.0514402572603,
       "previous_resource_event": 14,
@@ -7888,6 +7925,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 22,
       "ready_ms": 1077.0714727539766,
       "previous_resource_event": 19,
@@ -7929,6 +7968,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 23,
       "ready_ms": 1123.4259047539767,
       "previous_resource_event": 20,
@@ -7970,6 +8011,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 24,
       "ready_ms": 1126.2321074206434,
       "previous_resource_event": 21,
@@ -8866,6 +8909,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 29,
       "ready_ms": 1527.8908055905936,
       "previous_resource_event": 22,
@@ -8907,6 +8952,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 30,
       "ready_ms": 1574.2452375905937,
       "previous_resource_event": 23,
@@ -8948,6 +8995,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 31,
       "ready_ms": 1577.0514402572603,
       "previous_resource_event": 24,
@@ -8989,6 +9038,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 32,
       "ready_ms": 1577.0714727539766,
       "previous_resource_event": 29,
@@ -9030,6 +9081,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 33,
       "ready_ms": 1623.4259047539767,
       "previous_resource_event": 30,
@@ -9071,6 +9124,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 34,
       "ready_ms": 1626.2321074206434,
       "previous_resource_event": 31,
@@ -9415,6 +9470,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 37,
       "ready_ms": 2000.0,
       "previous_resource_event": 32,
@@ -9456,6 +9513,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 38,
       "ready_ms": 2028.7696213333334,
       "previous_resource_event": 33,
@@ -9497,6 +9556,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 39,
       "ready_ms": 2031.575824,
       "previous_resource_event": 37,
@@ -9538,6 +9599,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 40,
       "ready_ms": 2060.3454453333334,
       "previous_resource_event": 38,
@@ -10158,6 +10221,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 44,
       "ready_ms": 2500.0,
       "previous_resource_event": 39,
@@ -10199,6 +10264,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 45,
       "ready_ms": 2528.7696213333334,
       "previous_resource_event": 40,
@@ -10240,6 +10307,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 46,
       "ready_ms": 2531.575824,
       "previous_resource_event": 44,
@@ -10281,6 +10350,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 47,
       "ready_ms": 2560.3454453333334,
       "previous_resource_event": 45,
@@ -10901,6 +10972,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 51,
       "ready_ms": 3000.0,
       "previous_resource_event": 46,
@@ -10942,6 +11015,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 52,
       "ready_ms": 3028.7696213333334,
       "previous_resource_event": 47,
@@ -10983,6 +11058,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 53,
       "ready_ms": 3031.575824,
       "previous_resource_event": 51,
@@ -11024,6 +11101,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 54,
       "ready_ms": 3060.3454453333334,
       "previous_resource_event": 52,
@@ -11644,6 +11723,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 58,
       "ready_ms": 3500.0,
       "previous_resource_event": 54,
@@ -11685,6 +11766,8 @@
         "Network": 0,
         "Launch": 0
       },
+      "scope": "prefix",
+      "model_phase": "prefill",
       "event_id": 59,
       "ready_ms": 3502.8062026666666,
       "previous_resource_event": 34,
@@ -15100,7 +15183,7 @@
     "GPU operator service times use nested-CV selected shape-informed functions fitted to KAIST BF16 or Vidur FP16 profiles; no runtime timing-table lookup, GPU-ID correction or exact-match override. Profiled configurations also have prediction error.",
     "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
     "Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.",
-    "Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.",
+    "Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, blocking publication/spill before handoff, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.",
     "Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."
   ],
   "provenance": {
@@ -15109,7 +15192,7 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-8B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "c88748fa4dbf1726b942f7d1acab46f2d956ac7548cc6ab7432ccd499f81059f",
+    "config_sha256": "cc26e0c2387c3ae1a4bc125bcc9209cc5a613705a11db84c900401a98b061910",
     "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }

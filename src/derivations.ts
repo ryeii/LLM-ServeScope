@@ -1,3 +1,7 @@
+import {
+  activeStageCalculation,
+  activeHandoffCalculation,
+} from "./activeCalculations";
 /* Run-specific dependency graph. Every edge is lazy, and leaves identify provenance. */
 import {
   type Calculation,
@@ -720,6 +724,15 @@ function queueCalculation(r: Obj, e: Obj): Calculation {
 }
 export function eventService(r: Obj, e: Obj): Calculation {
   if (e.phase === "storage") return storageEventCalculation(r, e);
+  if (e.kind === "active_handoff") return activeHandoffCalculation(r, e);
+  if (e.active_io_event_ids !== undefined)
+    return activeStageCalculation(r, e, () =>
+      eventService(r, {
+        ...e,
+        active_io_event_ids: undefined,
+        duration_ms: e.gpu_service_ms,
+      }),
+    );
   if (e.phase === "transfer" || e.kind === "pipeline_transfer")
     return {
       ...calc(
@@ -2342,8 +2355,16 @@ function residentCount(r: Obj, phase: string): Calculation {
       "Capacity reservation includes queued requests assigned to a replica, not just the currently executing batch. This deliberately conservative rule is independent of the admission permit limit.",
   };
 }
-function busyCalculation(r: Obj, phase?: string): Calculation {
-  const entries = Object.entries(r.accounting.busy_ms).filter(
+function busyCalculation(
+  r: Obj,
+  phase?: string,
+  computeOnly = false,
+): Calculation {
+  const entries = Object.entries(
+    computeOnly && r.accounting.compute_busy_ms
+      ? r.accounting.compute_busy_ms
+      : r.accounting.busy_ms,
+  ).filter(
     ([k]) =>
       !phase || k.startsWith((r.config.separated ? phase : "shared") + ":"),
   );
@@ -2362,10 +2383,29 @@ function busyCalculation(r: Obj, phase?: string): Calculation {
           "Busy_GPU_ms = Σ stage_service_ms × TP × EP",
           [
             ...r.timeline
-              .filter((e: Obj) => e.resource === resource)
+              .filter(
+                (e: Obj) =>
+                  e.resource === resource &&
+                  (!computeOnly || e.kind !== "active_staging"),
+              )
               .map((e: Obj) =>
-                ms(`event_${e.event_id}`, eventLabel(e), e.duration_ms, () =>
-                  eventService(r, e),
+                ms(
+                  `event_${e.event_id}`,
+                  eventLabel(e),
+                  computeOnly
+                    ? (e.gpu_service_ms ?? e.duration_ms)
+                    : e.duration_ms,
+                  () =>
+                    eventService(
+                      r,
+                      computeOnly
+                        ? {
+                            ...e,
+                            active_io_event_ids: undefined,
+                            duration_ms: e.gpu_service_ms ?? e.duration_ms,
+                          }
+                        : e,
+                    ),
                 ),
               ),
             v("TP", "Tensor parallelism", p.tp, "", () =>
@@ -2430,7 +2470,7 @@ function dynamicEnergy(r: Obj, phase: string): Calculation {
     busy = q.weighted_busy_ms / 1000;
   const vars = [
     v("B_s", "Weighted GPU busy time", busy, "GPU·s", () =>
-      scaled(busyCalculation(r, phase), 0.001, "GPU·s"),
+      scaled(busyCalculation(r, phase, true), 0.001, "GPU·s"),
     ),
     v("P_idle", "Idle power", q.idle_watts, "W", () =>
       hardware(r, phase, "idle_watts", "Idle power"),

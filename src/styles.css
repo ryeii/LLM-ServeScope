@@ -2556,3 +2556,11 @@ footer {
 
 .storage-spill-table { max-height: 320px; overflow: auto; }
 .storage-spill-table th { position: sticky; top: 0; background: #f7fafb; z-index: 1; }
+
+.active-kv-view { margin-bottom: 24px; }
+.active-kv-baseline { margin-bottom: 24px; }
+.model-scope-note { color: #704b20; background: #fff9ed; border: 1px solid #ead8b8; border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.6; }
+.active-kv-view .table-scroll { max-width: 100%; overflow-x: auto; }
+
+.active-request-table { max-height: 450px; overflow: auto; }
+.active-request-table thead { position: sticky; top: 0; background: var(--card, white); z-index: 1; }

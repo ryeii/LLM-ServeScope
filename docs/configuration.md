@@ -166,7 +166,7 @@ Spill copies become reusable only when their transfer completes. Publication wai
 for required eviction moves; outgoing victims are unavailable to new lookups while
 in flight. Host↔GPU moves use the PCIe queue, SSD→host moves read SSD, and host→SSD
 moves write SSD. Cascades charge each actual move; the last tier discards its LRU
-victim. These are retained prefix cache policies: **active attention KV stays in GPU HBM**.
+victim. These policies control retained prefixes; active decode placement is independent.
 The result exports the selected layout, spill direction/counts, transitions, queue
 intervals and resulting latency. The UI shows primary/spill/unused roles and the
 last 100 completed moves; exports retain every move.
@@ -186,9 +186,16 @@ query/context shape stays uniform; excess restored tokens are recomputed. Active
 admission reserves the whole microbatch atomically. Variable-length replay requires
 batch size one. Loading a trace does not change caps or replicas automatically.
 
-All current layouts keep active attention KV in HBM throughout decoding. “SSD only”
-means **SSD-only retained prompt prefixes**, not per-token active-KV streaming.
+The retained-prefix “SSD only” selection means **SSD-only retained prompt prefixes**.
+Set **Active decode KV placement** independently to model per-token DRAM/SSD traffic.
+The default active placement is HBM only.
 See the [controlled default comparison](prefix-layout-comparison.md) for the original
 batching regression, corrected numbers, exact baseline-equivalence checks and scope.
 
 Turning prefix retention off preserves imported request records and their relative arrivals; only retained-cache placement is disabled. Uniform fields remain locked while records supply the workload. Use generated requests to return to uniform inputs.
+
+### Independent active decode KV
+
+Use **Active decode KV placement** independently of **Retained prefix cache layout**. Choose HBM, DRAM, SSD, HBM + DRAM spill or HBM + SSD spill. Hybrid HBM budgets and staging buffers are per decode GPU; total DRAM/SSD capacities are shared device totals, including enabled prefix partitions. Configure both lifetimes’ shared physical service functions in **KV I/O paths**.
+
+Offload adds explicit initialization, every-step reads and append writes, staging and backing admission. Prefill working KV remains in HBM. The model uses HBM-reference GPU costs plus serialized external stalls; its active-offload composition has no measured end-to-end error bound. See [equations, event interpretation and limitations](active-kv-model.md), and [controlled placement predictions](active-kv-comparison.md).

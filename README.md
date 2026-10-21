@@ -39,6 +39,9 @@ collectives and the configured network hierarchy.
   dense/MoE decoder geometry with MHA, GQA or MQA attention.
 - Independent prefill/decode hardware, TP/PP/EP, replicas, engine-efficiency
   policies, batch caps, active-batch limits and memory reservations.
+- Independent retained-prefix policies and active decode KV placement: HBM, DRAM,
+  SSD, HBM + DRAM spill or HBM + SSD spill. Explicit staging, admission and
+  shared I/O queues; [model and validation scope](docs/active-kv-model.md).
 - Separate weight/KV precision, chunk sizes, hierarchical fabrics, parallel KV
   links, power assumptions and GPU-hour cost inputs.
 

@@ -1,11 +1,16 @@
 import { calc, v, type Calculation, numberText } from "./calculations";
 import { eventService, eventCalculation } from "./derivations";
+import { activeRequestPath } from "./activeCalculations";
 type Obj = Record<string, any>;
 export const storageReport =
   "https://github.com/ryeii/LLM-ServeScope/blob/main/docs/storage-2026-10-20/README.md";
 const total = (xs: Obj[], f: (x: Obj) => number) =>
   xs.reduce((s, x) => s + f(x), 0);
-export function storageEventCalculation(r: Obj, e: Obj): Calculation {
+export function storageEventCalculation(
+  r: Obj,
+  e: Obj,
+  serviceOnly = false,
+): Calculation {
   if (e.kind === "kv_memory_wait")
     return {
       ...calc(
@@ -108,6 +113,7 @@ export function storageEventCalculation(r: Obj, e: Obj): Calculation {
   if (e.extrapolated)
     service.note =
       "At least one chunk size lies outside the measured I/O-size range.";
+  if (serviceOnly) return service;
   return {
     ...calc(
       `${e.tier} ${e.operation} · ${e.cause}`,
@@ -138,7 +144,7 @@ export function storageEventCalculation(r: Obj, e: Obj): Calculation {
       e.end_ms,
       "ms",
     ),
-    summary: `${e.payload_bytes.toLocaleString()} bytes. ${e.cause === "restore" ? "The request cannot compute its suffix until restoration finishes." : e.cause === "spill" ? "An LRU victim moves to its spill tier. The destination becomes ready only after this transfer completes; the triggering publication waits." : "Cache publication completes before this request hands off to decode."}`,
+    summary: `${e.payload_bytes.toLocaleString()} bytes. ${e.scope === "active" ? "Active decode KV transfer. Per-token read/append and initialization stalls are included in their parent GPU/stream reservation once." : e.cause === "restore" ? "The request cannot compute its suffix until restoration finishes." : e.cause === "spill" ? "An LRU victim moves to its spill tier. The destination becomes ready only after this transfer completes; the triggering publication waits." : "Cache publication completes before this request hands off to decode."}`,
     source: "Executed storage reservation · " + e.resource,
   };
 }
@@ -221,6 +227,11 @@ export function storageRequestCalculation(
   q: Obj,
   key: string,
 ): Calculation {
+  if (
+    r.active_kv &&
+    ["first_token_ms", "finish_ms", "prefill_release_ms"].includes(key)
+  )
+    return activeRequestPath(r, q, key, (e) => eventService(r, e));
   const k = q.cache,
     L = q.output_tokens;
   if (key === "batch_ready_ms")
@@ -462,6 +473,7 @@ export function storageMetricCalculation(r: Obj, key: string): Calculation {
   const events = r.timeline.filter(
     (e: Obj) =>
       e.kind === "storage_io" &&
+      e.scope !== "active" &&
       (key === "ssd_read_bytes"
         ? e.tier === "ssd" && e.operation === "read"
         : key === "ssd_write_bytes"
