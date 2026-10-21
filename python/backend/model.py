@@ -8,7 +8,7 @@ import simpy
 ROOT = Path(__file__).resolve().parents[1]
 PIN = "b09c7aaab4b072d73136641841cc2688616c49eb"
 from .catalog import MODELS, HARDWARE, BASE
-from .storage import DEFAULT_STORAGE, CacheTiers, validate_storage, workload as storage_workload, fit_dataset as storage_fits
+from .storage import DEFAULT_STORAGE, CACHE_LAYOUTS, cache_capacity_GB, CacheTiers, validate_storage, workload as storage_workload, fit_dataset as storage_fits
 from .calibration import OPERATOR_NAMES, manifest as calibration_manifest, timing as calibrated_timing
 
 DEFAULT = dict(
@@ -625,7 +625,7 @@ def simulate(config):
             if phase == "prefill"
             else max_batch * m["hidden"] * dtype * 8 / p["tp"]
         )
-        cache_reservation = c["storage"]["hbm_cache_GB"] * 1e9 if tier_mode and (phase == "prefill" or not c["separated"]) else 0
+        cache_reservation = cache_capacity_GB(c["storage"], "hbm") * 1e9 if tier_mode and (phase == "prefill" or not c["separated"]) else 0
         if tier_mode:
             # Active requests reserve real per-GPU KV payload on admission. Queued
             # requests no longer allocate max-context KV in advance.
@@ -1199,7 +1199,7 @@ def simulate(config):
         calibration["summary"] = "Original roofline · uncalibrated"
     if tier_mode:
         warnings = [w for w in warnings if not w.startswith("Memory utilization and runtime")]
-        warnings.extend(["KV-tier mode: single-request scheduling, cold inclusive LRU copies, write-through publication before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."])
+        warnings.extend(["KV-tier mode: single-request scheduling, the selected retained-cache layout, blocking publication/spill before handoff, and pinned active HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."])
     return dict(
         schema_version="servescope.behavioral.v4" if tier_mode else "servescope.behavioral.v3",
         **(dict(storage=dict(tiers.summary(workload_rows),active_memory_ledger=memory_ledger),workload_totals=dict(input_tokens=input_total,output_tokens=output_total,computed_prefill_tokens=input_total-tiers.stats["reused_tokens"])) if tier_mode else {}),
@@ -1243,6 +1243,7 @@ def catalog():
         hardware=HARDWARE,
         default_config=validate(DEFAULT),
         storage_profiles=storage_fits(),
+        storage_layouts=CACHE_LAYOUTS,
         upstream_revision=PIN,
         calibration=calibration_manifest(),
     )
