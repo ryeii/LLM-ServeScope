@@ -2515,3 +2515,20 @@ footer {
 .formula-tooltip-heading, .formula-tooltip pre, .formula-result, .formula-tooltip-hint { flex-shrink: 0; }
 .formula-tooltip-details { min-height: 0; overflow: auto; overscroll-behavior: contain; padding-right: 4px; }
 .formula-result { border-top: 1px solid #dbe7e7; margin-top: 8px; background: white; }
+.formula-cascade { position: fixed; inset: 0; pointer-events: none; z-index: 10000; }
+.formula-cascade .formula-tooltip { pointer-events: auto; width: min(420px, calc(100vw - 24px)); max-height: min(690px, calc(100dvh - 24px)); }
+.formula-tooltip-heading { position: relative; padding-right: 24px; }
+.formula-tooltip .formula-close { position: absolute; right: -5px; top: -7px; padding: 2px 7px; border: 0; background: none; font-size: 23px; color: #69818b; }
+.formula-path { display: flex; gap: 6px; align-items: center; overflow: auto; white-space: nowrap; flex-shrink: 0; padding-bottom: 9px; }
+.formula-path button { border: 0; background: none; color: #266b5a; padding: 0; font-size: 11px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+.formula-path span { color: #81948e; }
+.formula-tooltip .formula-summary { margin: 0 0 11px; font-size: 13px; line-height: 1.5; color: #2b4b5b; flex-shrink: 0; }
+.formula-tooltip dt .formula-term { width: 100%; position: relative; display: block; text-align: left; border: 0; background: transparent; padding: 0 13px 0 0; font: inherit; cursor: pointer; border-radius: 3px; }
+.formula-term b { position: absolute; right: 0; top: 2px; font-size: 18px; color: #29856e; }
+.formula-tooltip .formula-term-row:has(.formula-term:hover), .formula-tooltip .formula-term-row:has(.formula-term:focus-visible) { background: #f0f7f5; }
+.formula-term:focus-visible { outline: 2px solid #258d79; outline-offset: 2px; }
+.formula-tooltip dd { align-self: center; }
+.formula-tooltip-details > a { display: block; margin-top: 10px; color: #1d7560; font-size: 12px; }
+.formula-tooltip-hint { display: flex; gap: 10px; align-items: center; }
+.formula-tooltip-hint button { padding: 3px 6px; flex-shrink: 0; border: 1px solid #c8dcd6; border-radius: 4px; background: #f2f8f6; color: #22634f; font-size: 12px; }
+@media(max-width: 899px) { .formula-cascade .formula-tooltip { max-height: calc(100dvh - 90px); } }

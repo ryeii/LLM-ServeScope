@@ -37,6 +37,12 @@ import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
 import FormulaValue from "./FormulaValue";
 import {
+  intervalDerivation,
+  explainCalculation,
+  ceilingCalculation,
+  fabricCalculation,
+} from "./derivations";
+import {
   type Calculation,
   metricCalculation,
   memoryCalculation,
@@ -444,7 +450,8 @@ function MemoryChart({ r }: { r: Obj }) {
     </Chart>
   );
 }
-function Distribution({ requests }: { requests: Obj[] }) {
+function Distribution({ r }: { r: Obj }) {
+  const requests: Obj[] = r.requests;
   const fields = [
     ["ttft_ms", "Time to first token"],
     ["tpot_ms", "Time per output token"],
@@ -521,7 +528,7 @@ function Distribution({ requests }: { requests: Obj[] }) {
               >
                 <FormulaValue
                   as="tspan"
-                  calculation={quantileCalculation(requests, key, 1)}
+                  calculation={quantileCalculation(requests, key, 1, r)}
                 >
                   {fmt(a.at(-1)!, 0)}
                 </FormulaValue>
@@ -547,15 +554,19 @@ function Distribution({ requests }: { requests: Obj[] }) {
             >
               <FormulaValue
                 as="tspan"
-                calculation={calc(
-                  "Latency axis tick",
-                  "Tick_ms = fraction × max(request latency)",
-                  [
-                    v("fraction", "Axis fraction", t),
-                    v("max_latency", "Maximum request latency", max, "ms"),
-                  ],
-                  max * t,
-                  "ms",
+                calculation={explainCalculation(
+                  r,
+                  calc(
+                    "Latency axis tick",
+                    "Tick_ms = fraction × max(request latency)",
+                    [
+                      v("fraction", "Axis fraction", t),
+                      v("max_latency", "Maximum request latency", max, "ms"),
+                    ],
+                    max * t,
+                    "ms",
+                  ),
+                  { metric: "latency_ms" },
                 )}
               >
                 {fmt(max * t, 0)} ms
@@ -671,24 +682,7 @@ function Roofline({ r, phase }: { r: Obj; phase: string }) {
           fill="#218b71"
         >
           Nominal tensor ceiling{" "}
-          <FormulaValue
-            as="tspan"
-            calculation={calc(
-              "Nominal tensor ceiling",
-              "Peak = precision_peak × clock_scale",
-              [
-                v(
-                  "precision_peak",
-                  "Configured dense peak",
-                  peak / hw.clock_scale,
-                  "TFLOP/s",
-                ),
-                v("clock_scale", "Compute clock scale", hw.clock_scale),
-              ],
-              peak,
-              "TFLOP/s",
-            )}
-          >
+          <FormulaValue as="tspan" calculation={ceilingCalculation(r, phase)}>
             {fmt(peak)} TFLOP/s
           </FormulaValue>
         </text>
@@ -763,7 +757,7 @@ function BoxGraph({ r }: { r: Obj }) {
           {visible.map((e: Obj, i: number) => (
             <FormulaValue
               as="rect"
-              calculation={intervalCalculation(e)}
+              calculation={intervalDerivation(r, e)}
               formulaKey={"timeline." + i}
               key={i}
               x={160 + (e.start_ms / max) * 800}
@@ -2449,26 +2443,7 @@ function App() {
                       <h3>Compute ceiling</h3>
                       <p>
                         <FormulaValue
-                          calculation={calc(
-                            "Nominal tensor ceiling",
-                            "Peak = precision_peak × clock_scale",
-                            [
-                              v(
-                                "clock_scale",
-                                "Compute clock scale",
-                                r.config[phase].hardware.clock_scale,
-                              ),
-                              v(
-                                "precision_peak",
-                                "Configured precision peak",
-                                r.phases[phase].detail.peak_tflops /
-                                  r.config[phase].hardware.clock_scale,
-                                "TFLOP/s",
-                              ),
-                            ],
-                            r.phases[phase].detail.peak_tflops,
-                            "TFLOP/s",
-                          )}
+                          calculation={ceilingCalculation(r, phase)}
                         >
                           {fmt(r.phases[phase].detail.peak_tflops)} dense TFLOPS
                         </FormulaValue>
@@ -2482,43 +2457,7 @@ function App() {
                       <p>
                         {r.phases[phase].detail.fabric.name}:{" "}
                         <FormulaValue
-                          calculation={calc(
-                            "Limiting fabric bandwidth",
-                            "BW = limiting configured link bandwidth for this fabric tier",
-                            [
-                              v(
-                                "fabric",
-                                "Selected fabric",
-                                r.phases[phase].detail.fabric.name,
-                              ),
-                              v(
-                                "intra",
-                                "Intra-node link",
-                                r.config[phase].hardware.intra_node_bw_GBps,
-                                "GB/s",
-                              ),
-                              v(
-                                "same_rail",
-                                "Same-rail link",
-                                r.config[phase].hardware.same_rail_bw_GBps,
-                                "GB/s",
-                              ),
-                              v(
-                                "scale_out",
-                                "Scale-out link",
-                                r.config[phase].hardware.scale_out_bw_GBps,
-                                "GB/s",
-                              ),
-                              v(
-                                "spine",
-                                "Spine link",
-                                r.config.network.spine_bw_GBps,
-                                "GB/s",
-                              ),
-                            ],
-                            r.phases[phase].detail.fabric.bw,
-                            "GB/s",
-                          )}
+                          calculation={fabricCalculation(r, phase, "bw")}
                         >
                           {fmt(r.phases[phase].detail.fabric.bw)} GB/s
                         </FormulaValue>{" "}
@@ -2701,7 +2640,7 @@ function App() {
                     </div>
                   </div>
                   <BoxGraph r={r} />
-                  <Distribution requests={r.requests} />
+                  <Distribution r={r} />
                 </>
               )}
               {tab === "graph" && (

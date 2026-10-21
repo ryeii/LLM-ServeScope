@@ -16,15 +16,14 @@ export async function formulaScenario(page: Page) {
   await expect(throughput).toBeVisible({ timeout: 60000 });
   const initial = await exported(page);
   await throughput.hover();
-  let tip = page.getByRole("tooltip");
+  let tip = page.locator('[data-cascade-depth="0"]');
   await expect(tip).toBeVisible();
   await expect(tip.locator("pre")).toContainText("N_req × L_out / T_s");
   await expect(tip).toContainText("Completed requests");
   const outputRow = () =>
     tip
       .getByText("Output tokens per request", { exact: true })
-      .locator("..")
-      .locator("..")
+      .locator('xpath=ancestor::div[contains(@class,"formula-term-row")]')
       .locator("dd");
   await expect(outputRow()).toHaveText(
     String(initial.config.output_tokens) + "tokens",
@@ -78,8 +77,7 @@ export async function formulaScenario(page: Page) {
   );
   const intercept = tip
     .getByText("Fitted intercept", { exact: true })
-    .locator("..")
-    .locator("..")
+    .locator('xpath=ancestor::div[contains(@class,"formula-term-row")]')
     .locator("dd");
   await expect(intercept).toContainText(
     op.fit_parameters.coefficients[0].toLocaleString("en-US", {

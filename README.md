@@ -57,8 +57,14 @@ collectives and the configured network hierarchy.
 Pin a baseline, edit a scenario and run again to compare metrics. Export/import
 scenario JSON, export complete results and download SVG charts. Hover or keyboard-focus
 a result number to inspect its equation, labeled values, units and fitted coefficients.
-Touch users can tap a value; press Esc or tap outside to close. Explanations use the
-completed run, so pending scenario edits do not change the displayed calculation. Changed inputs
+Hover or select a marked term to follow a cascade of explanations: throughput →
+simulation horizon → last request completion → service and queues → GPU stage →
+operator function → arithmetic/traffic, fitted coefficients and hardware inputs.
+The cards use the actual executed shapes and resource reservations, and identify
+scenario inputs, fitted parameters and modeling assumptions at the source.
+Breadcrumbs and Back retain context; Esc steps back, and the close button or a tap
+outside closes the cascade. On narrow screens, one card is shown at a time.
+Explanations use the completed run, so pending edits do not change its derivation. Changed inputs
 are applied only when **Run scenario** is selected.
 
 ## Fitted GPU service-time model

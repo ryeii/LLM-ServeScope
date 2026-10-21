@@ -678,6 +678,17 @@ def simulate(config):
                     (shared_phase, replica, stage), simpy.Resource(env, capacity=1)
                 )
 
+    # Explanation metadata records the executed schedule, not a second simulation.
+    last_resource_event = {}
+
+    def record_interval(event, ready_ms):
+        resource = event["resource"]
+        event.update(event_id=len(timeline), ready_ms=ready_ms,
+                     previous_resource_event=last_resource_event.get(resource),
+                     queue_ms=event["start_ms"]-ready_ms)
+        timeline.append(event)
+        last_resource_event[resource] = event["event_id"]
+
     timing_records = {}
 
     def remember_timing(phase, name, cost):
@@ -701,7 +712,9 @@ def simulate(config):
         ops, detail = op_cache[key]
         for operation in ops:
             remember_timing(phase, operation["name"], operation)
+        shape_id = f"{phase}:{batch}:{tokens}:{context}"
         for stage, resource in enumerate(resources[phase][replica]):
+            ready_ms = env.now
             with resource.request() as ticket:
                 yield ticket
                 begin = env.now
@@ -713,6 +726,7 @@ def simulate(config):
                 )
                 duration = sum(o["duration_ms"] for o in ops) * layers
                 endpoint_costs = []
+                head_fallback_ms = 0
                 if c["timing_mode"] == "calibrated":
                     # KAIST's shared prologue/head are outside the repeated block.
                     names = (["embedding"] if stage == 0 else []) + (
@@ -748,7 +762,8 @@ def simulate(config):
                         * 1000
                     )
                     if not any(endpoint["name"] == "lm_head" for endpoint in endpoint_costs):
-                        duration += max(hc, hm)
+                        head_fallback_ms = max(hc, hm)
+                        duration += head_fallback_ms
                     component["Compute"] += hc
                     component["Memory"] += hm
                     traffic["flops"] += head_flops * p["tp"] * p["ep"]
@@ -761,7 +776,7 @@ def simulate(config):
                 label_phase = phase if c["separated"] else "shared"
                 rid = f"{label_phase}:{replica}:{stage}"
                 busy[rid] = busy.get(rid, 0) + duration
-                timeline.append(
+                record_interval(
                     dict(
                         phase=phase,
                         resource=rid,
@@ -775,7 +790,9 @@ def simulate(config):
                         context=context,
                         components=component,
                         endpoint_timing=endpoint_costs,
-                    )
+                        shape_id=shape_id, stage=stage, layers_per_stage=layers,
+                        tokens=tokens, head_fallback_ms=head_fallback_ms,
+                    ), ready_ms
                 )
                 for o in ops:
                     traffic["flops"] += o["flops"] * layers * p["tp"] * p["ep"]
@@ -808,6 +825,7 @@ def simulate(config):
                     component_work[k] += v * p["tp"] * p["ep"]
             if stage < p["pp"] - 1:
                 shared_phase = "prefill" if not c["separated"] else phase
+                ready_ms = env.now
                 with pipeline_links[
                     (shared_phase, replica, stage)
                 ].request() as link_ticket:
@@ -819,10 +837,11 @@ def simulate(config):
                         payload / (link["bw"] * 1e9) * 1000 + link["latency"] / 1000
                     )
                     yield env.timeout(latency)
-                    timeline.append(
+                    record_interval(
                         dict(
                             phase=phase,
-                            kind="pipeline_transfer",
+                            kind="pipeline_transfer", payload_bytes=payload, tokens=tokens,
+                            link_bandwidth_GBps=link["bw"], link_latency_us=link["latency"],
                             resource=f"{'shared' if not c['separated'] else phase}:{replica}:link{stage}",
                             batch_id=batch_id,
                             request_ids=request_ids,
@@ -838,7 +857,7 @@ def simulate(config):
                                 "Network": latency,
                                 "Launch": 0,
                             },
-                        )
+                        ), ready_ms
                     )
                     traffic["network_bytes"] += payload * p["tp"] * p["ep"]
                     phase_traffic[phase]["network_bytes"] += payload * p["tp"] * p["ep"]
@@ -846,15 +865,17 @@ def simulate(config):
 
     next_decode_batch = 0
 
-    def finish_decode(ids, prefill_bid, ready_ms, prefill_end, first):
+    def finish_decode(ids, prefill_bid, ready_ms, prefill_admitted, prefill_end, first):
         nonlocal next_decode_batch
         bid = next_decode_batch
         next_decode_batch += 1
         replica = bid % c["decode"]["replicas"]
         times = [first]
+        decode_admitted = first
         if c["output_tokens"] > 1:
             with admissions["decode"][replica].request() as ticket:
                 yield ticket
+                decode_admitted = env.now
                 for step in range(c["output_tokens"] - 1):
                     yield env.process(
                         work(
@@ -876,6 +897,8 @@ def simulate(config):
                     id=identifier,
                     arrival_ms=arrival,
                     batch_ready_ms=ready_ms,
+                    prefill_admitted_ms=prefill_admitted,
+                    decode_admitted_ms=decode_admitted,
                     prefill_batch_id=prefill_bid,
                     decode_batch_id=bid,
                     prefill_end_ms=prefill_end,
@@ -895,6 +918,7 @@ def simulate(config):
         replica = bid % c["prefill"]["replicas"]
         with admissions["prefill"][replica].request() as ticket:
             yield ticket
+            prefill_admitted = env.now
             done = 0
             while done < c["input_tokens"]:
                 n = min(c["prefill_chunk"], c["input_tokens"] - done)
@@ -913,6 +937,7 @@ def simulate(config):
             * m["layers"]
         )
         if c["separated"]:
+            transfer_ready = env.now
             with transfer[bid % len(transfer)].request() as ticket:
                 yield ticket
                 ts = env.now
@@ -921,9 +946,12 @@ def simulate(config):
                     + c["network"]["spine_latency_us"] / 1000
                 )
                 yield env.timeout(transfer_ms)
-                timeline.append(
+                record_interval(
                     dict(
                         phase="transfer",
+                        payload_bytes=kv_bytes,
+                        link_bandwidth_GBps=c["network"]["spine_bw_GBps"],
+                        link_latency_us=c["network"]["spine_latency_us"],
                         resource=f"spine:channel{bid % len(transfer)}",
                         batch_id=bid,
                         request_ids=ids,
@@ -939,7 +967,7 @@ def simulate(config):
                             "Network": transfer_ms,
                             "Launch": 0,
                         },
-                    )
+                    ), transfer_ready
                 )
                 traffic["network_bytes"] += kv_bytes
                 component_work["Network"] += transfer_ms
@@ -952,6 +980,7 @@ def simulate(config):
                     ids[offset : offset + c["decode"]["batch_size"]],
                     bid,
                     ready_ms,
+                    prefill_admitted,
                     prefill_end,
                     first,
                 )
@@ -1104,6 +1133,9 @@ def simulate(config):
         component_work_ms=component_work,
         accounting=dict(busy_ms=busy,phase_traffic=phase_traffic,energy_terms=energy_terms,
                         shared_parameters=shared,expert_parameters=expert),
+        execution_shapes={f"{phase}:{batch}:{tokens}:{context}":
+                          dict(phase=phase,batch=batch,tokens=tokens,context=context,operations=ops)
+                          for (phase,batch,tokens,context),(ops,_) in op_cache.items()},
         requests=requests,
         timeline=sorted(timeline, key=lambda e: e["start_ms"]),
         layers=layer_rows,

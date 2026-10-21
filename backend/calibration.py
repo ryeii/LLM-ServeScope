@@ -40,7 +40,7 @@ def dataset():
     return decode_dataset(Path(__file__).with_name("gpu-fit.json").read_bytes())
 
 
-def work_features(name, m, h, tp, n, *, pc=0, kp=0, nd=0, kv=0, precision="bf16", kv_precision="bf16"):
+def work_features(name, m, h, tp, n, *, pc=0, kp=0, nd=0, kv=0, precision="bf16", kv_precision="bf16", explain=False):
     """Ideal arithmetic/data-movement times in ns for the transfer regression.
 
     These nominal traffic features are not measured DRAM transactions. No SM-wave
@@ -94,7 +94,12 @@ def work_features(name, m, h, tp, n, *, pc=0, kp=0, nd=0, kv=0, precision="bf16"
     # Preserve the meaning of user edits relative to calibration defaults.
     compute *= .65/h.get("compute_efficiency", .65)
     memory *= .8/h.get("memory_efficiency", .8)
-    return [1.0, compute, memory]
+    features = [1.0, compute, memory]
+    if explain:
+        return dict(features=features, flops=flops, traffic_bytes=traffic, peak_tflops=peak,
+                    effective_tp=effective_tp, n=n, pc=pc, kp=kp, nd=nd, kv=kv,
+                    active_experts=active, dtype_bytes=dtype)
+    return features
 
 
 def prediction(coefficients, features, compute_floor=None):
@@ -138,8 +143,9 @@ def timing(name, config, phase, batch, tokens, context):
                  kp=max(0, context-tokens)+tokens/2 if phase == "prefill" else 0,
                  nd=batch if phase == "decode" else 0,
                  kv=max(0, context-1) if phase == "decode" else 0)
-    features = work_features(name,m,h,effective_tp,n,precision=config["precision"],
-                             kv_precision=config["kv_precision"],**shape)
+    fit_work = work_features(name,m,h,effective_tp,n,precision=config["precision"],
+                             kv_precision=config["kv_precision"],explain=True,**shape)
+    features = fit_work["features"]
     arithmetic_floor = features[1]*h.get("compute_efficiency",.65)/.65
     extended = shape_features(name,m,h,effective_tp,n,features,precision=config["precision"],
                               query_tokens=tokens if cohort_name=="vidur" and phase=="prefill" else None,**shape)
@@ -171,6 +177,7 @@ def timing(name, config, phase, batch, tokens, context):
     return dict(duration_ms=max(1,arithmetic_floor,ns)/1e6,
                 timing_source="fitted-profiled-configuration" if covered else "fitted-extrapolation",
                 fit_key=fit_key, fit_features_ns=features, shape_features_ns=extended,
+                fit_work=fit_work, fit_batch=batch, fit_tokens=tokens, fit_context=context,
                 fit_family=fit["family"], fit_cohort=cohort_name, fit_fallback_reason=fallback_reason,
                 fit_parameters={key:fit[key] for key in ("family","coefficients","scale","branches","threshold_tokens") if key in fit},
                 fit_compute_floor_ns=arithmetic_floor, fit_base_ns=evaluate(fit,extended,n,arithmetic_floor),

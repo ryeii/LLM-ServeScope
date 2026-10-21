@@ -1,14 +1,19 @@
+import { explainCalculation, horizonCalculation } from "./derivations";
 /** Explanations use the completed run snapshot, never unsubmitted form inputs. */
 export type Calculation = {
   title: string;
   formula: string;
+  source?: string;
+  summary?: string;
+  links?: { label: string; url: string }[];
   variables: {
     symbol: string;
     label: string;
     value: number | string;
     unit?: string;
+    explain?: () => Calculation;
   }[];
-  result: number;
+  result: number | string;
   unit: string;
   note?: string;
 };
@@ -18,12 +23,13 @@ export const v = (
   label: string,
   value: number | string,
   unit = "",
-) => ({ symbol, label, value, unit });
+  explain?: () => Calculation,
+) => ({ symbol, label, value, unit, explain });
 export const calc = (
   title: string,
   formula: string,
   variables: Calculation["variables"],
-  result: number,
+  result: number | string,
   unit: string,
   note?: string,
 ): Calculation => ({ title, formula, variables, result, unit, note });
@@ -64,7 +70,7 @@ export const numberText = (x: number | string) =>
       : "—"
     : x;
 
-export function metricCalculation(r: Obj, key: string): Calculation {
+function metricBase(r: Obj, key: string): Calculation {
   const m = r.metrics,
     c = r.config,
     requests = r.requests,
@@ -305,11 +311,7 @@ export function metricCalculation(r: Obj, key: string): Calculation {
   );
 }
 
-export function memoryCalculation(
-  r: Obj,
-  phase: string,
-  key: string,
-): Calculation {
+function memoryBase(r: Obj, phase: string, key: string): Calculation {
   const m = r.model,
     c = r.config,
     p = c[phase],
@@ -396,7 +398,7 @@ export function memoryCalculation(
     gpus: ["Pool GPU count", "GPUs = TP × PP × EP × replicas"],
   };
   const [title, formula] = map[key] || [key, "Configured value"];
-  return calc(
+  const explanation = calc(
     phase + " " + title,
     formula,
     [
@@ -414,9 +416,19 @@ export function memoryCalculation(
     mem[key],
     key === "gpus" ? "GPUs" : "GB",
   );
+  const dependencies: Obj = {
+    total_GB: ["weights", "KV", "activation"],
+    capacity_GB: ["physical_GB", "utilization", "reserved_GB"],
+    headroom_GB: ["capacity_GB", "total_GB"],
+    gpus: ["TP", "PP", "EP", "replicas"],
+  };
+  explanation.variables = explanation.variables.filter((row) =>
+    (dependencies[key] || []).includes(row.symbol),
+  );
+  return explanation;
 }
 
-export function operationCalculation(
+function operationBase(
   r: Obj,
   phase: string,
   o: Obj,
@@ -460,8 +472,16 @@ export function operationCalculation(
     );
   if (key === "flops" || key === "hbm_bytes") {
     const row =
-      r.layers.find((item: Obj) => item.phase === phase && item.id === o.id) ||
-      o;
+      o.fit_work || o.batch
+        ? {
+            ...o,
+            batch: o.batch ?? o.fit_batch,
+            tokens: o.tokens ?? o.fit_tokens,
+            context: o.context ?? o.fit_context,
+          }
+        : r.layers.find(
+            (item: Obj) => item.phase === phase && item.id === o.id,
+          ) || o;
     const batch =
         row.batch || Math.min(r.config[phase].batch_size, r.config.requests),
       tokens =
@@ -483,13 +503,20 @@ export function operationCalculation(
       "Down projection": "2 × n × H × I × top_k / (TP × EP)",
       "Expert router": "2 × n × H × experts / TP",
     };
+    const relevant = new Set(
+      (key === "flops"
+        ? (forms[o.name] || "0") + "; n = B × t"
+        : "weight_bytes activation_bytes kv_hbm_bytes"
+      )
+        .replace(/(\d)([A-Za-z_])/g, "$1 $2")
+        .match(/[A-Za-z_]+/g) || [],
+    );
     return calc(
       title,
       key === "flops"
         ? "F = " + (forms[o.name] || "0") + "; n = B × t"
         : "Q = weight_bytes + activation_bytes + kv_hbm_bytes",
       [
-        ...variables,
         v("weight_bytes", "Weights read", o.weight_bytes || 0, "bytes"),
         v(
           "activation_bytes",
@@ -518,7 +545,7 @@ export function operationCalculation(
         v("t", "Tokens per sequence", tokens),
         v("n", "Batch × tokens", batch * tokens),
         v("context", "Context length", context),
-      ],
+      ].filter((row) => relevant.has(row.symbol)),
       o[key],
       key === "flops" ? "FLOP" : "bytes",
       "Tensor geometry and precision determine work; traffic is nominal, not measured memory-controller transactions.",
@@ -698,15 +725,17 @@ export function operationCalculation(
       ),
     };
     const keys =
-      family === "F9" || family === "F8"
+      family === "F9"
         ? ["M_correct"]
-        : family === "F4"
-          ? ["W", "M"]
-          : family === "F7"
-            ? ["C", "M", "r"]
-            : ["F5", "F6"].includes(family)
-              ? ["C", "M", "w"]
-              : ["C", "M"];
+        : family === "F8"
+          ? ["C", "M_correct"]
+          : family === "F4"
+            ? ["W", "M"]
+            : family === "F7"
+              ? ["C", "M", "r"]
+              : ["F5", "F6"].includes(family)
+                ? ["C", "M", "w"]
+                : ["C", "M"];
     const vars = [
       ...coeffs,
       ...keys.map((key) => featureRows[key]),
@@ -757,7 +786,7 @@ export function operationCalculation(
   );
 }
 
-export function componentCalculation(r: Obj, key: string): Calculation {
+function componentBase(r: Obj, key: string): Calculation {
   const contributions = r.timeline.map((e: Obj) => {
     const p = r.config[e.phase === "decode" ? "decode" : "prefill"];
     return (
@@ -783,7 +812,7 @@ export function componentCalculation(r: Obj, key: string): Calculation {
   );
 }
 
-export function trafficCalculation(r: Obj, key: string): Calculation {
+function trafficBase(r: Obj, key: string): Calculation {
   const pre = r.accounting.phase_traffic.prefill[key],
     dec = r.accounting.phase_traffic.decode[key];
   return calc(
@@ -825,13 +854,14 @@ export function quantileCalculation(
   requests: Obj[],
   key: string,
   p: number,
+  run?: Obj,
 ): Calculation {
   const values = requests.map((r) => r[key]).sort((a, b) => a - b),
     x = (values.length - 1) * p,
     lo = Math.floor(x),
     hi = Math.ceil(x),
     result = values[lo] + (values[hi] - values[lo]) * (x - lo);
-  return calc(
+  const explanation = calc(
     key + " quantile",
     "Q(p) = a[lo] + (a[hi] − a[lo]) × (x−lo); x = (N−1)p",
     [
@@ -845,9 +875,12 @@ export function quantileCalculation(
     "ms",
     "Linear interpolation of per-request simulated timestamps.",
   );
+  return run
+    ? explainCalculation(run, explanation, { metric: key })
+    : explanation;
 }
 
-export function sramCalculation(r: Obj, phase: string): Calculation {
+function sramBase(r: Obj, phase: string): Calculation {
   const m = r.model,
     p = r.config[phase],
     detail = r.phases[phase].detail;
@@ -884,10 +917,10 @@ export function scaled(
     formula: c.formula + `\nDisplayed value = base_result × ${factor}`,
     variables: [
       ...c.variables,
-      v("base_result", "Unscaled result", c.result, c.unit),
+      v("base_result", "Unscaled result", c.result, c.unit, () => c),
       v("display_scale", "Unit conversion", factor),
     ],
-    result: c.result * factor,
+    result: Number(c.result) * factor,
     unit,
   };
 }
@@ -900,8 +933,16 @@ export function deltaCalculation(
     "Change versus pinned baseline",
     "Change_% = (current / pinned − 1) × 100",
     [
-      v("current", "Current completed-run value", current.metrics[key]),
-      v("pinned", "Pinned completed-run value", pinned.metrics[key]),
+      v(
+        "current",
+        "Current completed-run value",
+        current.metrics[key],
+        "",
+        () => metricCalculation(current, key),
+      ),
+      v("pinned", "Pinned completed-run value", pinned.metrics[key], "", () =>
+        metricCalculation(pinned, key),
+      ),
     ],
     (current.metrics[key] / pinned.metrics[key] - 1) * 100,
     "%",
@@ -951,3 +992,32 @@ export function nativeMetricCalculation(r: Obj, key: string): Calculation {
     "Taken from the native request CSV. This aggregation has no fitted coefficient.",
   );
 }
+
+// Dependencies are lazy: opening one term builds only the requested explanation.
+export const metricCalculation = (r: Obj, key: string): Calculation =>
+  key === "elapsed_ms"
+    ? horizonCalculation(r)
+    : explainCalculation(r, metricBase(r, key), { metric: key });
+export const memoryCalculation = (
+  r: Obj,
+  phase: string,
+  key: string,
+): Calculation =>
+  explainCalculation(r, memoryBase(r, phase, key), { phase, memory: key });
+export const operationCalculation = (
+  r: Obj,
+  phase: string,
+  o: Obj,
+  key: string,
+): Calculation =>
+  explainCalculation(r, operationBase(r, phase, o, key), {
+    phase,
+    op: o,
+    operation: key,
+  });
+export const componentCalculation = (r: Obj, key: string): Calculation =>
+  explainCalculation(r, componentBase(r, key), { component: key });
+export const trafficCalculation = (r: Obj, key: string): Calculation =>
+  explainCalculation(r, trafficBase(r, key), { traffic: key });
+export const sramCalculation = (r: Obj, phase: string): Calculation =>
+  explainCalculation(r, sramBase(r, phase), { phase });
