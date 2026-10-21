@@ -1621,7 +1621,7 @@ function App() {
           </button>
           <a
             className="upstream-link"
-            href="https://github.com/ryeii/LLM-ServeScope/blob/main/docs/accuracy-2026-10-19/README.md"
+            href="https://github.com/ryeii/LLM-ServeScope/blob/main/docs/accuracy.md"
             target="_blank"
             rel="noreferrer"
           >
@@ -2940,6 +2940,14 @@ function App() {
               rel="noreferrer"
             >
               FP16 profiles: Microsoft Vidur
+            </a>
+            <a
+              className="footer-credit"
+              href="https://github.com/kvcache-ai/Mooncake"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Storage benchmark &amp; traces: Mooncake
             </a>
             <button onClick={() => setShowMethods(true)}>
               Model notes

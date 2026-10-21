@@ -19,6 +19,7 @@ where the critical hardware characteristics are available but a full deployment
 is not. Hardware inputs and assumptions remain visible and exportable.
 
 [Browser edition](https://ryeii.github.io/LLM-ServeScope/) ·
+[Accuracy and validation](docs/accuracy.md) ·
 [Configuration guide](docs/configuration.md) ·
 [Methodology](docs/methodology.md) ·
 [How results are calculated](docs/how-results-are-calculated.md) ·
