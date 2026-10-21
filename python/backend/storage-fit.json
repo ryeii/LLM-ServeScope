@@ -1,0 +1,96 @@
+{
+  "schema_version": "servescope.storage-fit.v1",
+  "io": {
+    "read": {
+      "family": "two-slope",
+      "coefficients": [
+        0.0014758888145342158,
+        0.030010446098735058,
+        0.007012321547539525
+      ],
+      "min_bytes": 16384,
+      "max_bytes": 2097152,
+      "observations": 384,
+      "validation": {
+        "latency_mape_pct": 16.37287722794193,
+        "latency_p95_pct": 53.08557883236533,
+        "bandwidth_mape_pct": 29.420554363860532,
+        "bandwidth_p95_pct": 113.15526015299477,
+        "joint_mape_pct": 22.89671579590123
+      }
+    },
+    "write": {
+      "family": "affine",
+      "coefficients": [
+        0.02081865825582325,
+        0.32887179136514955
+      ],
+      "min_bytes": 16384,
+      "max_bytes": 2097152,
+      "observations": 384,
+      "validation": {
+        "latency_mape_pct": 9.974904856155355,
+        "latency_p95_pct": 27.899022442810217,
+        "bandwidth_mape_pct": 12.041536953683575,
+        "bandwidth_p95_pct": 38.69558121082868,
+        "joint_mape_pct": 11.008220904919465
+      }
+    }
+  },
+  "hit": {
+    "conversation": {
+      "family": "exponential",
+      "coefficients": [
+        0.9869606340485892,
+        0.22043931508639894
+      ],
+      "observations": 420,
+      "validation": {
+        "mae_pp": 1.269089991719495,
+        "rmse_pp": 1.8696538939847993,
+        "p95_pp": 3.7799042811958
+      },
+      "min_requests": 8,
+      "max_requests": 2006
+    },
+    "toolagent": {
+      "family": "weibull",
+      "coefficients": [
+        0.9999999999999999,
+        0.025172436080389698,
+        0.2890166428143976
+      ],
+      "observations": 420,
+      "validation": {
+        "mae_pp": 3.79404501604659,
+        "rmse_pp": 6.974854794194957,
+        "p95_pp": 13.750720906115959
+      },
+      "min_requests": 8,
+      "max_requests": 3935
+    },
+    "synthetic": {
+      "family": "exponential",
+      "coefficients": [
+        0.9999999999999974,
+        0.3328386115100144
+      ],
+      "observations": 420,
+      "validation": {
+        "mae_pp": 0.5310283406962917,
+        "rmse_pp": 1.4975771948508165,
+        "p95_pp": 3.2881953388642144
+      },
+      "min_requests": 8,
+      "max_requests": 666
+    }
+  },
+  "sources": {
+    "io_sha256": "6da4bae9339a1e30eedb06472dd99a56dd01ffae9a482885d46b6c49c105ebf0",
+    "hit_sha256": "4874aa7897657403e6e89c612e2a8c0ab3506919ab57b14e6990ebb730d60410"
+  },
+  "scope": "Local warm buffered macOS storage path, QD1 fsync(always) writes; hit functions approximate policy replay, not observed production cache hits.",
+  "training_script_sha256": "efd4716d6ddbc3393f1ba71a0d957156b0e7746df2f530513ff288e5ff9b7394",
+  "runtime_sha256": "c6a86add7816507eb3c7f4a78cec90101d1012e0e26cf1dc5075f185de428221",
+  "payload_sha256": "ec462b93e1eb31bc1edfe0b86bd0a7e249f5944ac4fb1bbab8059041ee5fa0e5"
+}
