@@ -91,7 +91,7 @@ export default function ModelGraph({
               x="280"
               y={height - 14}
               fill="#9aadb8"
-              fontSize="9"
+              fontSize="8"
               textAnchor="middle"
             >
               Dashed branch: residual connection
@@ -109,7 +109,7 @@ export default function ModelGraph({
               x="320"
               y={cacheY - 4}
               textAnchor="middle"
-              fontSize="10"
+              fontSize="9"
               fill="#6b9c8e"
             >
               KV cache
@@ -157,10 +157,10 @@ export default function ModelGraph({
                     r="4"
                     fill={COLORS[o.bound]}
                   />
-                  <text x={p.x + 29} y={p.y + 27} fill="#4f7485" fontSize="12">
+                  <text x={p.x + 29} y={p.y + 27} fill="#4f7485" fontSize="10">
                     {o.name}
                   </text>
-                  <text x={p.x + 17} y={p.y + 49} fill="#8ba4b0" fontSize="10">
+                  <text x={p.x + 17} y={p.y + 49} fill="#8ba4b0" fontSize="9">
                     <FormulaValue
                       as="tspan"
                       calculation={scaled(
