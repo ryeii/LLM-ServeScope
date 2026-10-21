@@ -62,7 +62,14 @@ SimPy determines when their work can run and how long it queues.
 | Model graph   | Interactive representative computation DAG with KV and residual branches                                                                           |
 | Configuration | Complete resolved inputs, source revisions, assumptions and SHA-256 fingerprint                                                                    |
 
-Pin a baseline, edit a scenario and run again to compare metrics. Export/import
+Pin a baseline, then edit a scenario: the original summary is preserved and a
+second block lists changed inputs as original → new values. Run the edited setup
+to calculate its results. **Hold P** to temporarily show the pinned run across all
+result views; release it to return to the current run. The highlighted summary
+identifies the displayed results. The shortcut is inactive while typing in inputs.
+The pinned block also has a press-and-hold preview control for touch/pointer use.
+
+Export/import
 scenario JSON, export complete results and download SVG charts. Hover or keyboard-focus
 a result number to inspect its equation, labeled values, units and fitted coefficients.
 Hover or select a marked term to follow a cascade of explanations: throughput →

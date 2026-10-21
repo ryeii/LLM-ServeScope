@@ -35,7 +35,8 @@ import "./styles.css";
 import { api, STATIC_PAGES } from "./api";
 import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
-import FormulaValue from "./FormulaValue";
+import FormulaValue, { RUN_CHANGED_EVENT } from "./FormulaValue";
+import RunComparison from "./RunComparison";
 import StorageView, { StorageControls } from "./StorageView";
 import ActiveKVView, {
   ActiveKVControls,
@@ -1304,7 +1305,7 @@ function Native({
 function App() {
   const [catalog, setCatalog] = useState<Obj | null>(null);
   const [config, setConfig] = useState<Obj | null>(null);
-  const [r, setR] = useState<Obj | null>(null);
+  const [currentRun, setR] = useState<Obj | null>(null);
   const [pinned, setPinned] = useState<Obj | null>(null);
   const [tab, setTab] = useState("overview");
   const [phase, setPhase] = useState("decode");
@@ -1315,6 +1316,64 @@ function App() {
   const [mobileConfig, setMobileConfig] = useState(false);
   const [showMethods, setShowMethods] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [previewKeyHeld, setPreviewKeyHeld] = useState(false);
+  const [previewControlHeld, setPreviewControlHeld] = useState(false);
+  const previewPinned = previewKeyHeld || previewControlHeld;
+  const clearPinnedPreview = () => {
+    setPreviewKeyHeld(false);
+    setPreviewControlHeld(false);
+  };
+  const nativeView = tab === "native";
+  const r =
+    previewPinned && pinned && !nativeView && !showMethods
+      ? pinned
+      : currentRun;
+  useEffect(() => {
+    window.dispatchEvent(new Event(RUN_CHANGED_EVENT));
+  }, [r]);
+  useEffect(() => {
+    clearPinnedPreview();
+    if (!pinned || nativeView || showMethods) return;
+    const release = clearPinnedPreview;
+    const down = (e: KeyboardEvent) => {
+      if (
+        e.key.toLowerCase() !== "p" ||
+        e.repeat ||
+        e.defaultPrevented ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.altKey ||
+        e.isComposing
+      )
+        return;
+      const target = e.target instanceof Element ? e.target : null;
+      if (
+        target?.closest(
+          "input, textarea, select, [contenteditable]:not([contenteditable='false']), [role='textbox'], [role='combobox']",
+        )
+      )
+        return;
+      e.preventDefault();
+      setPreviewKeyHeld(true);
+    };
+    const up = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "p" || e.code === "KeyP")
+        setPreviewKeyHeld(false);
+    };
+    const visibility = () => {
+      if (document.hidden) release();
+    };
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up, true);
+    window.addEventListener("blur", release);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("keyup", up, true);
+      window.removeEventListener("blur", release);
+      document.removeEventListener("visibilitychange", visibility);
+    };
+  }, [pinned, nativeView, showMethods]);
   async function refresh() {
     try {
       setHealth(await api("health"));
@@ -2196,7 +2255,10 @@ function App() {
                   <button
                     className="secondary pin-button"
                     disabled={!r}
-                    onClick={() => setPinned(pinned ? null : clone(r))}
+                    onClick={() => {
+                      clearPinnedPreview();
+                      setPinned(pinned ? null : clone(currentRun));
+                    }}
                   >
                     <Pin size={15} />
                     {pinned ? "Unpin baseline" : "Pin baseline"}
@@ -2213,31 +2275,43 @@ function App() {
               )}
             </div>
           </div>
-          {tab !== "native" && (
-            <div className="scenario-bar">
-              <span className="scenario-name">
-                {selectedModel.name}
-                <ChevronRight size={13} />
-                {config.precision.toUpperCase()}
-                <ChevronRight size={13} />
-                {config.separated ? "Prefill / decode split" : "Colocated"}
-              </span>
-              <span className={"scenario-status " + (dirty ? "dirty" : "")}>
-                <i />
-                {dirty
-                  ? "Inputs changed · run to update"
-                  : "Results match scenario"}
-              </span>
-              <button
-                className="text-button"
-                disabled={!r}
-                onClick={() => download("servescope-result.json", r)}
-              >
-                <Download size={13} />
-                Export run
-              </button>
-            </div>
-          )}
+          {tab !== "native" &&
+            (pinned && currentRun ? (
+              <RunComparison
+                pinned={pinned}
+                current={currentRun}
+                draft={config}
+                catalog={catalog}
+                dirty={dirty}
+                previewing={previewPinned}
+                onPreview={setPreviewControlHeld}
+                onExport={(run, name) => download(name, run)}
+              />
+            ) : (
+              <div className="scenario-bar">
+                <span className="scenario-name">
+                  {selectedModel.name}
+                  <ChevronRight size={13} />
+                  {config.precision.toUpperCase()}
+                  <ChevronRight size={13} />
+                  {config.separated ? "Prefill / decode split" : "Colocated"}
+                </span>
+                <span className={"scenario-status " + (dirty ? "dirty" : "")}>
+                  <i />
+                  {dirty
+                    ? "Inputs changed · run to update"
+                    : "Results match scenario"}
+                </span>
+                <button
+                  className="text-button"
+                  disabled={!r}
+                  onClick={() => download("servescope-result.json", r)}
+                >
+                  <Download size={13} />
+                  Export run
+                </button>
+              </div>
+            ))}
           {error && (
             <div className="error-banner" role="alert">
               <CircleHelp size={16} />
@@ -2267,7 +2341,10 @@ function App() {
               Preparing first scenario…
             </div>
           ) : (
-            <>
+            <div
+              className="behavioral-results"
+              data-result-fingerprint={r.provenance.config_sha256}
+            >
               <div className="result-caption">
                 <span>
                   <FlaskConical size={13} />
@@ -2905,7 +2982,7 @@ function App() {
                   </div>
                 </>
               )}
-            </>
+            </div>
           )}
           <footer>
             <span>

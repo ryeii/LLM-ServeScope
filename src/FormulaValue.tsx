@@ -8,6 +8,8 @@ import React, {
 import { createPortal } from "react-dom";
 import { type Calculation, numberText } from "./calculations";
 
+export const RUN_CHANGED_EVENT = "servescope:run-changed";
+
 type Props = {
   calculation?: Calculation;
   children?: React.ReactNode;
@@ -109,11 +111,13 @@ export default function FormulaValue({
     document.addEventListener("pointerdown", pointer);
     document.addEventListener("scroll", scroll, true);
     window.addEventListener("resize", close);
+    window.addEventListener(RUN_CHANGED_EVENT, close);
     return () => {
       document.removeEventListener("keydown", key);
       document.removeEventListener("pointerdown", pointer);
       document.removeEventListener("scroll", scroll, true);
       window.removeEventListener("resize", close);
+      window.removeEventListener(RUN_CHANGED_EVENT, close);
     };
   }, [steps.length]);
   const Tag = as as React.ElementType;
