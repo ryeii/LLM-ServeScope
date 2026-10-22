@@ -21,6 +21,10 @@ execution layer and native backend integration.
 
 Reference backend: LLMServingSim 2.0 by CASYS Lab at KAIST — Jaehong Cho, Hyunmin Choi,
 Guseul Heo and Jongse Park. [Upstream source](https://github.com/casys-kaist/LLMServingSim).
+FP16 profiling corpus: [Microsoft Vidur](https://github.com/microsoft/vidur).
+Published prefix-reuse workload evidence: [Mooncake contributors](https://github.com/kvcache-ai/Mooncake).
+Optional reuse fractions describe earlier-arrival potential; ready HBM availability
+is an assumption, not measured hardware cache hits or end-to-end validation.
 See THIRD_PARTY_NOTICES.md and licenses/ for retained credits and license texts.
 
 Deploy this branch from production / (root) in GitHub Pages settings.
