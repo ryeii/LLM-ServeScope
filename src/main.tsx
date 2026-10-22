@@ -39,6 +39,7 @@ import FormulaValue, { RUN_CHANGED_EVENT } from "./FormulaValue";
 import RunComparison from "./RunComparison";
 import ResourceService from "./ResourceService";
 import { PrefixReuseControls, PrefixReuseSummary } from "./PrefixReuse";
+import ScenarioInputHelp from "./ScenarioInputHelp";
 import {
   intervalDerivation,
   explainCalculation,
@@ -127,7 +128,7 @@ function Field({
   useEffect(() => setDraft(String(value)), [value]);
 
   return (
-    <label className="field" title={tip}>
+    <label className="field" data-input-tip={tip || undefined}>
       <span>{label}</span>
       <div>
         <input
@@ -1554,6 +1555,7 @@ function App() {
       : undefined;
   return (
     <div className="app">
+      <ScenarioInputHelp config={config} catalog={catalog} phase={editPhase} />
       <header className="topbar">
         <a className="brand" href={import.meta.env.BASE_URL}>
           <span className="brand-mark">
@@ -1667,10 +1669,10 @@ function App() {
               </select>
             </label>
             <div className="preset-summary">
-              <span>
+              <span data-input-help="Selected model geometry" tabIndex={0}>
                 {selectedModel.layers} layers · {selectedModel.hidden} hidden
               </span>
-              <span>
+              <span data-input-help="Selected model geometry" tabIndex={0}>
                 {selectedModel.heads} attention / {selectedModel.kv_heads} KV
                 heads
                 {selectedModel.experts > 1
@@ -1872,12 +1874,14 @@ function App() {
             </label>
             <div className="segmented edit-phase">
               <button
+                data-input-help="Pool editor"
                 className={editPhase === "prefill" ? "active" : ""}
                 onClick={() => setEditPhase("prefill")}
               >
                 Prefill pool
               </button>
               <button
+                data-input-help="Pool editor"
                 disabled={!config.separated}
                 className={editPhase === "decode" ? "active" : ""}
                 onClick={() => setEditPhase("decode")}
@@ -1909,7 +1913,10 @@ function App() {
               </select>
             </label>
             <div className="preset-summary">
-              <span>
+              <span
+                data-input-help="Selected hardware specifications"
+                tabIndex={0}
+              >
                 {fmt(h.main_memory_GB)} GB · {fmt(h.dram_bandwidth_TBps, 3)}{" "}
                 TB/s
               </span>
@@ -2009,7 +2016,11 @@ function App() {
                 unit="GB"
                 onChange={(n) => pool("runtime_reserved_GB", n)}
               />
-              <p className="fine">
+              <p
+                className="fine"
+                data-input-help="Usable GPU memory"
+                tabIndex={0}
+              >
                 {fmt(
                   Math.max(
                     0,

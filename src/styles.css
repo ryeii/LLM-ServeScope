@@ -2926,3 +2926,63 @@ footer {
   color: #526d7c;
   line-height: 1.6;
 }
+
+.sidebar [data-input-help] {
+  cursor: help;
+}
+.scenario-input-help {
+  position: fixed;
+  z-index: 10010;
+  box-sizing: border-box;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 17px 19px;
+  border: 1px solid #b7ccd1;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 34px #163c4c26;
+  color: #294858;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.scenario-input-help h3 {
+  margin: 0 0 11px;
+  font-size: 15px;
+  color: #173a4c;
+}
+.scenario-input-help h4 {
+  margin: 12px 0 4px;
+  color: #245c50;
+  font-size: 12px;
+}
+.scenario-input-help p {
+  margin: 0 0 8px;
+  color: #365564;
+}
+.input-help-value {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 14px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background: #edf6f3;
+}
+.input-help-value span {
+  font-size: 11px;
+  color: #4b6860;
+}
+.input-help-value strong {
+  overflow-wrap: anywhere;
+  color: #1d604e;
+  font-size: 13px;
+}
+.input-help-hint {
+  border-top: 1px solid #e3eceb;
+  padding-top: 9px;
+  margin-top: 10px;
+  color: #5b727c;
+  font-size: 11px;
+}
