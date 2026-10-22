@@ -149,11 +149,14 @@ The retained original capacity/fixed-workload descriptions above apply when KV
 tiers are disabled. Tier mode reserves active KV only when memory admission
 grants it, uses actual per-request lengths, restores ready contiguous prefixes,
 and executes remaining query tokens with full attention context. Inclusive
-retained copies use explicit per-tier capacities. Blocking write-through
-publication precedes KV handoff. Active decode KV defaults to HBM and has a separate
+retained copies use explicit per-tier capacities. Publication can be asynchronous
+or blocking before KV handoff. Active decode KV defaults to HBM and has a separate
 placement control.
-Local I/O fits and trace-policy hit forecasts have separate calibration evidence;
-forecasts never assign runtime cache hits. Read the [storage methodology and validation](storage-2026-10-20/README.md).
+Published Mooncake request traces provide arrivals, token lengths and prefix
+identities. They contain no device-service timing measurements. SSD, host–GPU
+and GDS timing are configured assumptions. Trace-policy prefix-reuse fits are
+separate from device timing and never assign runtime cache hits. Read the
+[trace coverage and storage assumptions](storage-model.md).
 
 Cache placement now follows the selected [single-tier, exclusive-spill or inclusive-copy policy](configuration.md#cache-layouts-and-eviction-spill). Spill transfer costs and readiness are scheduled explicitly. Active decode placement is independent; hit-fit residuals remain single-LRU replay validation, with no new multi-tier or streamed-attention calibration claim.
 

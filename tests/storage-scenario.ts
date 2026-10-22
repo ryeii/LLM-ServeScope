@@ -67,14 +67,17 @@ export async function storageScenario(page: Page) {
     .click();
   await page
     .getByLabel("SSD service model", { exact: true })
-    .selectOption("local-mooncake-path");
+    .selectOption("manual");
   await page
     .getByRole("complementary")
     .getByText("Retained prefixes", { exact: true })
     .click();
   await page.getByRole("button", { name: "Run scenario", exact: true }).click();
   await expect(
-    page.getByRole("columnheader", { name: "Latency MAPE", exact: true }),
+    page.getByRole("heading", {
+      name: "Trace evidence and timing assumptions",
+      exact: true,
+    }),
   ).toBeVisible();
   const fitted = await exported(page);
   const local = JSON.parse(
@@ -88,8 +91,9 @@ export async function storageScenario(page: Page) {
     local.storage.stats.ssd_service_ms,
     9,
   );
-  expect(fitted.storage.fit.payload_sha256).toBe(
-    local.storage.fit.payload_sha256,
+  expect(fitted.storage.fit).toBeUndefined();
+  expect(fitted.storage.timing_evidence).toBe(
+    "configured-assumptions-not-request-trace-measurements",
   );
   await page.getByRole("button", { name: "Overview", exact: true }).click();
   await page.locator('[data-formula-key="metrics.throughput_tps"]').hover();

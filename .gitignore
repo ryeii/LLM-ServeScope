@@ -17,4 +17,4 @@ playwright-report/
 dist-pages/
 
 public/workloads/mooncake/
-public/storage-study/
+public/trace-reuse/

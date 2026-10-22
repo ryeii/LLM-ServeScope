@@ -52,7 +52,8 @@ for (const name of [
   "storage.py",
   "kv_transfer.py",
   "active_kv.py",
-  "storage-fit.json",
+  "prefix_reuse.py",
+  "prefix-hit-fit.json",
 ])
   copy(`backend/${name}`, `${output}/python/backend/${name}`);
 const wheel = "simpy-4.1.1-py3-none-any.whl";

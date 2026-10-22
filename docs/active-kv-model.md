@@ -15,7 +15,7 @@ source prefill KV stays allocated until publication and handoff both finish.
 
 - **Active decode KV**: HBM only (default), host DRAM backing, SSD backing, HBM + DRAM spill, or HBM + SSD spill.
 - **Retained prefixes**: independently select no retention, single-tier, directional spill or inclusive copies. Existing prefix hit and eviction policies are unchanged.
-- **KV I/O paths**: shared effective host–GPU bandwidth/latency, I/O chunk size and manual or fitted SSD service. Both lifetimes use the same FIFO SSD and host–GPU resources. Their byte/service/queue counters are reported separately.
+- **KV I/O paths**: shared effective host–GPU bandwidth/latency, I/O chunk size and configured SSD service. Both lifetimes use the same FIFO SSD and host–GPU resources. Their byte/service/queue counters are reported separately.
 
 Selecting either placement preserves the other placement, workload and serving batch caps. The result has separate active/prefix sections, per-request residency and nested formula explanations; the box graph includes backing initialization, per-step reads, append writes and their queue dependencies.
 
@@ -66,7 +66,7 @@ f_manual(Q) = latency_us / 1000 + Q / (bandwidth_GBps × 10^6)  [ms]
 T_host_GPU(Q) = latency_us / 1000 + Q / (effective_GBps × 10^6)
 ```
 
-A fitted profile substitutes its documented size-to-latency function. Queue wait is added separately, once. Reads and writes share a single QD1 SSD FIFO; prefix operations and active operations contend for that same resource. Aggregate host–GPU transfers reserve one shared FIFO. No transfer/compute overlap or parallel outstanding I/O is modeled.
+All SSD coefficients are configured assumptions. Queue wait is added separately, once. Reads and writes share a single QD1 SSD FIFO; prefix operations and active operations contend for that same resource. Aggregate host–GPU transfers reserve one shared FIFO. No transfer/compute overlap or parallel outstanding I/O is modeled.
 
 ## Bounded staging and event interpretation
 
@@ -91,7 +91,11 @@ GPU resource occupancy includes stalled stages and reserved staging buffers. GPU
 
 ## Evidence and limitations
 
-This active-offload composition is **unvalidated**. KAIST/Vidur fits calibrate HBM-resident operator service, not streamed-attention kernels. Local Mooncake-path I/O errors describe warm buffered reads and fsync writes on a development Mac, not a customer SSD or complete serving system. Prefix hit errors describe trace-policy replay. None establishes an error bar for active offload throughput or latency. See the [storage evidence](storage-2026-10-20/README.md).
+This active-offload composition is **unvalidated**. KAIST/Vidur fits calibrate
+HBM-resident operator service, not streamed-attention kernels. Published Mooncake
+request traces contain no device-service timings. SSD, DRAM, host–GPU and GDS
+service use configured assumptions, with no measured error bound. Prefix-hit
+errors describe trace-policy replay only. See [evidence coverage](storage-model.md).
 
 The model provides an auditable serialized estimate. It excludes measured streaming-kernel overhead, tiling-dependent changes to kernel efficiency, transfer/compute overlap, fine-grained layer prefetch, dynamic active-KV eviction, remote object stores, cold-device service, NVMe/NAND/FTL mechanics, MLA and page-level execution. It can therefore overestimate time by serializing real overlap, and underestimate it by omitting real offload-kernel overhead. It is not a proven upper or lower bound.
 

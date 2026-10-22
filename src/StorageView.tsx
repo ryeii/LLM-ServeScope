@@ -5,6 +5,7 @@ import {
   cacheDecisionCalculation,
   storageMetricCalculation,
   storageReport,
+  traceReuseReport,
   storageEventCalculation,
   storageRequestCalculation,
 } from "./storageCalculations";
@@ -143,8 +144,8 @@ export function StorageControls({
         Load cache demo
       </button>
       <p className="fine">
-        The cache demo uses the host-staged, blocking path for comparison with
-        the local Mooncake file-I/O fit.
+        The synthetic cache demo uses configured host-staged timing assumptions.
+        Published request traces can be loaded below.
       </p>
       {(s.enabled || s.workload?.length > 0) && (
         <>
@@ -305,36 +306,6 @@ export function StorageControls({
     </div>
   );
 }
-function fitCalculation(f: Obj, op: string) {
-  const c = f.coefficients;
-  return {
-    ...calc(
-      `${op} latency fit`,
-      f.family === "two-slope"
-        ? "t_ms=L+b x+a max(0,x−0.25); x=bytes/10⁶"
-        : f.family === "sqrt-affine"
-          ? "t_ms=L+b x+a √x; x=bytes/10⁶"
-          : "t_ms=L+b x; x=bytes/10⁶",
-      [
-        v("L", "Intercept", c[0], "ms"),
-        v("b", "Linear coefficient", c[1], "ms/MB"),
-        ...(c.length > 2 ? [v("a", "Shape coefficient", c[2])] : []),
-        v("min_bytes", "Minimum measured I/O", f.min_bytes, "bytes"),
-        v("max_bytes", "Maximum measured I/O", f.max_bytes, "bytes"),
-      ],
-      f.validation.latency_mape_pct,
-      "% MAPE",
-    ),
-    summary:
-      "Nested leave-I/O-size-out evaluation. All repetitions/trials of the held-out size are excluded from coefficient fitting and family selection. Final runtime coefficients are refitted on all measurements. Bandwidth = bytes / predicted latency; it is not a second independent dataset.",
-    links: [
-      {
-        label: "Study protocol, data and held-out predictions",
-        url: storageReport,
-      },
-    ],
-  };
-}
 export default function StorageView({
   r,
   onDemo,
@@ -359,7 +330,7 @@ export default function StorageView({
           explicit uncalibrated storage assumptions.
         </p>
         <a href={storageReport} target="_blank" rel="noreferrer">
-          Read the Mooncake data-coverage and fitting report ↗
+          Read the published-trace coverage and storage assumptions ↗
         </a>
       </div>
     );
@@ -367,7 +338,6 @@ export default function StorageView({
     stats = s.stats,
     format = (n: number, d = 2) =>
       Number(n || 0).toLocaleString("en-US", { maximumFractionDigits: d });
-  const fits = s.fit;
   return (
     <div className="storage-view">
       <div className="calibration-status">
@@ -380,10 +350,7 @@ export default function StorageView({
         <span>
           {s.layout?.label || "Custom inclusive copies"} ·{" "}
           {s.workload_source.label} · {s.workload_source.requests} requests ·{" "}
-          {s.profile === "manual"
-            ? "configured affine I/O assumptions"
-            : "fitted local file path, QD1"}{" "}
-          · cold start
+          configured storage/transfer timing assumptions · cold start
           {" · "}
           {s.ssd_transfer_mode === "gds"
             ? "GDS direct path · configured"
@@ -395,7 +362,9 @@ export default function StorageView({
       <div className="card prefix-scope">
         <div className="card-head">
           <h3>Retained prompt prefixes</h3>
-          <button className="secondary" onClick={onDemo}>Load cache demo</button>
+          <button className="secondary" onClick={onDemo}>
+            Load cache demo
+          </button>
         </div>
         <p className="storage-note">
           This policy controls reuse between requests. Active decode KV has its
@@ -552,12 +521,12 @@ export default function StorageView({
         </div>
       )}
       <div className="card">
-        <h3>Request paths and actual compute</h3>
+        <h3>Request paths and modeled compute</h3>
         <p className="storage-note">
           Only a ready contiguous prefix can be reused. The final prompt token
-          is computed for logits. Publication and eviction spill complete before
-          handoff; the first token follows publication, handoff and
-          decode-memory admission.
+          is computed for logits. Blocking publication finishes before handoff;
+          asynchronous publication can overlap serving. The first token follows
+          the required request-path barriers and decode-memory admission.
         </p>
         <div className="table-scroll storage-request-table">
           <table>
@@ -645,59 +614,14 @@ export default function StorageView({
         </div>
       </div>
       <div className="card">
-        <h3>Fitted functions and held-out error</h3>
-        {fits ? (
-          <>
-            <p className="storage-note">
-              768 local measurements: 384 reads and 384 fsync writes, 16 KiB–2
-              MiB, serial QD1. Warm buffered read throughput can exceed the
-              physical SSD’s bandwidth. These errors do not validate a customer
-              SSD or full serving deployment.
-            </p>
-            <div className="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Path</th>
-                    <th>Selected function</th>
-                    <th>Latency MAPE</th>
-                    <th>Latency P95 error</th>
-                    <th>Bandwidth MAPE</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(fits.io).map(([op, f]: [string, any]) => (
-                    <tr key={op}>
-                      <td>{op}</td>
-                      <td>
-                        <FormulaValue calculation={fitCalculation(f, op)}>
-                          {f.family}
-                        </FormulaValue>
-                      </td>
-                      <td>{format(f.validation.latency_mape_pct)}%</td>
-                      <td>{format(f.validation.latency_p95_pct)}%</td>
-                      <td>{format(f.validation.bandwidth_mape_pct)}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        ) : (
-          <p className="storage-note">
-            {s.capacity_blocks.ssd === 0 ? (
-              "The retained-prefix layout performs no SSD I/O. Active decode KV has a separate policy and uses the shared I/O configuration."
-            ) : (
-              <>
-                This run uses configured coefficients. GDS has no measured
-                calibration. For host-staged transfers, choose “Fitted local
-                Mooncake file path” to use the measured-path fit. Its
-                calibration applies only to the documented local file-I/O
-                conditions.
-              </>
-            )}
-          </p>
-        )}
+        <h3>Trace evidence and timing assumptions</h3>
+        <p className="storage-note">
+          Published Mooncake request traces supply arrival timestamps,
+          input/output lengths and prefix identities. They do not contain
+          measured SSD reads, writes, host–GPU transfers or GDS timings. Storage
+          service uses the configured bandwidth and latency values; no device
+          timing error bound is available from these traces.
+        </p>
         <p className="storage-note">
           Runtime hits come from the cache state. Fitted hit curves are separate
           forecasts trained on trace-replayed LRU references; they never
@@ -754,7 +678,7 @@ export default function StorageView({
                 links: [
                   {
                     label: "Held-region validation and data coverage",
-                    url: storageReport,
+                    url: traceReuseReport,
                   },
                 ],
               }}
@@ -770,18 +694,12 @@ export default function StorageView({
             can reduce reuse.
           </p>
         )}
-        {stats.extrapolated_io_events > 0 && (
-          <p className="storage-note">
-            {stats.extrapolated_io_events} I/O events include a chunk outside
-            the measured size range.
-          </p>
-        )}
         <a href={storageReport} target="_blank" rel="noreferrer">
-          Data coverage, candidate functions, held-out errors and raw artifacts
+          Published request traces, simulation policies and timing assumptions
           ↗
         </a>
         <p className="storage-note">
-          Workload traces and benchmark code:{" "}
+          Published request traces:{" "}
           <a
             href="https://github.com/kvcache-ai/Mooncake"
             target="_blank"
@@ -789,7 +707,7 @@ export default function StorageView({
           >
             Mooncake contributors
           </a>
-          . Storage-path fitting, tier modeling and ServeScope integration:{" "}
+          . Trace-policy replay, tier modeling and ServeScope integration:{" "}
           <a href="https://github.com/ryeii" target="_blank" rel="noreferrer">
             ryeii (Ryan Z An)
           </a>

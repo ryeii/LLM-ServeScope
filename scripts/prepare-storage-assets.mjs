@@ -1,4 +1,4 @@
-import { mkdirSync, copyFileSync, readFileSync } from "node:fs";
+import { mkdirSync, copyFileSync, readFileSync, rmSync } from "node:fs";
 import { createHash } from "node:crypto";
 const root = "third_party/mooncake-traces";
 const manifest = JSON.parse(readFileSync(root + "/manifest.json", "utf8"));
@@ -14,18 +14,11 @@ for (const file of manifest.files) {
 }
 for (const name of ["manifest.json", "UPSTREAM-README.md", "LICENSE-APACHE"])
   copyFileSync(root + "/" + name, "public/workloads/mooncake/" + name);
-mkdirSync("public/storage-study", { recursive: true });
-for (const name of [
-  "io-fit.png",
-  "io-fit.svg",
-  "hit-fit.png",
-  "hit-fit.svg",
-  "io-candidates.png",
-  "io-candidates.svg",
-  "hit-candidates.png",
-  "hit-candidates.svg",
-])
+// Do not republish retired device-benchmark artifacts left by older builds.
+rmSync("public/storage-study", { recursive: true, force: true });
+mkdirSync("public/trace-reuse", { recursive: true });
+for (const name of ["hit-fit.png", "hit-fit.svg"])
   copyFileSync(
-    "docs/storage-2026-10-20/" + name,
-    "public/storage-study/" + name,
+    "docs/trace-reuse/" + name,
+    "public/trace-reuse/" + name,
   );

@@ -132,7 +132,7 @@ It includes an actual batch timeline, source-linked equations and a
 | Component | Data/model | When it contributes time |
 | --- | --- | --- |
 | GPU kernels | Functions fitted separately to KAIST BF16 and Microsoft Vidur FP16 profiles | Prefill and decode; internal HBM effects are already included |
-| SSD/file-path I/O | Configured latency/bandwidth, or the selected fit to local measurements using Mooncake benchmark code | Actual SSD reads/writes for retained prefixes or active decode KV |
+| SSD reads/writes | Configured latency and bandwidth assumptions; no measured timing error bound | Simulated SSD operations for retained prefixes or active decode KV |
 | Host–GPU transfers and explicit HBM copies | Configured effective bandwidth and latency | KV restore, publication, spill or active backing transfers |
 | Direct SSD–GPU transfers (GDS) | Configured startup + max(storage service, direct-link service); no measured GDS calibration | GPU–SSD transfers when the direct path is selected |
 | Collectives and KV handoff | Analytical network functions and configured topology | Communication inside/between GPU pools |
@@ -146,10 +146,10 @@ selectable. This is an independent approximation of selected NVIDIA Dynamo ideas
 without its complete scheduler or policy semantics.
 [Default behavior, equations, differences and reproduction](docs/dynamo-alignment.md).
 
-GDS timing is a configured assumption. The fitted SSD option is available only
-with the **host-staged** path and **“Fitted local Mooncake file path”** selected;
-its measured errors do not validate GDS. Changing link settings alone does not
-create transfers. A kernel's HBM cost is not added again to fitted GPU service.
+SSD, host–GPU and GDS timing are **configured assumptions**, not functions fitted
+to Mooncake data. Mooncake contributes only its published request traces:
+arrivals, token lengths and prefix identities. Those traces contain no device
+service times. Kernel HBM costs remain inside fitted GPU operator service.
 
 Overview now shows **Executed resource service**, including storage and explicit
 transfers. **Nominal GPU resource work** remains an expandable analytical
@@ -199,45 +199,28 @@ The [current serving integration recheck](docs/accuracy-2026-10-19/README.md#ser
 reports 4.83% mean throughput difference from nine native simulator references;
 this is separate evidence from operator CV and from physical GPU serving accuracy.
 
-## SSD service-time model and Mooncake evidence
+## Published Mooncake request traces and storage assumptions
 
-ServeScope fits a size-to-latency function for the **local storage file path** and
-derives bandwidth consistently as bytes divided by that time. The data comes from
-**768 measurements collected by ServeScope using Mooncake’s archived, unmodified
-`DiskHashTable` benchmark class**: 384 reads and 384 writes, eight I/O sizes from
-16 KiB to 2 MiB, serial queue depth one, warm buffered reads and fsync writes on a
-development Mac. This is not a fit to raw-device service or a customer SSD.
+ServeScope uses **Mooncake's published FAST'25 request traces only**. Conversation
+contains 12,031 requests; tool/agent 23,608; upstream synthetic 3,993. The unchanged
+JSONL supplies arrival timestamps, input/output lengths and 512-token prefix hashes.
+It does not supply SSD read/write timings, transfer events, observed cache hits,
+completion times or the original token IDs/text.
 
-### Main held-out accuracy results
+Trace replay preserves arrival differences and original lengths. Ready prefixes
+change executed prefill work, and the selected cache policy determines simulated
+hits and transfers. Storage and transfer service still require **explicit configured
+bandwidth and latency assumptions**. There is no measured SSD, DRAM, GDS or
+host–GPU timing accuracy claim. GPU fitting to KAIST/Vidur profiles is separate.
 
-Each of eight outer folds withholds **all measurements of one I/O size**. Function
-selection uses only the remaining training sizes in inner folds. The deployed
-function is then refitted on all measurements; the figure and errors below use
-outer held-out predictions, not training residuals.
+[Published-trace coverage and timing equations](docs/storage-model.md) ·
+[Source manifest and checksums](third_party/mooncake-traces/manifest.json) ·
+[Trace-only prefix-reuse study](docs/trace-reuse/README.md).
 
-| Operation | Selected function | Latency MAPE | Latency P95 error | Bandwidth MAPE | Bandwidth P95 error |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Read | Continuous two-slope | **16.37%** | 53.09% | 29.42% | 113.16% |
-| Write | Affine: fixed overhead + bytes/bandwidth | **9.97%** | 27.90% | 12.04% | 38.70% |
-
-MAPE is mean absolute percentage error; P95 is the 95th percentile of absolute
-percentage error. Bandwidth errors are a reciprocal view of the same timing
-observations, not independent validation. Warm-cache reads can exceed physical
-SSD bandwidth, and their read-error tail is substantial. These results do not
-establish cold-SSD, higher-queue-depth, cross-machine or end-to-end serving accuracy.
-
-![Local Mooncake file-path latency and derived bandwidth: measured values versus nested held-out predictions](https://ryeii.github.io/LLM-ServeScope/storage-study/io-fit.png?v=17c686000e4f)
-
-[Data coverage, equations, candidate functions and validation](docs/storage-2026-10-20/README.md)
-· [Raw local measurements](docs/storage-2026-10-20/io-observations.json)
-· [Deployed coefficients](backend/storage-fit.json)
-
-**Source attribution matters:** [Mooncake contributors](https://github.com/kvcache-ai/Mooncake)
-supply the benchmark code and published request traces. ServeScope’s measurement
-harness, local observations, fitting, validation and tier integration are by
-[ryeii (Ryan Z An)](https://github.com/ryeii). Mooncake’s published aggregate
-SSD-offload serving results are documented separately; they are not the per-size
-training samples used for this fit.
+Import the [published conversation example](examples/mooncake-conversation-scenario.json)
+to replay the first four source records unchanged. Its
+[result summary](examples/mooncake-conversation-result-summary.json) distinguishes
+source workload fields from modeled results.
 
 ### Independent active KV and retained prefixes
 
@@ -245,13 +228,13 @@ training samples used for this fit.
   HBM + DRAM spill or HBM + SSD spill. Offload adds initialization, per-step reads,
   append writes, staging capacity and backing admission. Prefill working KV remains
   in HBM. The serialized offload composition is **not end-to-end calibrated** by
-  the local I/O error figures above; see [model and limitations](docs/active-kv-model.md).
+  request traces or device measurements; see [model and limitations](docs/active-kv-model.md).
 - **Retained prefixes** can survive completed requests and save later prefill work.
   Choose no retention, HBM-only, DRAM-only, SSD-only, directional spill or inclusive
   copies. Ready hits reduce query work while preserving full attention context;
-  publication and required spill moves block before handoff. See
+  publication is asynchronous by default, with blocking mode available. See
   [cache policy details](docs/configuration.md#cache-layouts-and-eviction-spill).
-- **KV I/O paths** configure the shared SSD and host–GPU service functions. Both
+- **KV I/O paths** configure the shared SSD and host–GPU timing assumptions. Both
   lifetimes contend for those physical queues, with separate counters. Host DRAM
   currently uses the configured effective host–GPU path, not its own fitted
   DRAM service function. Explicit HBM copies and kernel HBM behavior do not share
@@ -268,8 +251,8 @@ Cache-hit forecasts have a different target: **1,260 trace-replayed LRU curve
 observations**, rather than measured hardware hits. Nested held-region MAE is
 1.27 percentage points for conversation, 3.79 for tool/agent and 0.53 for synthetic
 traces. Runtime hits come from executed cache state, never from those fitted
-forecasts. [Evidence scopes and raw artifacts](docs/storage-2026-10-20/README.md)
-keep published results, local I/O measurements and policy replay distinct.
+forecasts. [Trace-only sources, methods and held-out results](docs/trace-reuse/README.md)
+are separate from the uncalibrated storage and transfer timing assumptions.
 
 ## Limitations: behavioral, not mechanistic simulation
 
@@ -310,8 +293,8 @@ instruction-, cycle-, page- or transaction-level behavior is the question.
 ### LLM-ServeScope — ryeii (Ryan Z An)
 
 [ryeii (Ryan Z An)](https://github.com/ryeii) created LLM-ServeScope, including
-its behavioral serving model, GPU and storage fitting/validation pipelines, local
-I/O measurement harness, KV-tier integration, scenario controls, visualizations,
+its behavioral serving model, GPU and prefix-reuse fitting/validation pipelines,
+published-request replay, KV-tier integration, scenario controls, visualizations,
 request-timestamp explanations, user interface, browser execution layer and
 native backend integration.
 
@@ -354,16 +337,13 @@ FP16 cohort. The [source manifest](third_party/vidur-profiles/manifest.json) and
 data reuse; the default behavioral engine does not run Vidur’s simulator or inherit
 its end-to-end accuracy claims.
 
-### Storage benchmark and request traces — Mooncake contributors
+### Published request traces — Mooncake contributors
 
-[Mooncake](https://github.com/kvcache-ai/Mooncake) supplies the archived storage
-benchmark code and request dumps, with Apache 2.0 licenses retained in the
-[benchmark archive](third_party/mooncake-storage) and
-[trace archive](third_party/mooncake-traces). Local measurement, fitted storage
-functions, cache-policy replay and ServeScope integration are by
-[ryeii (Ryan Z An)](https://github.com/ryeii). Published Mooncake serving results,
-ServeScope’s local file-I/O measurements and trace-derived targets are credited
-and evaluated separately; no Mooncake hardware-performance claim is inherited.
+[Mooncake](https://github.com/kvcache-ai/Mooncake) supplies the unchanged published
+request traces, with the Apache 2.0 license and source checksums retained in the
+[trace archive](third_party/mooncake-traces). Trace-policy replay, prefix-reuse
+fitting and ServeScope integration are by [ryeii (Ryan Z An)](https://github.com/ryeii).
+The request traces provide workload evidence, not hardware timing measurements.
 
 ### Scheduling and browser runtime — SimPy and Pyodide
 

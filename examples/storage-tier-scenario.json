@@ -10,7 +10,7 @@
   "batch_size": 1,
   "storage": {
     "enabled": true,
-    "profile": "local-mooncake-path",
+    "profile": "manual",
     "hbm_cache_GB": 0,
     "dram_cache_GB": 0,
     "ssd_cache_GB": 4,

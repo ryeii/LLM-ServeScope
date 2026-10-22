@@ -47,15 +47,15 @@ class GDSTests(unittest.TestCase):
         self.assertEqual(direct['storage']['stats']['ssd_read_bytes'], staged['storage']['stats']['ssd_read_bytes'])
         self.assertLess(direct['requests'][4]['ttft_ms'], staged['requests'][4]['ttft_ms'])
 
-    def test_gds_link_can_be_the_bottleneck_and_old_local_fit_is_rejected(self):
+    def test_gds_link_can_be_the_bottleneck_and_nonmanual_profile_is_rejected(self):
         c = scenario()
         fast = simulate(c)
         c['storage']['gds_GBps'] = .1
         slow = simulate(c)
         self.assertGreater(slow['requests'][4]['ttft_ms'], fast['requests'][4]['ttft_ms'])
         self.assertAlmostEqual(direct_service(1, 1e6, .1, 10)['duration_ms'], 10.01)
-        c['storage']['profile'] = 'local-mooncake-path'
-        with self.assertRaisesRegex(ValueError, 'cannot calibrate GDS'):
+        c['storage']['profile'] = 'unsupported-device-fit'
+        with self.assertRaisesRegex(ValueError, 'Only configured storage timing'):
             validate(c)
 
     def test_async_publication_preserves_source_until_both_copies_and_handoff_finish(self):

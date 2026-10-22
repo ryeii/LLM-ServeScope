@@ -144,19 +144,13 @@ export function KVDeviceControls({
           <option value="manual">
             Configured affine function · uncalibrated
           </option>
-          <option
-            value="local-mooncake-path"
-            disabled={s.ssd_transfer_mode === "gds"}
-          >
-            Fitted local Mooncake file path · QD1
-          </option>
         </select>
       </label>
       <p className="fine">
-        The fitted profile measures warm buffered file reads and fsync writes on
-        a development Mac; it does not calibrate target-server SSD or streamed
-        attention. Select the host-staged path to use this fit; it cannot
-        calibrate GDS.
+        Published Mooncake request traces provide arrivals, token lengths and
+        prefix identities. They contain no SSD or transfer service timings.
+        These bandwidth and latency values are configured assumptions, with no
+        measured accuracy claim.
       </p>
       {[
         ["pcie_GBps", "Host–GPU aggregate link", "GB/s"],

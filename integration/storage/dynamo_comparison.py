@@ -28,12 +28,11 @@ def main():
         rows.append(dict(path=mode, config=r['config'], metrics=r['metrics'],
                          storage_stats=r['storage']['stats']))
     save('gds-comparison.json', dict(kind='configured-model-predictions-not-measurements', results=rows))
-    # Refresh provenance, preserving historical scenarios and their metrics.
+    # Repository examples use explicit configured timing assumptions only.
     for name in ('storage-tier-result.json', 'active-kv-result.json'):
         old = json.loads((ROOT/'examples'/name).read_text())
+        old['config']['storage']['profile'] = 'manual'
         new = simulate(old['config'])
-        if new['metrics'] != old['metrics']:
-            raise AssertionError(f'Historical timing changed: {name}')
         save(name, new)
     print(json.dumps({row['path']: row['metrics'] for row in rows}, indent=2))
 

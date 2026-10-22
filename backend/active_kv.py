@@ -167,7 +167,7 @@ class ActiveKV:
         return dict(model_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), placement=self.mode, label=PLACEMENTS[self.mode]['label'], backing=self.backing,
                     scope='Active decode KV only; prefill working KV remains in HBM. Retained-prefix placement is independent.',
                     model='Serialized tiled staging: remote reads + HBM-reference GPU service + append writes. No overlap or calibrated streaming-kernel correction.',
-                    calibration='Unvalidated active-offload composition. GPU fits cover HBM-resident kernels; local file-I/O error does not validate streamed attention or target-server SSD performance.',
+                    calibration='Unvalidated active-offload composition. GPU fits cover HBM-resident kernels; storage and transfer service use configured assumptions, not timings from the published request traces.',
                     staging_GB_per_gpu=self.a['staging_GB'], hbm_capacity_bytes_per_gpu=self.hbm_capacity,
                     remote_capacity_bytes=self.remote_capacity, peak_resident_bytes_per_gpu=self.peak_hbm,
                     peak_remote_bytes=self.peak_remote, partition=self.partition,

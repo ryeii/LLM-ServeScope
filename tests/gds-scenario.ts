@@ -94,19 +94,14 @@ export async function gdsScenario(page: Page) {
   expect(staged.storage.stats).toEqual(references.results[1].storage_stats);
   expect(staged.timeline.some((e: any) => e.tier === "pcie")).toBe(true);
   await page
-    .getByLabel("SSD service model", { exact: true })
-    .selectOption("local-mooncake-path");
-  await page
     .getByLabel("SSD transfer path", { exact: true })
     .selectOption("gds");
   await expect(
     page.getByLabel("SSD service model", { exact: true }),
   ).toHaveValue("manual");
   await expect(
-    page
-      .getByLabel("SSD service model", { exact: true })
-      .locator('option[value="local-mooncake-path"]'),
-  ).toHaveAttribute("disabled", "");
+    page.getByLabel("SSD service model", { exact: true }).locator("option"),
+  ).toHaveCount(1);
 
   await page
     .getByRole("button", { name: "Apply Dynamo-style setup", exact: true })

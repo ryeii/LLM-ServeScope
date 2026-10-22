@@ -130,8 +130,10 @@ class ActiveKVTests(unittest.TestCase):
         self.assertAlmostEqual(energy,r['metrics']['energy_j'])
 
     def test_profiles_scope_and_prefill_hbm_constraint(self):
-        c=scenario();c['storage']['profile']='local-mooncake-path';r=simulate(c)
-        self.assertTrue(any(e.get('scope')=='active' and e.get('profile')=='local-mooncake-path' for e in r['timeline']))
+        c=scenario();r=simulate(c)
+        self.assertTrue(any(e.get('scope')=='active' and e.get('profile')=='manual' for e in r['timeline']))
+        self.assertNotIn('fit',r['storage'])
+        self.assertEqual(r['storage']['timing_evidence'],'configured-assumptions-not-request-trace-measurements')
         self.assertIn('Unvalidated',r['active_kv']['calibration'])
         c=scenario();c.update(input_tokens=70000,requests=1,output_tokens=2);c['prefill']['hardware']['main_memory_GB']=20
         with self.assertRaisesRegex(ValueError,'Prefill requires'):simulate(c)

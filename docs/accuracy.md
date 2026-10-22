@@ -1,9 +1,10 @@
 # Accuracy and validation
 
-ServeScope has separate evidence for **GPU operator timing**, **SSD/file-path
-service** and **prefix-hit forecasts**. Their errors describe different targets;
-they do not combine into a single accuracy guarantee for serving throughput,
-request latency, energy or a new hardware configuration.
+ServeScope has fitted **GPU operator timings** and a separate **prefix-reuse
+policy approximation derived from published request traces**. Storage and
+transfer timings use configured assumptions. The request traces contain no
+measured device timings, so they provide no SSD, GDS or host–GPU timing error bound.
+These evidence classes do not combine into a serving-accuracy guarantee.
 
 ## GPU operator timing — KAIST and Microsoft Vidur
 
@@ -30,40 +31,15 @@ missing operators and new architectures can require extrapolation.
 [GPU accuracy report: per-operator, per-GPU and unseen-GPU results](accuracy-2026-10-19/README.md)
 · [GPU functions and assumptions](calibration.md)
 
-## SSD/file-path service — Mooncake benchmark integration
+## Storage and transfer service — configured assumptions
 
-**The new GDS default is not calibrated by these file-I/O results.** The measured
-fit is available only for host-staged transfers. Dynamo-style cache behavior,
-asynchronous publication and direct-link coefficients require end-to-end
-validation; see [scope and equations](dynamo-alignment.md).
+SSD read/write, DRAM/host–GPU, explicit HBM-copy and GDS service times use
+configured hardware rates and startup latencies. **No measured timing dataset or
+held-out device-service error bound is provided for these paths.** Mooncake's
+published request traces are workload inputs, not storage performance profiles.
 
-ServeScope collected **768 local I/O observations** using Mooncake’s archived,
-unmodified `DiskHashTable` benchmark class: 384 reads and 384 writes, 16 KiB–2 MiB,
-serial queue depth one, warm buffered reads and fsync writes on a development Mac.
-This measures the local file path, not isolated physical SSD service. Mooncake’s
-published aggregate SSD-offload serving results are separate evidence, not these
-per-size training samples.
-
-Eight outer folds withhold every measurement of one I/O size; inner folds select
-the function using only the remaining sizes. The following numbers and figure
-use those outer held-out predictions. Bandwidth is derived from the same latency
-function as bytes/time, so its error is not independent validation.
-
-| Operation | Selected function | Latency MAPE | Latency P95 error | Bandwidth MAPE | Bandwidth P95 error |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Read | Continuous two-slope | 16.37% | 53.09% | 29.42% | 113.16% |
-| Write | Affine | 9.97% | 27.90% | 12.04% | 38.70% |
-
-![Local file-path latency and derived bandwidth versus nested held-out predictions](https://ryeii.github.io/LLM-ServeScope/storage-study/io-fit.png?v=17c686000e4f)
-
-Warm-cache read bandwidth can exceed physical SSD bandwidth, and the read-error
-tail is substantial. These results do not validate cold-device, higher-queue-depth,
-cross-machine or end-to-end active-KV offload performance. The fitted path is used
-only when selected and the scenario actually performs SSD I/O; the default
-HBM-only active KV with prefix retention disabled adds no SSD service time.
-
-[Storage evidence: coverage, fitting, validation and raw observations](storage-2026-10-20/README.md)
-· [Deployed storage coefficients](../backend/storage-fit.json)
+[Published-trace coverage and storage equations](storage-model.md) ·
+[GDS and Dynamo-style assumptions](dynamo-alignment.md).
 
 ## Prefix-hit forecasts — trace-policy replay
 
@@ -79,7 +55,7 @@ including their overlapping windows and capacities.
 
 Runtime hits are determined by the executed cache state, not these forecasts.
 Single-LRU replay error does not validate every multi-tier spill policy or an
-unseen workload. [Hit-model methods and evidence](storage-2026-10-20/README.md#fitted-hit-rate-functions-and-their-different-target).
+unseen workload. [Hit-model methods and evidence](trace-reuse/README.md).
 
 ## Serving results and remaining validation gaps
 
@@ -95,7 +71,7 @@ comparison, not measured physical serving accuracy. See the
   rates/latencies. They have no general held-out target-server accuracy guarantee;
   kernel HBM behavior and explicit copies do not share a detailed bandwidth model.
 - **Memory capacity, GPU energy and utilization** use modeled accounting and
-  assumptions. GPU operator or local file-I/O errors do not validate those outputs.
+  assumptions. GPU operator errors do not validate those outputs.
   GPU energy excludes storage/host/network equipment power.
 
 [How request timestamps produce throughput and latency](how-results-are-calculated.md)
@@ -106,7 +82,7 @@ comparison, not measured physical serving accuracy. See the
 
 GPU profiles: [CASYS Lab at KAIST / LLMServingSim 2.0](https://github.com/casys-kaist/LLMServingSim)
 and [Microsoft Vidur](https://github.com/microsoft/vidur).
-Storage benchmark code and request traces: [Mooncake contributors](https://github.com/kvcache-ai/Mooncake).
-Local I/O measurements, fitted functions, validation, tier/serving modeling and
+Published request traces: [Mooncake contributors](https://github.com/kvcache-ai/Mooncake).
+Trace-policy replay, prefix-reuse fitting, GPU validation, tier/serving modeling and
 ServeScope integration: [ryeii (Ryan Z An)](https://github.com/ryeii).
 [Retained licenses and source notices](../THIRD_PARTY_NOTICES.md).

@@ -20,13 +20,14 @@ Llama 3.1 70B, BF16, separate H100 TP4 prefill/decode pools, 16 requests,
 2048 input tokens, 64 output tokens, 8 requests/s. Original/default batch caps: 4/4.
 The configured SSD profile is manual: read 3 GB/s + 100 us per I/O chunk; write
 2 GB/s + 200 us per chunk; chunk size 1 MiB. HBM prefix capacity 0.125 GB/GPU,
-host DRAM 0.25 GB aggregate, SSD 4 GB aggregate. The fitted local file profile is
-not selected in this comparison. Publication and spill costs block before handoff.
+host DRAM 0.25 GB aggregate, SSD 4 GB aggregate. Device timings are configured
+assumptions. Publication and spill costs block before handoff in this comparison.
 
 | Configuration | Prefill / decode caps | Generation throughput (tok/s) | Reused prompt tokens |
 | --- | --- | ---: | ---: |
 | Original disabled baseline | 4 / 4 | 186.634944 | 0 |
 | Batch change alone, no prefix retention | 1 / 1 | 58.124347 | 0 |
+| Dynamo-style tiered cache | 4 / 4 | 129.041011 | 4096 |
 | No retained prefix cache | 4 / 4 | 186.634944 | 0 |
 | HBM only | 4 / 4 | 186.628130 | 0 |
 | DRAM only | 4 / 4 | 182.901078 | 0 |
@@ -58,7 +59,7 @@ Active decode placement is now a separate control, with explicit per-step reads,
 append writes, staging capacity and shared I/O queues. See the
 [active-KV model](active-kv-model.md) for equations and its unvalidated serialized
 streaming assumptions. No active-offload accuracy claim is inferred from these
-prefix-cache experiments or from local file-I/O calibration.
+prefix-cache experiments or from the published request traces.
 
 A prefix layout can have a modest effect when decoding dominates, few ready prefixes
 are reused, capacity is small or arrival rate limits the finite run. Prefix reuse also

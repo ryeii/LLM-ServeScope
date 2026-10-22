@@ -3,7 +3,9 @@ import { eventService, eventCalculation } from "./derivations";
 import { activeRequestPath } from "./activeCalculations";
 type Obj = Record<string, any>;
 export const storageReport =
-  "https://github.com/ryeii/LLM-ServeScope/blob/main/docs/storage-2026-10-20/README.md";
+  "https://github.com/ryeii/LLM-ServeScope/blob/main/docs/storage-model.md";
+export const traceReuseReport =
+  "https://github.com/ryeii/LLM-ServeScope/blob/main/docs/trace-reuse/README.md";
 const total = (xs: Obj[], f: (x: Obj) => number) =>
   xs.reduce((s, x) => s + f(x), 0);
 export function storageEventCalculation(
@@ -62,23 +64,7 @@ export function storageEventCalculation(
     v("L", "Path intercept", c[0], "ms"),
     v("b", "Linear size coefficient", c[1], "ms/MB"),
   ];
-  if (c.length > 2)
-    terms.push(
-      v(
-        "a",
-        f.family === "sqrt-affine"
-          ? "Square-root coefficient"
-          : "Additional slope above 0.25 MB",
-        c[2],
-        f.family === "sqrt-affine" ? "ms/√MB" : "ms/MB",
-      ),
-    );
-  const equation =
-    f.family === "sqrt-affine"
-      ? "f(x)=L+b x+a √x"
-      : f.family === "two-slope"
-        ? "f(x)=L+b x+a max(0,x−0.25)"
-        : "f(x)=L+b x";
+  const equation = "f(x)=L+b x";
   let service: Calculation = {
     ...calc(
       e.tier + " " + e.operation + " service",
@@ -99,13 +85,11 @@ export function storageEventCalculation(
       "ms",
     ),
     summary:
-      e.profile === "local-mooncake-path"
-        ? "Coefficients fitted to local Mooncake DiskHashTable measurements: QD1, warm buffered reads, fsync writes. This is a file-path fit, not measured performance of the selected GPU server or a customer SSD."
-        : "Configured bandwidth/latency assumptions expressed as an affine service function. PCIe/HBM paths and manual SSD profiles have no measured calibration.",
+      "Configured bandwidth/latency assumptions expressed as an affine service function. Published request traces do not contain device-service timings. SSD, PCIe and explicit HBM-copy service have no measured calibration or held-out timing error bound.",
     source: e.profile,
     links: [
       {
-        label: "Data coverage, selected functions and held-out error",
+        label: "Published-trace coverage and storage assumptions",
         url: storageReport,
       },
     ],
@@ -148,7 +132,7 @@ export function storageEventCalculation(
         "ms",
       ),
       summary:
-        "A configured streaming direct path. No host DRAM relay or separate host–GPU copy is charged. The local Mooncake file-path fit does not calibrate this path. CPU control overhead, detailed PCIe contention and GDS kernel behavior are not measured.",
+        "A configured streaming direct path. No host DRAM relay or separate host–GPU copy is charged. Published request traces do not calibrate this path. CPU control overhead, detailed PCIe contention and GDS kernel behavior are not measured.",
       source: "configured-gds-assumption",
     };
   }

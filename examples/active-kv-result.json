@@ -1,13 +1,13 @@
 {
   "schema_version": "servescope.behavioral.v5",
   "active_kv": {
-    "model_source_sha256": "b5869c5dab1b8004bbef207d20495789b8af0402bbf13f92557a18469a60f39d",
+    "model_source_sha256": "77570d3a4af6e08ed54d0f76cb8f3edcea53f4bc3b688f1582f3593b5098951b",
     "placement": "ssd",
     "label": "SSD backing",
     "backing": "ssd",
     "scope": "Active decode KV only; prefill working KV remains in HBM. Retained-prefix placement is independent.",
     "model": "Serialized tiled staging: remote reads + HBM-reference GPU service + append writes. No overlap or calibrated streaming-kernel correction.",
-    "calibration": "Unvalidated active-offload composition. GPU fits cover HBM-resident kernels; local file-I/O error does not validate streamed attention or target-server SSD performance.",
+    "calibration": "Unvalidated active-offload composition. GPU fits cover HBM-resident kernels; storage and transfer service use configured assumptions, not timings from the published request traces.",
     "staging_GB_per_gpu": 0.0625,
     "hbm_capacity_bytes_per_gpu": 0,
     "remote_capacity_bytes": 1020000000000.0,
@@ -403,7 +403,7 @@
       }
     ],
     "hit_forecast": null,
-    "fit": null,
+    "timing_evidence": "configured-assumptions-not-request-trace-measurements",
     "workload_source": {
       "id": "synthetic-demo",
       "label": "Generated repeated-prefix workload",
@@ -414,7 +414,7 @@
       "classification": "generated-scenario"
     },
     "limitations": [
-      "Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.",
+      "Published request traces provide arrivals, token lengths and prefix identities, not measured SSD, DRAM, GDS or host-GPU service time. All storage and transfer timing uses configured assumptions with no measured error bound.",
       "Dynamo-style policy is an approximation: independent LRU copies and a non-decaying request-reference disk filter, without Dynamo LFU aging, priorities or NIXL kernels.",
       "GDS timing is configured startup + max(storage service, direct-link service); no measured GDS accuracy claim. No host relay or additional host-GPU copy is charged for direct GPU-SSD transfers.",
       "Background publication retains its prefill source until publication and handoff both complete. Placement commits are serialized; background copies can overlap GPU computation and independent restores.",
@@ -29808,10 +29808,10 @@
     "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
     "Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.",
     "Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, configured asynchronous or blocking publication, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.",
-    "Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power.",
+    "Published request traces supply workload and prefix identities, not device-service timings. Storage and transfers use configured assumptions with no measured error bound. Trace-policy hit forecasts do not decide runtime hits. GPU energy excludes storage and host power.",
     "GDS is a configured direct-path approximation, not measured GDS or Dynamo performance. Dynamo-style cache policy is simplified and does not reproduce its full scheduler.",
     "Serialized tiled staging: remote reads + HBM-reference GPU service + append writes. No overlap or calibrated streaming-kernel correction.",
-    "Unvalidated active-offload composition. GPU fits cover HBM-resident kernels; local file-I/O error does not validate streamed attention or target-server SSD performance.",
+    "Unvalidated active-offload composition. GPU fits cover HBM-resident kernels; storage and transfer service use configured assumptions, not timings from the published request traces.",
     "Prefill active KV remains in HBM. Active decode backing and retained prefixes have independent placement and capacity accounting; they share SSD and host/GPU queues."
   ],
   "provenance": {

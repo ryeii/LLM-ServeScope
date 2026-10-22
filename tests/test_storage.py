@@ -2,7 +2,8 @@ import copy,json,math,unittest
 from pathlib import Path
 import simpy
 from backend.model import DEFAULT,simulate,parameters,resolve_model,validate
-from backend.storage import CacheTiers,fit_dataset,latency_ms,hit_prediction,CACHE_LAYOUTS
+from backend.storage import CacheTiers,latency_ms,CACHE_LAYOUTS
+from backend.prefix_reuse import hit_fit_dataset,hit_prediction
 ROOT=Path(__file__).resolve().parents[1]
 
 def scenario():
@@ -67,41 +68,32 @@ class StorageTests(unittest.TestCase):
   r=simulate(c);self.assertTrue(any(e.get('kind')=='kv_memory_wait' for e in r['timeline']))
   for mm in r['memory'].values():self.assertLessEqual(mm['active_kv_GB']*1e9,mm['active_kv_budget_bytes']+1e-5)
 
- def test_fitted_functions_monotone_bounded_and_bandwidth_consistent(self):
-  data=fit_dataset()
-  for f in data['io'].values():
-   times=[latency_ms(f,x) for x in [16384,65536,262144,1048576,2097152]];self.assertEqual(times,sorted(times));self.assertTrue(all(x>0 for x in times))
+ def test_trace_reuse_functions_monotone_bounded_and_no_device_fit(self):
+  data=hit_fit_dataset();self.assertNotIn('io',data)
   for f in data['hit'].values():
    values=[hit_prediction(f,c,1000) for c in [0,1,10,100,1000,10000]];self.assertEqual(values,sorted(values));self.assertTrue(all(0<=x<=1 for x in values))
-  records=json.loads((ROOT/'docs/storage-2026-10-20/io-observations.json').read_text())['observations']
-  self.assertEqual(len(records),768)
-  for row in records:self.assertAlmostEqual(row['bandwidth_MBps'],row['bytes']/row['latency_ms']/1000)
 
  def test_archived_cv_models_reconstruct_held_out_predictions(self):
-  validation=json.loads((ROOT/'docs/storage-2026-10-20/validation.json').read_text());predictions=json.loads((ROOT/'docs/storage-2026-10-20/held-out-predictions.json').read_text())
-  for op,rows in predictions['io'].items():
+  validation=json.loads((ROOT/'docs/trace-reuse/validation.json').read_text());predictions=json.loads((ROOT/'docs/trace-reuse/held-out-predictions.json').read_text())
+  for source,rows in predictions.items():
    for row in rows:
-    f=validation['io'][op]['outer_models'][str(row['bytes'])]
-    self.assertNotIn(row['bytes'],f['training_sizes'])
-    self.assertAlmostEqual(latency_ms(f,row['bytes']),row['predicted_ms'])
-  for source,rows in predictions['hit'].items():
-   for row in rows:
-    f=validation['hit'][source]['outer_models'][str(row['window'])]
+    f=validation[source]['outer_models'][str(row['window'])]
     self.assertNotIn(row['window'],f['training_regions'])
     self.assertAlmostEqual(hit_prediction(f,row['capacity_blocks'],row['working_set_blocks'],row['max_hit_fraction']),row['predicted_hit'])
 
  def test_source_and_fit_integrity(self):
   import hashlib
-  fit=fit_dataset()
-  for field,path in [('training_script_sha256','integration/storage/study.py'),('runtime_sha256','backend/storage.py')]:
+  fit=hit_fit_dataset()
+  for field,path in [('training_script_sha256','integration/storage/trace_reuse.py'),('runtime_sha256','backend/prefix_reuse.py')]:
    self.assertEqual(fit[field],hashlib.sha256((ROOT/path).read_bytes()).hexdigest())
-  for kind in ['io','hit']:
-   path=ROOT/'docs/storage-2026-10-20'/f'{kind}-observations.json';self.assertEqual(fit['sources'][kind+'_sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
-  for folder in ['mooncake-storage','mooncake-traces']:
-   base=ROOT/'third_party'/folder;m=json.loads((base/'manifest.json').read_text())
-   for file in m['files']:
-    path=base/('source/'+file['path'] if folder=='mooncake-storage' else file['file'])
-    self.assertEqual(file['sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
+  path=ROOT/'docs/trace-reuse/hit-observations.json';self.assertEqual(fit['sources']['hit_sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
+  base=ROOT/'third_party/mooncake-traces';m=json.loads((base/'manifest.json').read_text())
+  self.assertEqual(fit['sources']['trace_manifest_sha256'],hashlib.sha256((base/'manifest.json').read_bytes()).hexdigest())
+  for file in m['files']:
+   path=base/file['file'];self.assertEqual(file['sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
+   rows=[json.loads(line) for line in path.read_bytes().splitlines()]
+   self.assertEqual(len(rows),file['requests'])
+   self.assertTrue(all(set(row)=={'timestamp','input_length','output_length','hash_ids'} for row in rows))
 
  def test_parallel_shards_and_colocated_pools_preserve_payload_and_completion(self):
   for separated in [True,False]:

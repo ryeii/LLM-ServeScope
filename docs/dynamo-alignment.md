@@ -69,10 +69,10 @@ paths**. GDS requires compatible hardware, filesystem and drivers; ServeScope
 does not probe or enable them. Direct transfer is not guaranteed faster for
 every transfer size or deployment.
 
-The measured Mooncake fit covers warm buffered file I/O on a development Mac.
-It cannot calibrate GDS, so it is available only with the host-staged path.
-Selecting GDS switches to configured SSD coefficients. Existing file-path error
-figures do not validate direct transfers or end-to-end serving.
+Published Mooncake request traces supply workload arrivals, token lengths and
+prefix identities only. They do not calibrate storage or transfer timing.
+All SSD, host–GPU and GDS coefficients here are configured assumptions with no
+measured device-service error bound. [Evidence coverage](storage-model.md).
 
 ## Alignment and remaining differences
 
@@ -84,7 +84,7 @@ figures do not validate direct transfers or end-to-end serving.
 | Background work | Async publication; restore before use | Async transfer manager with connector scheduling |
 | Policy | Independent LRU copies; reference-count filter | Presence/LFU/priority policies |
 | I/O concurrency | Bounded jobs; one physical-path reservation | Actual batched/concurrent NIXL transfers |
-| Calibration | GPU fits; optional local staged file-I/O fit | Actual deployment hardware/software |
+| Calibration | GPU fits; configured storage/transfer timing | Actual deployment hardware/software |
 
 Experimental **Active decode KV → SSD backing** remains a separate scenario:
 it streams remote KV every decode token. GDS changes that transport, without
@@ -119,7 +119,5 @@ Comparison outputs are **model predictions, not measurements**. Tests establish
 routing, accounting, capacity lifetimes and Python/browser parity, not physical
 GDS or Dynamo accuracy. KAIST, Vidur, Mooncake and SimPy credits remain separate.
 
-Verification on 21 October 2026: **81 Python tests, 15 local browser tests and
-12 static Pages browser tests passed**. The GDS workflow was rechecked in both
-editions after adding v6 source-hash metadata. The local file-I/O coefficients
-and held-out errors are unchanged; only their runtime provenance was refreshed.
+Validation covers trace identity, routing, accounting, capacity lifetimes and
+Python/browser parity. It does not measure physical GDS or Dynamo performance.

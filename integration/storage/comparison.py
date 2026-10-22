@@ -9,12 +9,15 @@ def compact(result):
     return dict(metrics=result['metrics'],config=result['config'],reused_tokens=result.get('storage',{}).get('stats',{}).get('reused_tokens',0),storage_service_ms=sum(e['duration_ms'] for e in result['timeline'] if e.get('kind')=='storage_io'))
 
 def main():
-    baseline=simulate(DEFAULT);after={}
+    base=copy.deepcopy(DEFAULT)
+    base['storage'].update(enabled=False,placement='inclusive',profile='manual',
+        ssd_transfer_mode='host-staged',publication_mode='blocking')
+    baseline=simulate(base);after={}
     for layout in CACHE_LAYOUTS:
-        c=copy.deepcopy(DEFAULT);c['storage'].update(enabled=True,placement=layout)
+        c=copy.deepcopy(baseline['config']);c['storage'].update(enabled=True,placement=layout)
         after[layout]=compact(simulate(c))
     assert after['none']['metrics']==baseline['metrics']
-    single=copy.deepcopy(DEFAULT)
+    single=copy.deepcopy(baseline['config'])
     for phase in ['prefill','decode']:single[phase]['batch_size']=1
     data=dict(kind='behavioral-simulator-regression-not-hardware-measurements',baseline=compact(baseline),batch_one_without_retention=compact(simulate(single)),layouts=after)
     (ROOT/'examples/prefix-layout-comparison.json').write_text(json.dumps(data,indent=2)+'\n')
@@ -40,8 +43,8 @@ Llama 3.1 70B, BF16, separate H100 TP4 prefill/decode pools, 16 requests,
 2048 input tokens, 64 output tokens, 8 requests/s. Original/default batch caps: 4/4.
 The configured SSD profile is manual: read 3 GB/s + 100 us per I/O chunk; write
 2 GB/s + 200 us per chunk; chunk size 1 MiB. HBM prefix capacity 0.125 GB/GPU,
-host DRAM 0.25 GB aggregate, SSD 4 GB aggregate. The fitted local file profile is
-not selected in this comparison. Publication and spill costs block before handoff.
+host DRAM 0.25 GB aggregate, SSD 4 GB aggregate. Device timings are configured
+assumptions. Publication and spill costs block before handoff in this comparison.
 
 | Configuration | Prefill / decode caps | Generation throughput (tok/s) | Reused prompt tokens |
 | --- | --- | ---: | ---: |
@@ -68,7 +71,7 @@ Active decode placement is now a separate control, with explicit per-step reads,
 append writes, staging capacity and shared I/O queues. See the
 [active-KV model](active-kv-model.md) for equations and its unvalidated serialized
 streaming assumptions. No active-offload accuracy claim is inferred from these
-prefix-cache experiments or from local file-I/O calibration.
+prefix-cache experiments or from the published request traces.
 
 A prefix layout can have a modest effect when decoding dominates, few ready prefixes
 are reused, capacity is small or arrival rate limits the finite run. Prefix reuse also

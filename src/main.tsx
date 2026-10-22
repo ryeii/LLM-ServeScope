@@ -3066,7 +3066,7 @@ function App() {
               target="_blank"
               rel="noreferrer"
             >
-              Storage benchmark &amp; traces: Mooncake
+              Published request traces: Mooncake
             </a>
             <a
               className="footer-credit"

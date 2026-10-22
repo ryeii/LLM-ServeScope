@@ -24,7 +24,7 @@
         "request_id": 0,
         "ready_ms": 27.89080559059347,
         "start_ms": 27.89080559059347,
-        "end_ms": 80.30842382099256,
+        "end_ms": 126.2120749239268,
         "queue_ms": 0.0,
         "background": false
       },
@@ -32,7 +32,7 @@
         "request_id": 1,
         "ready_ms": 527.8908055905935,
         "start_ms": 527.8908055905935,
-        "end_ms": 580.3084238209925,
+        "end_ms": 626.2120749239267,
         "queue_ms": 0.0,
         "background": false
       },
@@ -40,7 +40,7 @@
         "request_id": 2,
         "ready_ms": 1027.8908055905936,
         "start_ms": 1027.8908055905936,
-        "end_ms": 1080.3084238209926,
+        "end_ms": 1126.212074923927,
         "queue_ms": 0.0,
         "background": false
       },
@@ -48,39 +48,39 @@
         "request_id": 3,
         "ready_ms": 1527.8908055905936,
         "start_ms": 1527.8908055905936,
-        "end_ms": 1580.3084238209926,
+        "end_ms": 1626.212074923927,
         "queue_ms": 0.0,
         "background": false
       },
       {
         "request_id": 4,
-        "ready_ms": 2017.1305803286846,
-        "start_ms": 2017.1305803286846,
-        "end_ms": 2017.1305803286846,
+        "ready_ms": 2069.7361917588573,
+        "start_ms": 2069.7361917588573,
+        "end_ms": 2069.7361917588573,
         "queue_ms": 0.0,
         "background": false
       },
       {
         "request_id": 5,
-        "ready_ms": 2517.1305803286846,
-        "start_ms": 2517.1305803286846,
-        "end_ms": 2517.1305803286846,
+        "ready_ms": 2569.7361917588573,
+        "start_ms": 2569.7361917588573,
+        "end_ms": 2569.7361917588573,
         "queue_ms": 0.0,
         "background": false
       },
       {
         "request_id": 6,
-        "ready_ms": 3017.1305803286846,
-        "start_ms": 3017.1305803286846,
-        "end_ms": 3017.1305803286846,
+        "ready_ms": 3069.7361917588573,
+        "start_ms": 3069.7361917588573,
+        "end_ms": 3069.7361917588573,
         "queue_ms": 0.0,
         "background": false
       },
       {
         "request_id": 7,
-        "ready_ms": 3517.1305803286846,
-        "start_ms": 3517.1305803286846,
-        "end_ms": 3517.1305803286846,
+        "ready_ms": 3569.7361917588573,
+        "start_ms": 3569.7361917588573,
+        "end_ms": 3569.7361917588573,
         "queue_ms": 0.0,
         "background": false
       }
@@ -88,7 +88,7 @@
     "ssd_transfer_mode": "host-staged",
     "disk_min_uses": 2,
     "max_inflight_publications": 128,
-    "profile": "local-mooncake-path",
+    "profile": "manual",
     "block_tokens": 512,
     "block_bytes": 67108864.0,
     "per_gpu_block_bytes": 67108864.0,
@@ -111,7 +111,7 @@
       "pcie_service_ms": 44.89924266666666,
       "pcie_queue_ms": 0.0,
       "ssd_write_bytes": 536870912.0,
-      "ssd_service_ms": 206.95537653423915,
+      "ssd_service_ms": 600.9924266666669,
       "ssd_queue_ms": 0.0,
       "ssd_read_bytes": 536870912.0,
       "pcie_read_bytes": 536870912.0,
@@ -121,151 +121,56 @@
     },
     "snapshots": [
       {
-        "time_ms": 54.099614705793016,
+        "time_ms": 77.05144025726014,
         "tier": "ssd",
         "blocks": 1,
         "request_id": 0
       },
       {
-        "time_ms": 80.30842382099256,
+        "time_ms": 126.2120749239268,
         "tier": "ssd",
         "blocks": 2,
         "request_id": 0
       },
       {
-        "time_ms": 554.099614705793,
+        "time_ms": 577.0514402572601,
         "tier": "ssd",
         "blocks": 3,
         "request_id": 1
       },
       {
-        "time_ms": 580.3084238209925,
+        "time_ms": 626.2120749239267,
         "tier": "ssd",
         "blocks": 4,
         "request_id": 1
       },
       {
-        "time_ms": 1054.099614705793,
+        "time_ms": 1077.0514402572603,
         "tier": "ssd",
         "blocks": 5,
         "request_id": 2
       },
       {
-        "time_ms": 1080.3084238209926,
+        "time_ms": 1126.212074923927,
         "tier": "ssd",
         "blocks": 6,
         "request_id": 2
       },
       {
-        "time_ms": 1554.099614705793,
+        "time_ms": 1577.0514402572603,
         "tier": "ssd",
         "blocks": 7,
         "request_id": 3
       },
       {
-        "time_ms": 1580.3084238209926,
+        "time_ms": 1626.212074923927,
         "tier": "ssd",
         "blocks": 8,
         "request_id": 3
       }
     ],
     "hit_forecast": null,
-    "fit": {
-      "schema_version": "servescope.storage-fit.v1",
-      "io": {
-        "read": {
-          "family": "two-slope",
-          "coefficients": [
-            0.0014758888145342158,
-            0.030010446098735058,
-            0.007012321547539525
-          ],
-          "min_bytes": 16384,
-          "max_bytes": 2097152,
-          "observations": 384,
-          "validation": {
-            "latency_mape_pct": 16.37287722794193,
-            "latency_p95_pct": 53.08557883236533,
-            "bandwidth_mape_pct": 29.420554363860532,
-            "bandwidth_p95_pct": 113.15526015299477,
-            "joint_mape_pct": 22.89671579590123
-          }
-        },
-        "write": {
-          "family": "affine",
-          "coefficients": [
-            0.02081865825582325,
-            0.32887179136514955
-          ],
-          "min_bytes": 16384,
-          "max_bytes": 2097152,
-          "observations": 384,
-          "validation": {
-            "latency_mape_pct": 9.974904856155355,
-            "latency_p95_pct": 27.899022442810217,
-            "bandwidth_mape_pct": 12.041536953683575,
-            "bandwidth_p95_pct": 38.69558121082868,
-            "joint_mape_pct": 11.008220904919465
-          }
-        }
-      },
-      "hit": {
-        "conversation": {
-          "family": "exponential",
-          "coefficients": [
-            0.9869606340485892,
-            0.22043931508639894
-          ],
-          "observations": 420,
-          "validation": {
-            "mae_pp": 1.269089991719495,
-            "rmse_pp": 1.8696538939847993,
-            "p95_pp": 3.7799042811958
-          },
-          "min_requests": 8,
-          "max_requests": 2006
-        },
-        "toolagent": {
-          "family": "weibull",
-          "coefficients": [
-            0.9999999999999999,
-            0.025172436080389698,
-            0.2890166428143976
-          ],
-          "observations": 420,
-          "validation": {
-            "mae_pp": 3.79404501604659,
-            "rmse_pp": 6.974854794194957,
-            "p95_pp": 13.750720906115959
-          },
-          "min_requests": 8,
-          "max_requests": 3935
-        },
-        "synthetic": {
-          "family": "exponential",
-          "coefficients": [
-            0.9999999999999974,
-            0.3328386115100144
-          ],
-          "observations": 420,
-          "validation": {
-            "mae_pp": 0.5310283406962917,
-            "rmse_pp": 1.4975771948508165,
-            "p95_pp": 3.2881953388642144
-          },
-          "min_requests": 8,
-          "max_requests": 666
-        }
-      },
-      "sources": {
-        "io_sha256": "6da4bae9339a1e30eedb06472dd99a56dd01ffae9a482885d46b6c49c105ebf0",
-        "hit_sha256": "4874aa7897657403e6e89c612e2a8c0ab3506919ab57b14e6990ebb730d60410"
-      },
-      "scope": "Local warm buffered macOS storage path, QD1 fsync(always) writes; hit functions approximate policy replay, not observed production cache hits.",
-      "training_script_sha256": "efd4716d6ddbc3393f1ba71a0d957156b0e7746df2f530513ff288e5ff9b7394",
-      "runtime_sha256": "474e7b85549f6fe450620eb6c8b8b33795697dbc5aa0f70e29b521536f4af63e",
-      "payload_sha256": "983bae9020fe83212153d2fd437cf5055013044565f55d542302274799e25ce5"
-    },
+    "timing_evidence": "configured-assumptions-not-request-trace-measurements",
     "workload_source": {
       "id": "synthetic-demo",
       "label": "Generated repeated-prefix demonstration",
@@ -276,7 +181,7 @@
       "classification": "generated-scenario"
     },
     "limitations": [
-      "Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.",
+      "Published request traces provide arrivals, token lengths and prefix identities, not measured SSD, DRAM, GDS or host-GPU service time. All storage and transfer timing uses configured assumptions with no measured error bound.",
       "Dynamo-style policy is an approximation: independent LRU copies and a non-decaying request-reference disk filter, without Dynamo LFU aging, priorities or NIXL kernels.",
       "GDS timing is configured startup + max(storage service, direct-link service); no measured GDS accuracy claim. No host relay or additional host-GPU copy is charged for direct GPU-SSD transfers.",
       "Background publication retains its prefill source until publication and handoff both complete. Placement commits are serialized; background copies can overlap GPU computation and independent restores.",
@@ -298,7 +203,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 0,
-        "time_ms": 85.68713294099256,
+        "time_ms": 131.59078404392682,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -307,7 +212,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 0,
-        "time_ms": 85.68713294099256,
+        "time_ms": 131.59078404392682,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -316,7 +221,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 0,
-        "time_ms": 92.17566051246766,
+        "time_ms": 138.0793116154019,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -334,7 +239,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 1,
-        "time_ms": 585.6871329409926,
+        "time_ms": 631.5907840439268,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -343,7 +248,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 1,
-        "time_ms": 585.6871329409926,
+        "time_ms": 631.5907840439268,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -352,7 +257,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 1,
-        "time_ms": 592.1756605124676,
+        "time_ms": 638.0793116154018,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -370,7 +275,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 2,
-        "time_ms": 1085.6871329409926,
+        "time_ms": 1131.590784043927,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -379,7 +284,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 2,
-        "time_ms": 1085.6871329409926,
+        "time_ms": 1131.590784043927,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -388,7 +293,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 2,
-        "time_ms": 1092.1756605124676,
+        "time_ms": 1138.079311615402,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -406,7 +311,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 3,
-        "time_ms": 1585.6871329409926,
+        "time_ms": 1631.590784043927,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -415,7 +320,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 3,
-        "time_ms": 1585.6871329409926,
+        "time_ms": 1631.590784043927,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -424,7 +329,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 3,
-        "time_ms": 1592.1756605124676,
+        "time_ms": 1638.079311615402,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -442,7 +347,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 4,
-        "time_ms": 2022.5092894486845,
+        "time_ms": 2075.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -451,7 +356,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 4,
-        "time_ms": 2022.5092894486845,
+        "time_ms": 2075.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -460,7 +365,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 4,
-        "time_ms": 2028.9978170201596,
+        "time_ms": 2081.6034284503326,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -478,7 +383,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 5,
-        "time_ms": 2522.5092894486847,
+        "time_ms": 2575.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -487,7 +392,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 5,
-        "time_ms": 2522.5092894486847,
+        "time_ms": 2575.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -496,7 +401,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 5,
-        "time_ms": 2528.99781702016,
+        "time_ms": 2581.6034284503326,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -514,7 +419,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 6,
-        "time_ms": 3022.5092894486847,
+        "time_ms": 3075.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -523,7 +428,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 6,
-        "time_ms": 3022.5092894486847,
+        "time_ms": 3075.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -532,7 +437,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 6,
-        "time_ms": 3028.99781702016,
+        "time_ms": 3081.6034284503326,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -550,7 +455,7 @@
         "action": "release",
         "phase": "prefill",
         "request_id": 7,
-        "time_ms": 3522.5092894486847,
+        "time_ms": 3575.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63905923072.0
@@ -559,7 +464,7 @@
         "action": "grant",
         "phase": "decode",
         "request_id": 7,
-        "time_ms": 3522.5092894486847,
+        "time_ms": 3575.1149008788575,
         "bytes": 134348800.0,
         "used_bytes": 134348800.0,
         "capacity_bytes": 63939411968.0
@@ -568,7 +473,7 @@
         "action": "release",
         "phase": "decode",
         "request_id": 7,
-        "time_ms": 3528.99781702016,
+        "time_ms": 3581.6034284503326,
         "bytes": 134348800.0,
         "used_bytes": 0.0,
         "capacity_bytes": 63939411968.0
@@ -1636,7 +1541,7 @@
     "storage": {
       "enabled": true,
       "placement": "ssd-only",
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "hbm_cache_GB": 0.0,
       "dram_cache_GB": 0.0,
       "ssd_cache_GB": 4.0,
@@ -1798,21 +1703,21 @@
     "tie_embeddings": false
   },
   "metrics": {
-    "throughput_tps": 4.53386508850555,
-    "request_throughput": 2.266932544252775,
-    "prompt_tps": 2321.3389253148416,
-    "ttft_mean_ms": 54.098211194838626,
-    "ttft_p95_ms": 85.68713294099257,
-    "tpot_mean_ms": 6.488527571475066,
-    "latency_p95_ms": 92.17566051246764,
-    "elapsed_ms": 3528.99781702016,
+    "throughput_tps": 4.467272918298157,
+    "request_throughput": 2.2336364591490785,
+    "prompt_tps": 2287.2437341686564,
+    "ttft_mean_ms": 103.35284246139219,
+    "ttft_p95_ms": 131.590784043927,
+    "tpot_mean_ms": 6.488527571475064,
+    "latency_p95_ms": 138.07931161540205,
+    "elapsed_ms": 3581.6034284503326,
     "gpu_count": 2,
-    "energy_j": 940.535617743853,
-    "tokens_per_joule": 0.017011583291636136,
-    "tokens_per_gpu_s": 2.266932544252775,
-    "cost_usd": 0.0058816630283669335,
-    "cost_per_million_tokens": 367.60393927293336,
-    "gpu_utilization": 0.026892850011717557
+    "energy_j": 953.1609644870945,
+    "tokens_per_joule": 0.016786251846360244,
+    "tokens_per_gpu_s": 2.2336364591490785,
+    "cost_usd": 0.005969339047417221,
+    "cost_per_million_tokens": 373.0836904635763,
+    "gpu_utilization": 0.02649785518712905
   },
   "memory": {
     "prefill": {
@@ -4691,18 +4596,18 @@
       "arrival_ms": 0.0,
       "batch_ready_ms": 0.0,
       "prefill_admitted_ms": 0,
-      "decode_admitted_ms": 85.68713294099256,
+      "decode_admitted_ms": 131.59078404392682,
       "prefill_batch_id": 0,
       "decode_batch_id": 0,
-      "prefill_end_ms": 80.30842382099256,
-      "first_token_ms": 85.68713294099256,
-      "finish_ms": 92.17566051246766,
-      "ttft_ms": 85.68713294099256,
-      "tpot_ms": 6.488527571475103,
-      "latency_ms": 92.17566051246766,
+      "prefill_end_ms": 126.2120749239268,
+      "first_token_ms": 131.59078404392682,
+      "finish_ms": 138.0793116154019,
+      "ttft_ms": 131.59078404392682,
+      "tpot_ms": 6.488527571475089,
+      "latency_ms": 138.0793116154019,
       "token_times_ms": [
-        85.68713294099256,
-        92.17566051246766
+        131.59078404392682,
+        138.0793116154019
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4724,11 +4629,11 @@
         "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 27.89080559059347,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 80.30842382099256,
-        "publication_end_ms": 80.30842382099256,
-        "handoff_end_ms": 85.68713294099256,
-        "prefill_release_ms": 85.68713294099256,
-        "decode_memory_ready_ms": 85.68713294099256
+        "background_publication_end_ms": 126.2120749239268,
+        "publication_end_ms": 126.2120749239268,
+        "handoff_end_ms": 131.59078404392682,
+        "prefill_release_ms": 131.59078404392682,
+        "decode_memory_ready_ms": 131.59078404392682
       }
     },
     {
@@ -4736,18 +4641,18 @@
       "arrival_ms": 500.0,
       "batch_ready_ms": 500.0,
       "prefill_admitted_ms": 500.0,
-      "decode_admitted_ms": 585.6871329409926,
+      "decode_admitted_ms": 631.5907840439268,
       "prefill_batch_id": 1,
       "decode_batch_id": 1,
-      "prefill_end_ms": 580.3084238209925,
-      "first_token_ms": 585.6871329409926,
-      "finish_ms": 592.1756605124676,
-      "ttft_ms": 85.68713294099257,
+      "prefill_end_ms": 626.2120749239267,
+      "first_token_ms": 631.5907840439268,
+      "finish_ms": 638.0793116154018,
+      "ttft_ms": 131.59078404392676,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 92.17566051246763,
+      "latency_ms": 138.07931161540182,
       "token_times_ms": [
-        585.6871329409926,
-        592.1756605124676
+        631.5907840439268,
+        638.0793116154018
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4769,11 +4674,11 @@
         "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 527.8908055905935,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 580.3084238209925,
-        "publication_end_ms": 580.3084238209925,
-        "handoff_end_ms": 585.6871329409926,
-        "prefill_release_ms": 585.6871329409926,
-        "decode_memory_ready_ms": 585.6871329409926
+        "background_publication_end_ms": 626.2120749239267,
+        "publication_end_ms": 626.2120749239267,
+        "handoff_end_ms": 631.5907840439268,
+        "prefill_release_ms": 631.5907840439268,
+        "decode_memory_ready_ms": 631.5907840439268
       }
     },
     {
@@ -4781,18 +4686,18 @@
       "arrival_ms": 1000.0,
       "batch_ready_ms": 1000.0,
       "prefill_admitted_ms": 1000.0,
-      "decode_admitted_ms": 1085.6871329409926,
+      "decode_admitted_ms": 1131.590784043927,
       "prefill_batch_id": 2,
       "decode_batch_id": 2,
-      "prefill_end_ms": 1080.3084238209926,
-      "first_token_ms": 1085.6871329409926,
-      "finish_ms": 1092.1756605124676,
-      "ttft_ms": 85.68713294099257,
+      "prefill_end_ms": 1126.212074923927,
+      "first_token_ms": 1131.590784043927,
+      "finish_ms": 1138.079311615402,
+      "ttft_ms": 131.590784043927,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 92.17566051246763,
+      "latency_ms": 138.07931161540205,
       "token_times_ms": [
-        1085.6871329409926,
-        1092.1756605124676
+        1131.590784043927,
+        1138.079311615402
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4814,11 +4719,11 @@
         "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 1027.8908055905936,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 1080.3084238209926,
-        "publication_end_ms": 1080.3084238209926,
-        "handoff_end_ms": 1085.6871329409926,
-        "prefill_release_ms": 1085.6871329409926,
-        "decode_memory_ready_ms": 1085.6871329409926
+        "background_publication_end_ms": 1126.212074923927,
+        "publication_end_ms": 1126.212074923927,
+        "handoff_end_ms": 1131.590784043927,
+        "prefill_release_ms": 1131.590784043927,
+        "decode_memory_ready_ms": 1131.590784043927
       }
     },
     {
@@ -4826,18 +4731,18 @@
       "arrival_ms": 1500.0,
       "batch_ready_ms": 1500.0,
       "prefill_admitted_ms": 1500.0,
-      "decode_admitted_ms": 1585.6871329409926,
+      "decode_admitted_ms": 1631.590784043927,
       "prefill_batch_id": 3,
       "decode_batch_id": 3,
-      "prefill_end_ms": 1580.3084238209926,
-      "first_token_ms": 1585.6871329409926,
-      "finish_ms": 1592.1756605124676,
-      "ttft_ms": 85.68713294099257,
+      "prefill_end_ms": 1626.212074923927,
+      "first_token_ms": 1631.590784043927,
+      "finish_ms": 1638.079311615402,
+      "ttft_ms": 131.590784043927,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 92.17566051246763,
+      "latency_ms": 138.07931161540205,
       "token_times_ms": [
-        1585.6871329409926,
-        1592.1756605124676
+        1631.590784043927,
+        1638.079311615402
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4859,30 +4764,30 @@
         "batch_prefix_floor_tokens": 0,
         "gpu_prefill_end_ms": 1527.8908055905936,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 1580.3084238209926,
-        "publication_end_ms": 1580.3084238209926,
-        "handoff_end_ms": 1585.6871329409926,
-        "prefill_release_ms": 1585.6871329409926,
-        "decode_memory_ready_ms": 1585.6871329409926
+        "background_publication_end_ms": 1626.212074923927,
+        "publication_end_ms": 1626.212074923927,
+        "handoff_end_ms": 1631.590784043927,
+        "prefill_release_ms": 1631.590784043927,
+        "decode_memory_ready_ms": 1631.590784043927
       }
     },
     {
       "id": 4,
       "arrival_ms": 2000.0,
       "batch_ready_ms": 2000.0,
-      "prefill_admitted_ms": 2010.5460365698273,
-      "decode_admitted_ms": 2022.5092894486845,
+      "prefill_admitted_ms": 2063.151648,
+      "decode_admitted_ms": 2075.1149008788575,
       "prefill_batch_id": 4,
       "decode_batch_id": 4,
-      "prefill_end_ms": 2017.1305803286846,
-      "first_token_ms": 2022.5092894486845,
-      "finish_ms": 2028.9978170201596,
-      "ttft_ms": 22.509289448684513,
+      "prefill_end_ms": 2069.7361917588573,
+      "first_token_ms": 2075.1149008788575,
+      "finish_ms": 2081.6034284503326,
+      "ttft_ms": 75.1149008788575,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 28.997817020159573,
+      "latency_ms": 81.60342845033256,
       "token_times_ms": [
-        2022.5092894486845,
-        2028.9978170201596
+        2075.1149008788575,
+        2081.6034284503326
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4895,7 +4800,7 @@
         },
         "computed_tokens": 1,
         "memory_ready_ms": 2000.0,
-        "cache_ready_ms": 2010.5460365698273,
+        "cache_ready_ms": 2063.151648,
         "available_reused_tokens": 1023,
         "batch_request_ids": [
           4
@@ -4904,32 +4809,32 @@
           "4": 1023
         },
         "batch_prefix_floor_tokens": 1023,
-        "gpu_prefill_end_ms": 2017.1305803286846,
+        "gpu_prefill_end_ms": 2069.7361917588573,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 2017.1305803286846,
-        "publication_end_ms": 2017.1305803286846,
-        "handoff_end_ms": 2022.5092894486845,
-        "prefill_release_ms": 2022.5092894486845,
-        "decode_memory_ready_ms": 2022.5092894486845
+        "background_publication_end_ms": 2069.7361917588573,
+        "publication_end_ms": 2069.7361917588573,
+        "handoff_end_ms": 2075.1149008788575,
+        "prefill_release_ms": 2075.1149008788575,
+        "decode_memory_ready_ms": 2075.1149008788575
       }
     },
     {
       "id": 5,
       "arrival_ms": 2500.0,
       "batch_ready_ms": 2500.0,
-      "prefill_admitted_ms": 2510.5460365698273,
-      "decode_admitted_ms": 2522.5092894486847,
+      "prefill_admitted_ms": 2563.151648,
+      "decode_admitted_ms": 2575.1149008788575,
       "prefill_batch_id": 5,
       "decode_batch_id": 5,
-      "prefill_end_ms": 2517.1305803286846,
-      "first_token_ms": 2522.5092894486847,
-      "finish_ms": 2528.99781702016,
-      "ttft_ms": 22.50928944868474,
+      "prefill_end_ms": 2569.7361917588573,
+      "first_token_ms": 2575.1149008788575,
+      "finish_ms": 2581.6034284503326,
+      "ttft_ms": 75.1149008788575,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 28.9978170201598,
+      "latency_ms": 81.60342845033256,
       "token_times_ms": [
-        2522.5092894486847,
-        2528.99781702016
+        2575.1149008788575,
+        2581.6034284503326
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4942,7 +4847,7 @@
         },
         "computed_tokens": 1,
         "memory_ready_ms": 2500.0,
-        "cache_ready_ms": 2510.5460365698273,
+        "cache_ready_ms": 2563.151648,
         "available_reused_tokens": 1023,
         "batch_request_ids": [
           5
@@ -4951,32 +4856,32 @@
           "5": 1023
         },
         "batch_prefix_floor_tokens": 1023,
-        "gpu_prefill_end_ms": 2517.1305803286846,
+        "gpu_prefill_end_ms": 2569.7361917588573,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 2517.1305803286846,
-        "publication_end_ms": 2517.1305803286846,
-        "handoff_end_ms": 2522.5092894486847,
-        "prefill_release_ms": 2522.5092894486847,
-        "decode_memory_ready_ms": 2522.5092894486847
+        "background_publication_end_ms": 2569.7361917588573,
+        "publication_end_ms": 2569.7361917588573,
+        "handoff_end_ms": 2575.1149008788575,
+        "prefill_release_ms": 2575.1149008788575,
+        "decode_memory_ready_ms": 2575.1149008788575
       }
     },
     {
       "id": 6,
       "arrival_ms": 3000.0,
       "batch_ready_ms": 3000.0,
-      "prefill_admitted_ms": 3010.5460365698273,
-      "decode_admitted_ms": 3022.5092894486847,
+      "prefill_admitted_ms": 3063.151648,
+      "decode_admitted_ms": 3075.1149008788575,
       "prefill_batch_id": 6,
       "decode_batch_id": 6,
-      "prefill_end_ms": 3017.1305803286846,
-      "first_token_ms": 3022.5092894486847,
-      "finish_ms": 3028.99781702016,
-      "ttft_ms": 22.50928944868474,
+      "prefill_end_ms": 3069.7361917588573,
+      "first_token_ms": 3075.1149008788575,
+      "finish_ms": 3081.6034284503326,
+      "ttft_ms": 75.1149008788575,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 28.9978170201598,
+      "latency_ms": 81.60342845033256,
       "token_times_ms": [
-        3022.5092894486847,
-        3028.99781702016
+        3075.1149008788575,
+        3081.6034284503326
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -4989,7 +4894,7 @@
         },
         "computed_tokens": 1,
         "memory_ready_ms": 3000.0,
-        "cache_ready_ms": 3010.5460365698273,
+        "cache_ready_ms": 3063.151648,
         "available_reused_tokens": 1023,
         "batch_request_ids": [
           6
@@ -4998,32 +4903,32 @@
           "6": 1023
         },
         "batch_prefix_floor_tokens": 1023,
-        "gpu_prefill_end_ms": 3017.1305803286846,
+        "gpu_prefill_end_ms": 3069.7361917588573,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 3017.1305803286846,
-        "publication_end_ms": 3017.1305803286846,
-        "handoff_end_ms": 3022.5092894486847,
-        "prefill_release_ms": 3022.5092894486847,
-        "decode_memory_ready_ms": 3022.5092894486847
+        "background_publication_end_ms": 3069.7361917588573,
+        "publication_end_ms": 3069.7361917588573,
+        "handoff_end_ms": 3075.1149008788575,
+        "prefill_release_ms": 3075.1149008788575,
+        "decode_memory_ready_ms": 3075.1149008788575
       }
     },
     {
       "id": 7,
       "arrival_ms": 3500.0,
       "batch_ready_ms": 3500.0,
-      "prefill_admitted_ms": 3510.5460365698273,
-      "decode_admitted_ms": 3522.5092894486847,
+      "prefill_admitted_ms": 3563.151648,
+      "decode_admitted_ms": 3575.1149008788575,
       "prefill_batch_id": 7,
       "decode_batch_id": 7,
-      "prefill_end_ms": 3517.1305803286846,
-      "first_token_ms": 3522.5092894486847,
-      "finish_ms": 3528.99781702016,
-      "ttft_ms": 22.50928944868474,
+      "prefill_end_ms": 3569.7361917588573,
+      "first_token_ms": 3575.1149008788575,
+      "finish_ms": 3581.6034284503326,
+      "ttft_ms": 75.1149008788575,
       "tpot_ms": 6.4885275714750605,
-      "latency_ms": 28.9978170201598,
+      "latency_ms": 81.60342845033256,
       "token_times_ms": [
-        3522.5092894486847,
-        3528.99781702016
+        3575.1149008788575,
+        3581.6034284503326
       ],
       "input_tokens": 1024,
       "output_tokens": 2,
@@ -5036,7 +4941,7 @@
         },
         "computed_tokens": 1,
         "memory_ready_ms": 3500.0,
-        "cache_ready_ms": 3510.5460365698273,
+        "cache_ready_ms": 3563.151648,
         "available_reused_tokens": 1023,
         "batch_request_ids": [
           7
@@ -5045,13 +4950,13 @@
           "7": 1023
         },
         "batch_prefix_floor_tokens": 1023,
-        "gpu_prefill_end_ms": 3517.1305803286846,
+        "gpu_prefill_end_ms": 3569.7361917588573,
         "publication_mode": "blocking",
-        "background_publication_end_ms": 3517.1305803286846,
-        "publication_end_ms": 3517.1305803286846,
-        "handoff_end_ms": 3522.5092894486847,
-        "prefill_release_ms": 3522.5092894486847,
-        "decode_memory_ready_ms": 3522.5092894486847
+        "background_publication_end_ms": 3569.7361917588573,
+        "publication_end_ms": 3569.7361917588573,
+        "handoff_end_ms": 3575.1149008788575,
+        "prefill_release_ms": 3575.1149008788575,
+        "decode_memory_ready_ms": 3575.1149008788575
       }
     }
   ],
@@ -5669,27 +5574,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 30.697008257260137,
-      "end_ms": 54.099614705793016,
-      "duration_ms": 23.402606448532882,
+      "end_ms": 77.05144025726014,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -5724,8 +5619,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 54.099614705793016,
-      "end_ms": 56.90581737245968,
+      "start_ms": 77.05144025726014,
+      "end_ms": 79.8576429239268,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -5752,7 +5647,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 4,
-      "ready_ms": 54.099614705793016,
+      "ready_ms": 77.05144025726014,
       "previous_resource_event": 2,
       "queue_ms": 0.0
     },
@@ -5770,28 +5665,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 56.90581737245968,
-      "end_ms": 80.30842382099256,
-      "duration_ms": 23.402606448532882,
+      "start_ms": 79.8576429239268,
+      "end_ms": 126.2120749239268,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -5808,7 +5693,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 5,
-      "ready_ms": 56.90581737245968,
+      "ready_ms": 79.8576429239268,
       "previous_resource_event": 3,
       "queue_ms": 0.0
     },
@@ -5823,8 +5708,8 @@
         0
       ],
       "chunk": 0,
-      "start_ms": 80.30842382099256,
-      "end_ms": 85.68713294099256,
+      "start_ms": 126.2120749239268,
+      "end_ms": 131.59078404392682,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -5835,7 +5720,7 @@
         "Launch": 0
       },
       "event_id": 6,
-      "ready_ms": 80.30842382099256,
+      "ready_ms": 126.2120749239268,
       "previous_resource_event": null,
       "queue_ms": 0.0
     },
@@ -5847,8 +5732,8 @@
         0
       ],
       "chunk": 0,
-      "start_ms": 85.68713294099256,
-      "end_ms": 92.17566051246766,
+      "start_ms": 131.59078404392682,
+      "end_ms": 138.0793116154019,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -6111,7 +5996,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 7,
-      "ready_ms": 85.68713294099256,
+      "ready_ms": 131.59078404392682,
       "previous_resource_event": null,
       "queue_ms": 0.0
     },
@@ -6728,27 +6613,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 530.6970082572601,
-      "end_ms": 554.099614705793,
-      "duration_ms": 23.402606448532882,
+      "end_ms": 577.0514402572601,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -6783,8 +6658,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 554.099614705793,
-      "end_ms": 556.9058173724596,
+      "start_ms": 577.0514402572601,
+      "end_ms": 579.8576429239267,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -6811,7 +6686,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 12,
-      "ready_ms": 554.099614705793,
+      "ready_ms": 577.0514402572601,
       "previous_resource_event": 10,
       "queue_ms": 0.0
     },
@@ -6829,28 +6704,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 556.9058173724596,
-      "end_ms": 580.3084238209925,
-      "duration_ms": 23.402606448532882,
+      "start_ms": 579.8576429239267,
+      "end_ms": 626.2120749239267,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -6867,7 +6732,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 13,
-      "ready_ms": 556.9058173724596,
+      "ready_ms": 579.8576429239267,
       "previous_resource_event": 11,
       "queue_ms": 0.0
     },
@@ -6882,8 +6747,8 @@
         1
       ],
       "chunk": 0,
-      "start_ms": 580.3084238209925,
-      "end_ms": 585.6871329409926,
+      "start_ms": 626.2120749239267,
+      "end_ms": 631.5907840439268,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -6894,7 +6759,7 @@
         "Launch": 0
       },
       "event_id": 14,
-      "ready_ms": 580.3084238209925,
+      "ready_ms": 626.2120749239267,
       "previous_resource_event": 6,
       "queue_ms": 0.0
     },
@@ -6906,8 +6771,8 @@
         1
       ],
       "chunk": 0,
-      "start_ms": 585.6871329409926,
-      "end_ms": 592.1756605124676,
+      "start_ms": 631.5907840439268,
+      "end_ms": 638.0793116154018,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -7170,7 +7035,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 15,
-      "ready_ms": 585.6871329409926,
+      "ready_ms": 631.5907840439268,
       "previous_resource_event": 7,
       "queue_ms": 0.0
     },
@@ -7787,27 +7652,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 1030.6970082572602,
-      "end_ms": 1054.099614705793,
-      "duration_ms": 23.402606448532882,
+      "end_ms": 1077.0514402572603,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -7842,8 +7697,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 1054.099614705793,
-      "end_ms": 1056.9058173724598,
+      "start_ms": 1077.0514402572603,
+      "end_ms": 1079.857642923927,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -7870,7 +7725,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 20,
-      "ready_ms": 1054.099614705793,
+      "ready_ms": 1077.0514402572603,
       "previous_resource_event": 18,
       "queue_ms": 0.0
     },
@@ -7888,28 +7743,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 1056.9058173724598,
-      "end_ms": 1080.3084238209926,
-      "duration_ms": 23.402606448532882,
+      "start_ms": 1079.857642923927,
+      "end_ms": 1126.212074923927,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -7926,7 +7771,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 21,
-      "ready_ms": 1056.9058173724598,
+      "ready_ms": 1079.857642923927,
       "previous_resource_event": 19,
       "queue_ms": 0.0
     },
@@ -7941,8 +7786,8 @@
         2
       ],
       "chunk": 0,
-      "start_ms": 1080.3084238209926,
-      "end_ms": 1085.6871329409926,
+      "start_ms": 1126.212074923927,
+      "end_ms": 1131.590784043927,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -7953,7 +7798,7 @@
         "Launch": 0
       },
       "event_id": 22,
-      "ready_ms": 1080.3084238209926,
+      "ready_ms": 1126.212074923927,
       "previous_resource_event": 14,
       "queue_ms": 0.0
     },
@@ -7965,8 +7810,8 @@
         2
       ],
       "chunk": 0,
-      "start_ms": 1085.6871329409926,
-      "end_ms": 1092.1756605124676,
+      "start_ms": 1131.590784043927,
+      "end_ms": 1138.079311615402,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -8229,7 +8074,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 23,
-      "ready_ms": 1085.6871329409926,
+      "ready_ms": 1131.590784043927,
       "previous_resource_event": 15,
       "queue_ms": 0.0
     },
@@ -8846,27 +8691,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 1530.6970082572602,
-      "end_ms": 1554.099614705793,
-      "duration_ms": 23.402606448532882,
+      "end_ms": 1577.0514402572603,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -8901,8 +8736,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 1554.099614705793,
-      "end_ms": 1556.9058173724598,
+      "start_ms": 1577.0514402572603,
+      "end_ms": 1579.857642923927,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -8929,7 +8764,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 28,
-      "ready_ms": 1554.099614705793,
+      "ready_ms": 1577.0514402572603,
       "previous_resource_event": 26,
       "queue_ms": 0.0
     },
@@ -8947,28 +8782,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 1556.9058173724598,
-      "end_ms": 1580.3084238209926,
-      "duration_ms": 23.402606448532882,
+      "start_ms": 1579.857642923927,
+      "end_ms": 1626.212074923927,
+      "duration_ms": 46.354432,
       "payload_bytes": 67108864.0,
       "service_model": {
         "family": "affine",
         "coefficients": [
-          0.02081865825582325,
-          0.32887179136514955
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 9.974904856155355,
-          "latency_p95_pct": 27.899022442810217,
-          "bandwidth_mape_pct": 12.041536953683575,
-          "bandwidth_p95_pct": 38.69558121082868,
-          "joint_mape_pct": 11.008220904919465
-        }
+          0.2,
+          0.5
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -8985,7 +8810,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 29,
-      "ready_ms": 1556.9058173724598,
+      "ready_ms": 1579.857642923927,
       "previous_resource_event": 27,
       "queue_ms": 0.0
     },
@@ -9000,8 +8825,8 @@
         3
       ],
       "chunk": 0,
-      "start_ms": 1580.3084238209926,
-      "end_ms": 1585.6871329409926,
+      "start_ms": 1626.212074923927,
+      "end_ms": 1631.590784043927,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -9012,7 +8837,7 @@
         "Launch": 0
       },
       "event_id": 30,
-      "ready_ms": 1580.3084238209926,
+      "ready_ms": 1626.212074923927,
       "previous_resource_event": 22,
       "queue_ms": 0.0
     },
@@ -9024,8 +8849,8 @@
         3
       ],
       "chunk": 0,
-      "start_ms": 1585.6871329409926,
-      "end_ms": 1592.1756605124676,
+      "start_ms": 1631.590784043927,
+      "end_ms": 1638.079311615402,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -9288,7 +9113,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 31,
-      "ready_ms": 1585.6871329409926,
+      "ready_ms": 1631.590784043927,
       "previous_resource_event": 23,
       "queue_ms": 0.0
     },
@@ -9307,28 +9132,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 2000.0,
-      "end_ms": 2002.466815618247,
-      "duration_ms": 2.466815618246998,
+      "end_ms": 2028.7696213333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -9363,8 +9177,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 2002.466815618247,
-      "end_ms": 2005.2730182849136,
+      "start_ms": 2028.7696213333334,
+      "end_ms": 2031.575824,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -9391,7 +9205,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 33,
-      "ready_ms": 2002.466815618247,
+      "ready_ms": 2028.7696213333334,
       "previous_resource_event": 28,
       "queue_ms": 0.0
     },
@@ -9409,29 +9223,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 2005.2730182849136,
-      "end_ms": 2007.7398339031606,
-      "duration_ms": 2.466815618246998,
+      "start_ms": 2031.575824,
+      "end_ms": 2060.3454453333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -9448,7 +9251,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 34,
-      "ready_ms": 2005.2730182849136,
+      "ready_ms": 2031.575824,
       "previous_resource_event": 32,
       "queue_ms": 0.0
     },
@@ -9466,8 +9269,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 2007.7398339031606,
-      "end_ms": 2010.5460365698273,
+      "start_ms": 2060.3454453333334,
+      "end_ms": 2063.151648,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -9494,7 +9297,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 35,
-      "ready_ms": 2007.7398339031606,
+      "ready_ms": 2060.3454453333334,
       "previous_resource_event": 33,
       "queue_ms": 0.0
     },
@@ -9506,8 +9309,8 @@
         4
       ],
       "chunk": 1024,
-      "start_ms": 2010.5460365698273,
-      "end_ms": 2017.1305803286846,
+      "start_ms": 2063.151648,
+      "end_ms": 2069.7361917588573,
       "duration_ms": 6.58454375885725,
       "batch_size": 1,
       "context": 1024,
@@ -9770,7 +9573,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 36,
-      "ready_ms": 2010.5460365698273,
+      "ready_ms": 2063.151648,
       "previous_resource_event": 25,
       "queue_ms": 0.0
     },
@@ -9785,8 +9588,8 @@
         4
       ],
       "chunk": 0,
-      "start_ms": 2017.1305803286846,
-      "end_ms": 2022.5092894486845,
+      "start_ms": 2069.7361917588573,
+      "end_ms": 2075.1149008788575,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -9797,7 +9600,7 @@
         "Launch": 0
       },
       "event_id": 37,
-      "ready_ms": 2017.1305803286846,
+      "ready_ms": 2069.7361917588573,
       "previous_resource_event": 30,
       "queue_ms": 0.0
     },
@@ -9809,8 +9612,8 @@
         4
       ],
       "chunk": 0,
-      "start_ms": 2022.5092894486845,
-      "end_ms": 2028.9978170201596,
+      "start_ms": 2075.1149008788575,
+      "end_ms": 2081.6034284503326,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -10073,7 +9876,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 38,
-      "ready_ms": 2022.5092894486845,
+      "ready_ms": 2075.1149008788575,
       "previous_resource_event": 31,
       "queue_ms": 0.0
     },
@@ -10092,28 +9895,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 2500.0,
-      "end_ms": 2502.466815618247,
-      "duration_ms": 2.466815618246998,
+      "end_ms": 2528.7696213333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -10148,8 +9940,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 2502.466815618247,
-      "end_ms": 2505.2730182849136,
+      "start_ms": 2528.7696213333334,
+      "end_ms": 2531.575824,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -10176,7 +9968,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 40,
-      "ready_ms": 2502.466815618247,
+      "ready_ms": 2528.7696213333334,
       "previous_resource_event": 35,
       "queue_ms": 0.0
     },
@@ -10194,29 +9986,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 2505.2730182849136,
-      "end_ms": 2507.7398339031606,
-      "duration_ms": 2.466815618246998,
+      "start_ms": 2531.575824,
+      "end_ms": 2560.3454453333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -10233,7 +10014,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 41,
-      "ready_ms": 2505.2730182849136,
+      "ready_ms": 2531.575824,
       "previous_resource_event": 39,
       "queue_ms": 0.0
     },
@@ -10251,8 +10032,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 2507.7398339031606,
-      "end_ms": 2510.5460365698273,
+      "start_ms": 2560.3454453333334,
+      "end_ms": 2563.151648,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -10279,7 +10060,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 42,
-      "ready_ms": 2507.7398339031606,
+      "ready_ms": 2560.3454453333334,
       "previous_resource_event": 40,
       "queue_ms": 0.0
     },
@@ -10291,8 +10072,8 @@
         5
       ],
       "chunk": 1024,
-      "start_ms": 2510.5460365698273,
-      "end_ms": 2517.1305803286846,
+      "start_ms": 2563.151648,
+      "end_ms": 2569.7361917588573,
       "duration_ms": 6.58454375885725,
       "batch_size": 1,
       "context": 1024,
@@ -10555,7 +10336,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 43,
-      "ready_ms": 2510.5460365698273,
+      "ready_ms": 2563.151648,
       "previous_resource_event": 36,
       "queue_ms": 0.0
     },
@@ -10570,8 +10351,8 @@
         5
       ],
       "chunk": 0,
-      "start_ms": 2517.1305803286846,
-      "end_ms": 2522.5092894486847,
+      "start_ms": 2569.7361917588573,
+      "end_ms": 2575.1149008788575,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -10582,7 +10363,7 @@
         "Launch": 0
       },
       "event_id": 44,
-      "ready_ms": 2517.1305803286846,
+      "ready_ms": 2569.7361917588573,
       "previous_resource_event": 37,
       "queue_ms": 0.0
     },
@@ -10594,8 +10375,8 @@
         5
       ],
       "chunk": 0,
-      "start_ms": 2522.5092894486847,
-      "end_ms": 2528.99781702016,
+      "start_ms": 2575.1149008788575,
+      "end_ms": 2581.6034284503326,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -10858,7 +10639,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 45,
-      "ready_ms": 2522.5092894486847,
+      "ready_ms": 2575.1149008788575,
       "previous_resource_event": 38,
       "queue_ms": 0.0
     },
@@ -10877,28 +10658,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 3000.0,
-      "end_ms": 3002.466815618247,
-      "duration_ms": 2.466815618246998,
+      "end_ms": 3028.7696213333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -10933,8 +10703,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 3002.466815618247,
-      "end_ms": 3005.2730182849136,
+      "start_ms": 3028.7696213333334,
+      "end_ms": 3031.575824,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -10961,7 +10731,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 47,
-      "ready_ms": 3002.466815618247,
+      "ready_ms": 3028.7696213333334,
       "previous_resource_event": 42,
       "queue_ms": 0.0
     },
@@ -10979,29 +10749,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 3005.2730182849136,
-      "end_ms": 3007.7398339031606,
-      "duration_ms": 2.466815618246998,
+      "start_ms": 3031.575824,
+      "end_ms": 3060.3454453333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -11018,7 +10777,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 48,
-      "ready_ms": 3005.2730182849136,
+      "ready_ms": 3031.575824,
       "previous_resource_event": 46,
       "queue_ms": 0.0
     },
@@ -11036,8 +10795,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 3007.7398339031606,
-      "end_ms": 3010.5460365698273,
+      "start_ms": 3060.3454453333334,
+      "end_ms": 3063.151648,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -11064,7 +10823,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 49,
-      "ready_ms": 3007.7398339031606,
+      "ready_ms": 3060.3454453333334,
       "previous_resource_event": 47,
       "queue_ms": 0.0
     },
@@ -11076,8 +10835,8 @@
         6
       ],
       "chunk": 1024,
-      "start_ms": 3010.5460365698273,
-      "end_ms": 3017.1305803286846,
+      "start_ms": 3063.151648,
+      "end_ms": 3069.7361917588573,
       "duration_ms": 6.58454375885725,
       "batch_size": 1,
       "context": 1024,
@@ -11340,7 +11099,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 50,
-      "ready_ms": 3010.5460365698273,
+      "ready_ms": 3063.151648,
       "previous_resource_event": 43,
       "queue_ms": 0.0
     },
@@ -11355,8 +11114,8 @@
         6
       ],
       "chunk": 0,
-      "start_ms": 3017.1305803286846,
-      "end_ms": 3022.5092894486847,
+      "start_ms": 3069.7361917588573,
+      "end_ms": 3075.1149008788575,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -11367,7 +11126,7 @@
         "Launch": 0
       },
       "event_id": 51,
-      "ready_ms": 3017.1305803286846,
+      "ready_ms": 3069.7361917588573,
       "previous_resource_event": 44,
       "queue_ms": 0.0
     },
@@ -11379,8 +11138,8 @@
         6
       ],
       "chunk": 0,
-      "start_ms": 3022.5092894486847,
-      "end_ms": 3028.99781702016,
+      "start_ms": 3075.1149008788575,
+      "end_ms": 3081.6034284503326,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -11643,7 +11402,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 52,
-      "ready_ms": 3022.5092894486847,
+      "ready_ms": 3075.1149008788575,
       "previous_resource_event": 45,
       "queue_ms": 0.0
     },
@@ -11662,28 +11421,17 @@
       "batch_size": 1,
       "context": 0,
       "start_ms": 3500.0,
-      "end_ms": 3502.466815618247,
-      "duration_ms": 2.466815618246998,
+      "end_ms": 3528.7696213333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -11718,8 +11466,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 3502.466815618247,
-      "end_ms": 3505.2730182849136,
+      "start_ms": 3528.7696213333334,
+      "end_ms": 3531.575824,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -11746,7 +11494,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 54,
-      "ready_ms": 3502.466815618247,
+      "ready_ms": 3528.7696213333334,
       "previous_resource_event": 49,
       "queue_ms": 0.0
     },
@@ -11764,29 +11512,18 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 3505.2730182849136,
-      "end_ms": 3507.7398339031606,
-      "duration_ms": 2.466815618246998,
+      "start_ms": 3531.575824,
+      "end_ms": 3560.3454453333334,
+      "duration_ms": 28.769621333333333,
       "payload_bytes": 67108864.0,
       "service_model": {
-        "family": "two-slope",
+        "family": "affine",
         "coefficients": [
-          0.0014758888145342158,
-          0.030010446098735058,
-          0.007012321547539525
-        ],
-        "min_bytes": 16384,
-        "max_bytes": 2097152,
-        "observations": 384,
-        "validation": {
-          "latency_mape_pct": 16.37287722794193,
-          "latency_p95_pct": 53.08557883236533,
-          "bandwidth_mape_pct": 29.420554363860532,
-          "bandwidth_p95_pct": 113.15526015299477,
-          "joint_mape_pct": 22.89671579590123
-        }
+          0.1,
+          0.3333333333333333
+        ]
       },
-      "profile": "local-mooncake-path",
+      "profile": "manual",
       "chunk_bytes": 1048576,
       "full_chunks": 64,
       "tail_bytes": 0.0,
@@ -11803,7 +11540,7 @@
       "transfer_path": "ssd-host",
       "background": false,
       "event_id": 55,
-      "ready_ms": 3505.2730182849136,
+      "ready_ms": 3531.575824,
       "previous_resource_event": 53,
       "queue_ms": 0.0
     },
@@ -11821,8 +11558,8 @@
       "chunk": 0,
       "batch_size": 1,
       "context": 0,
-      "start_ms": 3507.7398339031606,
-      "end_ms": 3510.5460365698273,
+      "start_ms": 3560.3454453333334,
+      "end_ms": 3563.151648,
       "duration_ms": 2.806202666666666,
       "payload_bytes": 67108864.0,
       "service_model": {
@@ -11849,7 +11586,7 @@
       "transfer_path": "host-gpu",
       "background": false,
       "event_id": 56,
-      "ready_ms": 3507.7398339031606,
+      "ready_ms": 3560.3454453333334,
       "previous_resource_event": 54,
       "queue_ms": 0.0
     },
@@ -11861,8 +11598,8 @@
         7
       ],
       "chunk": 1024,
-      "start_ms": 3510.5460365698273,
-      "end_ms": 3517.1305803286846,
+      "start_ms": 3563.151648,
+      "end_ms": 3569.7361917588573,
       "duration_ms": 6.58454375885725,
       "batch_size": 1,
       "context": 1024,
@@ -12125,7 +11862,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 57,
-      "ready_ms": 3510.5460365698273,
+      "ready_ms": 3563.151648,
       "previous_resource_event": 50,
       "queue_ms": 0.0
     },
@@ -12140,8 +11877,8 @@
         7
       ],
       "chunk": 0,
-      "start_ms": 3517.1305803286846,
-      "end_ms": 3522.5092894486847,
+      "start_ms": 3569.7361917588573,
+      "end_ms": 3575.1149008788575,
       "duration_ms": 5.37870912,
       "batch_size": 1,
       "context": 1024,
@@ -12152,7 +11889,7 @@
         "Launch": 0
       },
       "event_id": 58,
-      "ready_ms": 3517.1305803286846,
+      "ready_ms": 3569.7361917588573,
       "previous_resource_event": 51,
       "queue_ms": 0.0
     },
@@ -12164,8 +11901,8 @@
         7
       ],
       "chunk": 0,
-      "start_ms": 3522.5092894486847,
-      "end_ms": 3528.99781702016,
+      "start_ms": 3575.1149008788575,
+      "end_ms": 3581.6034284503326,
       "duration_ms": 6.488527571475097,
       "batch_size": 1,
       "context": 1025,
@@ -12428,7 +12165,7 @@
       "tokens": 1,
       "head_fallback_ms": 0,
       "event_id": 59,
-      "ready_ms": 3522.5092894486847,
+      "ready_ms": 3575.1149008788575,
       "previous_resource_event": 52,
       "queue_ms": 0.0
     }
@@ -15264,7 +15001,7 @@
     "Serving queues, network collectives, memory/traffic accounting and GPU energy remain behavioral estimates. Empirical residual percentiles on withheld data are not confidence bounds for every new GPU.",
     "Training includes compatible dense profiles across five GPU families and two precision/software cohorts. Precision selects the historical calibration cohort; software-version changes remain unvalidated. Fused MoE, MLA, hybrid layers, cross-vendor hardware, quantization, clocks and architectural cache changes require additional validation. Unsupported operators retain analytical fallbacks.",
     "Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, configured asynchronous or blocking publication, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.",
-    "Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power.",
+    "Published request traces supply workload and prefix identities, not device-service timings. Storage and transfers use configured assumptions with no measured error bound. Trace-policy hit forecasts do not decide runtime hits. GPU energy excludes storage and host power.",
     "GDS is a configured direct-path approximation, not measured GDS or Dynamo performance. Dynamo-style cache policy is simplified and does not reproduce its full scheduler."
   ],
   "provenance": {
@@ -15273,7 +15010,7 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-8B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "f4ce04fc5013843f93555f23fe1e194585f23ed3ac9eee99479082a374f06ddd",
+    "config_sha256": "63e4875447b855ca7076d2fd3879fe8ff26bbd20913e6cf7cb536d5c93c881e3",
     "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }

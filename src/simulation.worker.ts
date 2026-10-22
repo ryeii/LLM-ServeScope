@@ -29,6 +29,7 @@ function loadRuntime(): Promise<PyodideAPI> {
       "model.py",
       "storage.py",
       "kv_transfer.py",
+      "prefix_reuse.py",
       "active_kv.py",
     ];
     const files = await Promise.all(
@@ -44,8 +45,8 @@ function loadRuntime(): Promise<PyodideAPI> {
       await (await source("backend/gpu-fit.json")).text(),
     );
     py.FS.writeFile(
-      "/servescope/backend/storage-fit.json",
-      await (await source("backend/storage-fit.json")).text(),
+      "/servescope/backend/prefix-hit-fit.json",
+      await (await source("backend/prefix-hit-fit.json")).text(),
     );
     py.unpackArchive(
       await (await source("simpy-4.1.1-py3-none-any.whl")).arrayBuffer(),
