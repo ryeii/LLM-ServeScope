@@ -9,8 +9,10 @@ from functools import lru_cache
 from pathlib import Path
 import copy, hashlib, json, math
 import simpy
+from .kv_transfer import direct_service
 
 CACHE_LAYOUTS = {
+    'dynamo': dict(label='Dynamo-style tiered cache', tiers=['hbm','dram','ssd'], kind='write-through', description='Retain GPU prefix blocks, write through to host DRAM, and retain frequently referenced blocks on SSD. Restore cached prefixes into HBM before computation. Simplified Dynamo-style policy.'),
     'none': dict(label='No retained prefix cache', tiers=[], kind='single', description='Compute every prompt; retain no prefix blocks. Active request KV stays in HBM.'),
     'hbm-only': dict(label='HBM only', tiers=['hbm'], kind='single', description='Retain prefixes in GPU HBM; discard least-recently-used blocks when full.'),
     'dram-only': dict(label='DRAM only', tiers=['dram'], kind='single', description='Retain prefixes in host DRAM; restores and publication use the host–GPU link.'),
@@ -28,9 +30,11 @@ CACHE_LAYOUTS = {
 def cache_capacity_GB(s, tier):
     return s[tier+'_cache_GB'] if s.get('enabled') and tier in CACHE_LAYOUTS[s.get('placement','inclusive')]['tiers'] else 0
 
-DEFAULT_STORAGE=dict(enabled=False,placement='inclusive',profile='manual',hbm_cache_GB=0.125,dram_cache_GB=0.25,ssd_cache_GB=4,
+DEFAULT_STORAGE=dict(enabled=True,placement='dynamo',profile='manual',hbm_cache_GB=0.125,dram_cache_GB=0.25,ssd_cache_GB=4,
                      ssd_read_GBps=3,ssd_write_GBps=2,ssd_read_latency_us=100,ssd_write_latency_us=200,
                      pcie_GBps=24,pcie_latency_us=10,io_chunk_KiB=1024,block_tokens=512,
+                     ssd_transfer_mode='gds',gds_GBps=24,gds_latency_us=10,
+                     publication_mode='async',max_inflight_publications=4,disk_min_uses=2,
                      source_id='synthetic-demo',source_label='Generated repeated-prefix workload',workload=[])
 
 @lru_cache(maxsize=1)
@@ -58,15 +62,25 @@ def hit_prediction(fit,capacity_blocks,unique_blocks,max_hit_fraction=1):
 def validate_storage(c,number):
     raw=c.get('storage') or {}
     if not isinstance(raw,dict):raise ValueError('storage must be an object.')
-    s=dict(copy.deepcopy(DEFAULT_STORAGE),**raw);c['storage']=s
+    defaults=copy.deepcopy(DEFAULT_STORAGE)
+    # Preserve the semantics of scenarios exported before transfer-path selection.
+    if 'ssd_transfer_mode' not in raw:
+        defaults.update(enabled=False,placement='inclusive',ssd_transfer_mode='host-staged',publication_mode='blocking',max_inflight_publications=128)
+    s=dict(defaults,**raw);c['storage']=s
     if type(s['enabled']) is not bool:raise ValueError('KV storage enabled must be boolean.')
     if s['placement'] not in CACHE_LAYOUTS:raise ValueError('Unknown KV cache layout.')
     if s['profile'] not in ('manual','local-mooncake-path'):raise ValueError('Unknown storage profile.')
+    if s['ssd_transfer_mode'] not in ('gds','host-staged'):raise ValueError('Unknown SSD transfer path.')
+    if s['publication_mode'] not in ('async','blocking'):raise ValueError('Unknown prefix publication mode.')
+    if s['ssd_transfer_mode']=='gds' and s['profile']=='local-mooncake-path':
+        raise ValueError('The local buffered Mooncake file-path fit cannot calibrate GDS. Select configured SSD service or the host-staged path.')
+    for k in ['max_inflight_publications','disk_min_uses']:
+        s[k]=number(s[k],k,1,128,True)
     for k in ['hbm_cache_GB','dram_cache_GB','ssd_cache_GB']:
         s[k]=number(s[k],k,0,1e6)
-    for k in ['ssd_read_GBps','ssd_write_GBps','pcie_GBps']:
+    for k in ['ssd_read_GBps','ssd_write_GBps','pcie_GBps','gds_GBps']:
         s[k]=number(s[k],k,.001,1e5)
-    for k in ['ssd_read_latency_us','ssd_write_latency_us','pcie_latency_us']:
+    for k in ['ssd_read_latency_us','ssd_write_latency_us','pcie_latency_us','gds_latency_us']:
         s[k]=number(s[k],k,0,1e6)
     s['io_chunk_KiB']=number(s['io_chunk_KiB'],'I/O chunk KiB',16,2048,True)
     if s['block_tokens']!=512:raise ValueError('Prefix storage currently uses 512-token blocks.')
@@ -117,6 +131,8 @@ class CacheTiers:
         self.layout=CACHE_LAYOUTS[self.placement]
         self.capacity={tier:int(cache_capacity_GB(self.s,tier)*1e9/(self.per_gpu_block_bytes if tier=='hbm' else self.block_bytes)) for tier in ['hbm','dram','ssd']}
         self.placement_lock=simpy.Resource(env,1)
+        self.publication_slots=simpy.Resource(env,self.s['max_inflight_publications'])
+        self.accesses=Counter();self.seen=set();self.publications=[]
         self.transitions=[]
         self.caches={k:OrderedDict() for k in self.capacity};self.pins={k:Counter() for k in self.capacity};self.pending={}
         self.links={k:simpy.Resource(env,1) for k in ['ssd','pcie','hbm']}
@@ -140,8 +156,9 @@ class CacheTiers:
         cache[key]=None;self.peaks[tier]=max(self.peaks[tier],len(cache))
         self.snapshots.append(dict(time_ms=self.env.now,tier=tier,blocks=len(cache),request_id=request))
 
-    def _io(self,tier,op,nbytes,identifier,cause,scope='prefix',model_phase='prefill',**metadata):
+    def _io(self,tier,op,nbytes,identifier,cause,scope='prefix',model_phase='prefill',direct_gpu=False,**metadata):
         if nbytes<=0:return
+        direct=bool(direct_gpu and tier=='ssd' and self.s['ssd_transfer_mode']=='gds')
         counter=self.stats if scope=='prefix' else self.active_io_stats
         ready=self.env.now;resource=self.links[tier]
         with resource.request() as ticket:
@@ -158,14 +175,23 @@ class CacheTiers:
                 latency=self.s['pcie_latency_us']/1000 if tier=='pcie' else 0
                 duration=nbytes/(bw*1e9)*1000+latency
                 model=dict(family='affine',coefficients=[latency,1/bw]);full=0;tail=nbytes;extrapolated=False
+            gds=direct_service(duration,nbytes,self.s['gds_GBps'],self.s['gds_latency_us']) if direct else None
+            if gds:
+                duration=gds['duration_ms']
+                counter['gds_service_ms']+=duration
+                counter['ssd_device_service_ms']+=gds['storage_ms']
+                counter['gds_'+op+'_bytes']+=nbytes
             yield self.env.timeout(duration)
             event=dict(phase='storage',kind='storage_io',tier=tier,operation=op,cause=cause,resource='kv_'+tier+':0',batch_id=identifier,request_ids=[identifier],chunk=0,batch_size=1,context=0,start_ms=begin,end_ms=self.env.now,duration_ms=duration,payload_bytes=nbytes,service_model=model,profile=self.s['profile'] if tier=='ssd' else 'configured-link-assumption',chunk_bytes=chunk if tier=='ssd' else nbytes,full_chunks=full,tail_bytes=tail,extrapolated=extrapolated,components=dict(Compute=0,Memory=0,Network=0,Launch=0))
-            event.update(scope=scope,model_phase=model_phase,**metadata)
+            event.update(scope=scope,model_phase=model_phase,gds=gds,
+                         transfer_path='gds' if direct else 'ssd-host' if tier=='ssd' else 'host-gpu' if tier=='pcie' else 'hbm-copy',
+                         background=scope=='prefix' and self.s['publication_mode']=='async' and cause in ('publish','spill'),**metadata)
             self.record(event,ready);self.events.append(event);counter[tier+'_'+op+'_bytes']+=nbytes;counter[tier+'_service_ms']+=duration;counter[tier+'_queue_ms']+=begin-ready
             return event
 
     def restore(self,row,identifier):
         keys=self.keys(row);selected=[]
+        for key in keys:self._reference(key,identifier)
         for key in keys:
             tier=next((t for t in self.layout['tiers'] if key in self.caches[t]),None)
             if tier is None:break
@@ -176,9 +202,7 @@ class CacheTiers:
         self.stats['eligible_blocks']+=len(keys);self.stats['hit_blocks']+=len(selected)
         try:
             for key,tier in selected:
-                if tier=='ssd':yield from self._io('ssd','read',self.block_bytes,identifier,'restore')
-                if tier!='hbm':yield from self._io('pcie','read',self.block_bytes,identifier,'restore')
-                else:yield from self._io('hbm','read',self.block_bytes,identifier,'restore')
+                yield from self._copy_between(tier,'active',identifier,'restore')
                 self.stats[tier+'_hit_blocks']+=1
         finally:
             for key,tier in selected:self.pins[tier][key]-=1
@@ -188,13 +212,25 @@ class CacheTiers:
 
     def _copy_between(self,source,destination,identifier,cause):
         # Source 'active' denotes the pinned request's computed GPU KV.
-        if source=='ssd':yield from self._io('ssd','read',self.block_bytes,identifier,cause)
-        if destination=='hbm':
-            if source in ('dram','ssd'):yield from self._io('pcie','read',self.block_bytes,identifier,cause)
-            else:yield from self._io('hbm','write',self.block_bytes,identifier,cause)
-        elif source in ('active','hbm'):
+        gpu={'active','hbm'}
+        if source=='ssd' and destination in gpu:
+            yield from self._io('ssd','read',self.block_bytes,identifier,cause,direct_gpu=True)
+            if self.s['ssd_transfer_mode']=='host-staged':
+                yield from self._io('pcie','read',self.block_bytes,identifier,cause)
+        elif destination=='ssd' and source in gpu:
+            if self.s['ssd_transfer_mode']=='host-staged':
+                yield from self._io('pcie','write',self.block_bytes,identifier,cause)
+            yield from self._io('ssd','write',self.block_bytes,identifier,cause,direct_gpu=True)
+        elif source=='ssd':
+            yield from self._io('ssd','read',self.block_bytes,identifier,cause)
+        elif destination=='ssd':
+            yield from self._io('ssd','write',self.block_bytes,identifier,cause)
+        elif source in gpu and destination=='dram':
             yield from self._io('pcie','write',self.block_bytes,identifier,cause)
-        if destination=='ssd':yield from self._io('ssd','write',self.block_bytes,identifier,cause)
+        elif source=='dram' and destination in gpu:
+            yield from self._io('pcie','read',self.block_bytes,identifier,cause)
+        elif source in gpu and destination in gpu:
+            yield from self._io('hbm','read' if cause=='restore' else 'write',self.block_bytes,identifier,cause)
         if cause=='spill':
             self.stats['spill_blocks']+=1
             self.stats[source+'_to_'+destination+'_spill_blocks']+=1
@@ -226,12 +262,38 @@ class CacheTiers:
         self.peaks[tier]=max(self.peaks[tier],len(cache))
         self.snapshots.append(dict(time_ms=self.env.now,tier=tier,blocks=len(cache),request_id=identifier))
 
+    def _reference(self,key,identifier):
+        if (key,identifier) not in self.seen:
+            self.seen.add((key,identifier));self.accesses[key]+=1
+
     def publish(self,row,identifier):
+        ready=self.env.now
+        with self.publication_slots.request() as ticket:
+            yield ticket
+            begin=self.env.now
+            yield from self._publish(row,identifier)
+            self.publications.append(dict(request_id=identifier,ready_ms=ready,start_ms=begin,end_ms=self.env.now,queue_ms=begin-ready,background=self.s['publication_mode']=='async'))
+
+    def _publish(self,row,identifier):
         for key in self.keys(row):
+            self._reference(key,identifier)
             if key in self.pending:
                 self.stats['coalesced_publications']+=1;yield self.pending[key];continue
             done=self.env.event();self.pending[key]=done
             try:
+                if self.layout['kind']=='write-through':
+                    # Placement commits are serialized; copies may overlap GPU
+                    # work and independent restores. Readiness follows completion.
+                    with self.placement_lock.request() as ticket:
+                        yield ticket
+                        for tier in self.layout['tiers']:
+                            if not self.capacity[tier] or key in self.caches[tier]:continue
+                            if tier=='ssd' and self.accesses[key]<self.s['disk_min_uses']:
+                                self.stats['filtered_disk_blocks']+=1;continue
+                            source='dram' if tier=='ssd' and self.s['ssd_transfer_mode']=='host-staged' and key in self.caches['dram'] else 'active'
+                            yield from self._copy_between(source,tier,identifier,'publish')
+                            self._put(tier,key,identifier)
+                    continue
                 if self.layout['kind']!='inclusive':
                     with self.placement_lock.request() as ticket:
                         yield ticket
@@ -244,9 +306,9 @@ class CacheTiers:
                 self._put('hbm',key,identifier)
                 needs_dram=self.capacity['dram'] and key not in self.caches['dram']
                 needs_ssd=self.capacity['ssd'] and key not in self.caches['ssd']
-                if needs_dram or needs_ssd:yield from self._io('pcie','write',self.block_bytes,identifier,'publish')
+                if needs_dram:yield from self._io('pcie','write',self.block_bytes,identifier,'publish')
                 self._put('dram',key,identifier)
-                if needs_ssd:yield from self._io('ssd','write',self.block_bytes,identifier,'publish')
+                if needs_ssd:yield from self._copy_between('dram' if needs_dram else 'active','ssd',identifier,'publish')
                 self._put('ssd',key,identifier)
             finally:
                 done.succeed();self.pending.pop(key,None)
@@ -255,7 +317,27 @@ class CacheTiers:
         st=dict(self.stats);st['hit_fraction']=st.get('hit_blocks',0)/max(1,st.get('eligible_blocks',0));st['reused_fraction']=st.get('reused_tokens',0)/sum(r['input_length'] for r in rows)
         dataset=fit_dataset();source=self.s['source_id'];unique=len({key for row in rows for key in self.keys(row)});references=sum(len(self.keys(row)) for row in rows);potential=max(0,(references-unique)/max(1,references))
         forecast=None
-        effective_capacity=max(self.capacity.values()) if self.layout['kind']=='inclusive' else sum(self.capacity.values())
+        effective_capacity=max(self.capacity.values()) if self.layout['kind'] in ('inclusive','write-through') else sum(self.capacity.values())
         if dataset and source in dataset['hit']:
             f=dataset['hit'][source];forecast=dict(fit=f,working_set_blocks=unique,effective_capacity_blocks=effective_capacity,prediction=hit_prediction(f,effective_capacity,unique,potential),max_hit_fraction=potential,scope='Instantaneous-publication single-LRU trace-window approximation; uses summed exclusive-tier capacity or the largest inclusive-tier capacity. This does not validate the selected multi-tier replacement policy. Runtime queues, pending fills and short trace slices can differ; forecast is not used for cache decisions.',outside_request_range=not f['min_requests']<=len(rows)<=f['max_requests'])
-        return dict(enabled=True,retention_enabled=self.s['enabled'],active_kv_location='hbm',active_kv_offload=False,retained_scope='prompt-prefix-reuse-between-requests',batching_policy='Fixed uniform microbatches use the minimum restored prefix of their members; excess restored tokens are recomputed.',placement=self.placement,layout=self.layout,spill_transitions=self.transitions,policy=self.layout['description']+' Cold start; active KV separately pinned; blocking publication/spill before handoff. Exclusive spill layouts keep one retained copy and do not promote hits; only ready contiguous prefixes can be reused. Last prompt token recomputed for logits.',profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),limitations=['Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.','One replica per pool. Fixed batching supports uniform input/output lengths; each prefill microbatch uses its minimum restored prefix length. Variable-length replay requires batch size one. No continuous/ragged batching.','HBM cache is explicitly reserved per GPU; retained copies and active request KV are separate allocations. Host/SSD capacities cover aggregate prefilling shard payloads.','Cache copies are not a NAND, NVMe or filesystem simulator. I/O chunks reserve a FIFO path; reads/writes share one SSD path; no packet or channel model.','GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry.'])
+        return dict(
+            enabled=True,retention_enabled=self.s['enabled'],active_kv_location='hbm',active_kv_offload=False,
+            retained_scope='prompt-prefix-reuse-between-requests',
+            batching_policy='Fixed uniform microbatches use the minimum restored prefix of their members; excess restored tokens are recomputed.',
+            placement=self.placement,layout=self.layout,spill_transitions=self.transitions,
+            policy=self.layout['description']+' Cold start; '+self.s['publication_mode']+' publication. Only completed contiguous prefixes are reusable; last prompt token is recomputed for logits.',
+            publication_mode=self.s['publication_mode'],publications=self.publications,
+            ssd_transfer_mode=self.s['ssd_transfer_mode'],disk_min_uses=self.s['disk_min_uses'],max_inflight_publications=self.s['max_inflight_publications'],
+            profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,
+            capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),
+            stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,
+            workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),
+            limitations=[
+                'Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.',
+                'Dynamo-style policy is an approximation: independent LRU copies and a non-decaying request-reference disk filter, without Dynamo LFU aging, priorities or NIXL kernels.',
+                'GDS timing is configured startup + max(storage service, direct-link service); no measured GDS accuracy claim. No host relay or additional host-GPU copy is charged for direct GPU-SSD transfers.',
+                'Background publication retains its prefill source until publication and handoff both complete. Placement commits are serialized; background copies can overlap GPU computation and independent restores.',
+                'One replica per pool; fixed uniform batches, no continuous/ragged batching. Host and SSD capacities cover aggregate prefilling shard payloads.',
+                'HBM retained copies and active KV are separate allocations. One shared SSD bandwidth reservation prevents concurrent jobs multiplying bandwidth; no packet, NAND or detailed PCIe contention model.',
+                'GPU energy excludes SSD, CPU and transfer-device energy. Hit-fit validation is against trace-policy replay, not hardware cache telemetry.',
+            ])

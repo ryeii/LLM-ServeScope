@@ -1061,9 +1061,16 @@ def simulate(config):
                 yield env.process(
                     work("prefill", batch, n, done, replica, bid, done, ids)
                 )
+        publication=None
         if tier_mode:
-            for info in cache_info.values():info['gpu_prefill_end_ms']=env.now
-            yield env.all_of([env.process(tiers.publish(workload_rows[i],i)) for i in ids])
+            for info in cache_info.values():
+                info.update(gpu_prefill_end_ms=env.now,publication_mode=c['storage']['publication_mode'])
+            def publish_group():
+                yield env.all_of([env.process(tiers.publish(workload_rows[i],i)) for i in ids])
+                for info in cache_info.values():info['background_publication_end_ms']=env.now
+            publication=env.process(publish_group())
+            if c['storage']['publication_mode']=='blocking':yield publication
+            # This timestamp is the request-path barrier, not background finish.
             for info in cache_info.values():info['publication_end_ms']=env.now
         prefill_end = env.now
         kv_bytes = (
@@ -1134,11 +1141,16 @@ def simulate(config):
                 phase_traffic["prefill"]["network_bytes"] += kv_bytes
         if tier_mode:
             for info in cache_info.values():info['handoff_end_ms']=env.now
-            if active_model:
+            def release_prefill():
+                # Source KV must survive both handoff and background copies.
+                if publication is not None:yield publication
                 yield from release_kv('prefill',ids)
-                for info in cache_info.values():info['prefill_release_ms']=env.now;info['decode_memory_ready_ms']=env.now
+                for info in cache_info.values():info['prefill_release_ms']=env.now
+            release=env.process(release_prefill())
+            if c['storage']['publication_mode']=='blocking':yield release
+            if active_model:
+                for info in cache_info.values():info['decode_memory_ready_ms']=env.now
             else:
-                yield from release_kv("prefill", ids)
                 yield from reserve_kv("decode", ids)
                 for info in cache_info.values():info['decode_memory_ready_ms']=env.now
         first = env.now
@@ -1311,11 +1323,12 @@ def simulate(config):
         calibration["summary"] = "Original roofline · uncalibrated"
     if tier_mode:
         warnings = [w for w in warnings if not w.startswith("Memory utilization and runtime")]
-        warnings.extend(["Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, blocking publication/spill before handoff, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power."])
+        warnings.extend(["Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, configured asynchronous or blocking publication, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power.","GDS is a configured direct-path approximation, not measured GDS or Dynamo performance. Dynamo-style cache policy is simplified and does not reproduce its full scheduler."])
     if active_model:
         warnings.extend([active_model.summary()['model'],active_model.summary()['calibration'],"Prefill active KV remains in HBM. Active decode backing and retained prefixes have independent placement and capacity accounting; they share SSD and host/GPU queues."])
+    modern_storage = tier_mode and (c['storage']['ssd_transfer_mode']=='gds' or c['storage']['publication_mode']=='async' or c['storage']['placement']=='dynamo')
     return dict(
-        schema_version="servescope.behavioral.v5" if active_model else "servescope.behavioral.v4" if tier_mode else "servescope.behavioral.v3",
+        schema_version="servescope.behavioral.v6" if modern_storage else "servescope.behavioral.v5" if active_model else "servescope.behavioral.v4" if tier_mode else "servescope.behavioral.v3",
         **(dict(active_kv=active_model.summary()) if active_model else {}),
         **(dict(storage=dict(tiers.summary(workload_rows),active_memory_ledger=memory_ledger,active_kv_location=c["active_kv"]["placement"],active_kv_offload=active_offload),workload_totals=dict(input_tokens=input_total,output_tokens=output_total,computed_prefill_tokens=input_total-tiers.stats["reused_tokens"])) if tier_mode else {}),
         calibration=calibration,
@@ -1339,6 +1352,8 @@ def simulate(config):
         warnings=warnings,
         provenance=dict(
             kind="behavioral_extension",
+            **(dict(kv_transfer_model_sha256=hashlib.sha256(Path(__file__).with_name('kv_transfer.py').read_bytes()).hexdigest(),
+                    kv_storage_model_sha256=hashlib.sha256(Path(__file__).with_name('storage.py').read_bytes()).hexdigest()) if modern_storage else {}),
             upstream_url="https://github.com/casys-kaist/LLMServingSim",
             upstream_revision=PIN,
             model_architecture_source=m["source_url"] or m["source"],

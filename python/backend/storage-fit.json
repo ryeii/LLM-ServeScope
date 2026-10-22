@@ -91,6 +91,6 @@
   },
   "scope": "Local warm buffered macOS storage path, QD1 fsync(always) writes; hit functions approximate policy replay, not observed production cache hits.",
   "training_script_sha256": "efd4716d6ddbc3393f1ba71a0d957156b0e7746df2f530513ff288e5ff9b7394",
-  "runtime_sha256": "c4102cbdad7f8e833a6825c776e900b8131a7bcecdbb5e1c6a662eacc9e312e7",
-  "payload_sha256": "5247aafc3f376abc0c2ca37227cf95d9118e9dd7e381f54f6da89a85805ab27c"
+  "runtime_sha256": "474e7b85549f6fe450620eb6c8b8b33795697dbc5aa0f70e29b521536f4af63e",
+  "payload_sha256": "983bae9020fe83212153d2fd437cf5055013044565f55d542302274799e25ce5"
 }
