@@ -11,12 +11,14 @@ def main():
     for prefix in ['disabled', 'ssd-only']:
         for active in PLACEMENTS:
             c=copy.deepcopy(DEFAULT)
+            c['storage'].update(ssd_transfer_mode='host-staged',publication_mode='blocking')
             c['active_kv'].update(placement=active)
             c['storage'].update(enabled=prefix!='disabled', placement='ssd-only')
             r=simulate(c)
             rows.append(dict(active=active, prefix=prefix, config=r['config'], metrics=r['metrics'], active_stats=r.get('active_kv',{}).get('stats',{}), prefix_stats=r.get('storage',{}).get('stats',{})))
     save('examples/active-kv-comparison.json',dict(kind='behavioral-predictions-not-hardware-measurements', results=rows))
     c=copy.deepcopy(DEFAULT)
+    c['storage'].update(ssd_transfer_mode='host-staged',publication_mode='blocking')
     c.update(model_id='llama8',requests=8,input_tokens=1024,output_tokens=8,arrival_rate=8)
     for phase in ['prefill','decode']:c[phase].update(tp=1,pp=1,ep=1,batch_size=2)
     c['active_kv'].update(placement='ssd',hbm_resident_GB=.05)

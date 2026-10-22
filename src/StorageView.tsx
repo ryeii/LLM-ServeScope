@@ -16,6 +16,7 @@ export function StorageControls({
   onLayout,
   layouts,
   onDemo,
+  onDynamo,
   onWorkload,
   onError,
 }: {
@@ -25,6 +26,7 @@ export function StorageControls({
   onLayout: (id: string) => void;
   layouts: Obj;
   onDemo: () => void;
+  onDynamo: () => void;
   onWorkload: (rows: Obj[], source: Obj) => Promise<void>;
   onError: (message: string) => void;
 }) {
@@ -110,7 +112,7 @@ export function StorageControls({
           value={s.enabled ? s.placement || "inclusive" : "disabled"}
           onChange={(e) => onLayout(e.target.value)}
         >
-          <option value="disabled">Off · active KV in HBM</option>
+          <option value="disabled">Off · no retained prefixes</option>
           {Object.entries(layouts).map(([id, item]: [string, any]) => (
             <option key={id} value={id}>
               {item.label}
@@ -124,16 +126,70 @@ export function StorageControls({
           : "Choose a single tier or a directed spill layout to model prefix retention."}
       </p>
       <p className="fine">
-        Arrows show primary placement → eviction destination. These are retained
-        prefix caches. Selecting a layout preserves batch sizes, replicas and
-        workload. Fixed uniform batches are supported with one replica per pool;
-        variable-length replay requires batch size one.
+        Arrows show primary placement → eviction destination. The Dynamo-style
+        option writes through to lower tiers with a configurable disk filter.
+        These are retained prefix caches. Selecting a layout preserves batch
+        sizes, replicas and workload. Fixed uniform batches are supported with
+        one replica per pool; variable-length replay requires batch size one.
+      </p>
+      <button className="secondary" onClick={onDynamo}>
+        Apply Dynamo-style setup
+      </button>
+      <p className="fine">
+        Sets active KV to HBM, tiered prefix retention, asynchronous publication
+        and GDS. Preserves workload and GPU settings.
       </p>
       <button className="secondary" onClick={onDemo}>
         Load cache demo
       </button>
+      <p className="fine">
+        The cache demo uses the host-staged, blocking path for comparison with
+        the local Mooncake file-I/O fit.
+      </p>
       {(s.enabled || s.workload?.length > 0) && (
         <>
+          <label className="field vertical">
+            <span>Prefix publication</span>
+            <select
+              aria-label="Prefix publication"
+              value={s.publication_mode}
+              onChange={(e) => onChange("publication_mode", e.target.value)}
+            >
+              <option value="async">Asynchronous · overlap with serving</option>
+              <option value="blocking">Blocking · before decode handoff</option>
+            </select>
+          </label>
+          <p className="fine">
+            Asynchronous publication can overlap GPU work. Unfinished blocks
+            cannot be reused; source HBM remains reserved until copying and
+            handoff finish. Placement commits and each physical I/O path remain
+            serialized bandwidth budgets.
+          </p>
+          {s.publication_mode === "async" && (
+            <Field
+              label="In-flight prefix publications"
+              value={s.max_inflight_publications}
+              min={1}
+              max={128}
+              onChange={(n: number) => onChange("max_inflight_publications", n)}
+            />
+          )}
+          {s.placement === "dynamo" && (
+            <>
+              <Field
+                label="SSD admission minimum uses"
+                value={s.disk_min_uses}
+                min={1}
+                max={128}
+                onChange={(n: number) => onChange("disk_min_uses", n)}
+              />
+              <p className="fine">
+                Counts distinct requests referencing a prefix block. This
+                simplified filter has no LFU aging or priority policy; it is not
+                an exact Dynamo implementation.
+              </p>
+            </>
+          )}
           {(
             [
               ["hbm_cache_GB", "Retained HBM / GPU"],
@@ -328,10 +384,19 @@ export default function StorageView({
             ? "configured affine I/O assumptions"
             : "fitted local file path, QD1"}{" "}
           · cold start
+          {" · "}
+          {s.ssd_transfer_mode === "gds"
+            ? "GDS direct path · configured"
+            : "host-staged SSD path"}
+          {" · "}
+          {s.publication_mode} publication
         </span>
       </div>
       <div className="card prefix-scope">
-        <h3>Retained prompt prefixes</h3>
+        <div className="card-head">
+          <h3>Retained prompt prefixes</h3>
+          <button className="secondary" onClick={onDemo}>Load cache demo</button>
+        </div>
         <p className="storage-note">
           This policy controls reuse between requests. Active decode KV has its
           own placement above. Prefill / decode batch caps:{" "}
@@ -624,8 +689,9 @@ export default function StorageView({
               "The retained-prefix layout performs no SSD I/O. Active decode KV has a separate policy and uses the shared I/O configuration."
             ) : (
               <>
-                This run uses configured affine coefficients. Choose “Fitted
-                local Mooncake file path” to use the measured-path fit. Its
+                This run uses configured coefficients. GDS has no measured
+                calibration. For host-staged transfers, choose “Fitted local
+                Mooncake file path” to use the measured-path fit. Its
                 calibration applies only to the documented local file-I/O
                 conditions.
               </>

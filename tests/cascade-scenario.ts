@@ -8,6 +8,15 @@ export async function cascadeScenario(page: Page) {
     '[data-formula-key="metrics.throughput_tps"]',
   );
   await expect(throughput).toBeVisible({ timeout: 60000 });
+  // This regression follows the published no-retention worked example.
+  await page
+    .getByLabel("Import scenario", { exact: true })
+    .setInputFiles("examples/default-scenario.json");
+  await expect(page.getByRole("alert")).toContainText("Imported");
+  await page.getByRole("button", { name: "Run scenario", exact: true }).click();
+  await expect(
+    page.getByText("Results match scenario", { exact: true }),
+  ).toBeVisible();
   await throughput.hover();
   const card = (depth: number) =>
     page.locator(`[data-cascade-depth="${depth}"]`);

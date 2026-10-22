@@ -4,6 +4,15 @@ ServeScope models two independent KV lifetimes. **Retained prefixes** survive co
 
 ## Interface and policies
 
+The current default is **HBM-resident active KV with Dynamo-style retained-prefix
+caching and GDS**, not active streaming from SSD. See [default cache lifecycle,
+transfer mechanisms and validation limits](dynamo-alignment.md). SSD transport
+in the equations below has two selectable mechanisms: the historical serialized
+host-staged path, or direct GDS service computed as startup + max(storage service,
+direct-link service). GDS reserves no host relay buffer. Prefix publication is
+asynchronous by default; only blocking mode delays handoff. In asynchronous mode,
+source prefill KV stays allocated until publication and handoff both finish.
+
 - **Active decode KV**: HBM only (default), host DRAM backing, SSD backing, HBM + DRAM spill, or HBM + SSD spill.
 - **Retained prefixes**: independently select no retention, single-tier, directional spill or inclusive copies. Existing prefix hit and eviction policies are unchanged.
 - **KV I/O paths**: shared effective host–GPU bandwidth/latency, I/O chunk size and manual or fitted SSD service. Both lifetimes use the same FIFO SSD and host–GPU resources. Their byte/service/queue counters are reported separately.
@@ -36,7 +45,7 @@ Backing admission waits for completed requests to release capacity; a microbatch
 
 ## Initialization and every-token I/O
 
-Prefill produces prompt KV in HBM. After prefix publication, backing admission reserves decode capacity. Disaggregated serving transfers the prompt through its configured handoff channel; initialization writes the remote prompt fraction through the shared host–GPU path and, for SSD, the SSD path. Colocated serving also charges HBM migration for the resident fraction into its separate decode arena. The prefill source allocation is released only after initialization completes, then the first token is released.
+Prefill produces prompt KV in HBM. After any blocking prefix publication, backing admission reserves decode capacity. Disaggregated serving transfers the prompt through its configured handoff channel; initialization writes the remote prompt fraction using GDS or the selected staged path. Colocated serving also charges HBM migration for the resident fraction into its separate decode arena. Source prefill KV is released after initialization and any background prefix publication both finish; asynchronous prefix publication need not delay the first token.
 
 For each decode pipeline stage and token:
 
@@ -47,7 +56,7 @@ stage_elapsed = read_queue_and_service + HBM_reference_GPU_service
                 + append_queue_and_service
 ```
 
-Existing KV is read before the current query appends its new KV. SSD reads traverse SSD then host–GPU; writes traverse host–GPU then SSD. DRAM backing traverses the configured effective host–GPU path, which is assumed to include host memory limits. There is no independent DRAM bandwidth model beyond that effective path. Initialization spans all PP shards; each later stage services only its own layers. GPU kernel reference service is still calculated from its actual batch/query/context shape, including fitted HBM memory stalls. External stalls are **added once**, without adding another synthetic HBM kernel-memory cost.
+Existing KV is read before the current query appends its new KV. Host-staged SSD reads traverse SSD then host–GPU; writes reverse those phases. GDS uses a single direct reservation with startup + max(storage service, direct-link service). DRAM backing uses the configured effective host–GPU path, assumed to include host memory limits; there is no independent DRAM bandwidth model. Initialization spans all PP shards; later stages service their own layers. GPU kernel reference service retains its actual batch/query/context shape and fitted HBM stalls. External stalls are **added once**, without another synthetic HBM kernel-memory cost.
 
 The SSD function is applied per configured I/O chunk:
 
@@ -76,7 +85,7 @@ available_backing = total_device_bytes − enabled_retained_prefix_reservation
                     − relay_reservation_if_applicable
 ```
 
-SSD staging also reserves one I/O chunk of host DRAM relay space. Inactive prefix tiers reserve zero. Admission never spends the prefix partition on active allocations. Memory charts conservatively combine peak components rather than claiming their peaks were simultaneous. Colocated prefill and decode have distinct arenas within one GPU capacity.
+Host-staged SSD transfers reserve one I/O chunk of host DRAM relay space; direct GDS transfers reserve none. Inactive prefix tiers reserve zero. Admission never spends the prefix partition on active allocations. Memory charts conservatively combine peak components rather than claiming their peaks were simultaneous. Colocated prefill and decode have distinct arenas within one GPU capacity.
 
 GPU resource occupancy includes stalled stages and reserved staging buffers. GPU activity energy charges the reference GPU service; I/O stall time uses GPU idle power. CPU, SSD, NIC and DMA energy are excluded, so tokens/J is **GPU-energy efficiency**, not full-system efficiency.
 

@@ -15,6 +15,19 @@
   --green: #21886f;
   --navy: #102f43;
 }
+.nominal-resource-details {
+  margin: 16px 0;
+}
+.nominal-resource-details > summary {
+  cursor: pointer;
+  padding: 12px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.resource-service .work-row > div:first-child {
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
 * {
   box-sizing: border-box;
 }

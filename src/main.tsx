@@ -37,6 +37,7 @@ import NativeGraph from "./NativeGraph";
 import BehavioralGraph from "./ModelGraph";
 import FormulaValue, { RUN_CHANGED_EVENT } from "./FormulaValue";
 import RunComparison from "./RunComparison";
+import ResourceService from "./ResourceService";
 import StorageView, { StorageControls } from "./StorageView";
 import ActiveKVView, {
   ActiveKVControls,
@@ -1410,7 +1411,13 @@ function App() {
   function storageChange(k: string, value: any) {
     setConfig((c: Obj | null) => ({
       ...c,
-      storage: { ...c!.storage, [k]: value },
+      storage: {
+        ...c!.storage,
+        [k]: value,
+        ...(k === "ssd_transfer_mode" && value === "gds"
+          ? { profile: "manual" }
+          : {}),
+      },
     }));
     setDirty(true);
   }
@@ -1458,6 +1465,8 @@ function App() {
     Object.assign(c.storage, {
       enabled: true,
       placement: "ssd-only",
+      ssd_transfer_mode: "host-staged",
+      publication_mode: "blocking",
       hbm_cache_GB: 0,
       dram_cache_GB: 0,
       ssd_cache_GB: 4,
@@ -1468,6 +1477,30 @@ function App() {
     setConfig(c);
     setDirty(true);
     setTab("storage");
+  }
+  function applyDynamoSetup() {
+    setConfig((c: Obj | null) => ({
+      ...c,
+      active_kv: { ...c!.active_kv, placement: "hbm" },
+      storage: {
+        ...c!.storage,
+        enabled: true,
+        placement: "dynamo",
+        publication_mode: "async",
+        ssd_transfer_mode: "gds",
+        profile: "manual",
+        hbm_cache_GB:
+          c!.storage.hbm_cache_GB ||
+          catalog!.default_config.storage.hbm_cache_GB,
+        dram_cache_GB:
+          c!.storage.dram_cache_GB ||
+          catalog!.default_config.storage.dram_cache_GB,
+        ssd_cache_GB:
+          c!.storage.ssd_cache_GB ||
+          catalog!.default_config.storage.ssd_cache_GB,
+      },
+    }));
+    setDirty(true);
   }
   async function loadStorageWorkload(rows: Obj[], source: Obj) {
     const candidate = {
@@ -1975,6 +2008,7 @@ function App() {
               onLayout={selectStorageLayout}
               layouts={catalog.storage_layouts}
               onDemo={loadCacheDemo}
+              onDynamo={applyDynamoSetup}
               onWorkload={loadStorageWorkload}
               onError={setError}
             />
@@ -2479,10 +2513,16 @@ function App() {
                   <Pipeline r={r} />
                   <div className="overview-grid">
                     <MemoryChart r={r} />
+                    <ResourceService r={r} />
+                  </div>
+                  <details className="nominal-resource-details">
+                    <summary>
+                      Nominal GPU resource work · analytical diagnostic
+                    </summary>
                     <section className="card insight-card">
                       <div className="card-head">
                         <div>
-                          <h3>Resource service demand</h3>
+                          <h3>Nominal GPU resource work</h3>
                           <p>
                             Nominal resource-work estimates; calibrated service
                             timing is separate
@@ -2540,11 +2580,13 @@ function App() {
                             )}
                             %
                           </FormulaValue>
-                          . Remaining KV reads spill to HBM.
+                          . This is the analytical HBM-reference workload;
+                          external KV backing transfers are shown separately in
+                          Executed resource service.
                         </p>
                       </div>
                     </section>
-                  </div>
+                  </details>
                   <div className="economics-grid">
                     {[
                       {
@@ -3025,6 +3067,14 @@ function App() {
               rel="noreferrer"
             >
               Storage benchmark &amp; traces: Mooncake
+            </a>
+            <a
+              className="footer-credit"
+              href="https://github.com/ai-dynamo/dynamo"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Cache architecture reference: NVIDIA Dynamo
             </a>
             <button onClick={() => setShowMethods(true)}>
               Model notes

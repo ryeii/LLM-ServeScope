@@ -79,7 +79,7 @@ export function storageEventCalculation(
       : f.family === "two-slope"
         ? "f(x)=L+b x+a max(0,x−0.25)"
         : "f(x)=L+b x";
-  const service: Calculation = {
+  let service: Calculation = {
     ...calc(
       e.tier + " " + e.operation + " service",
       `${equation}; x=bytes/10⁶\nService_ms = full_chunks × f(chunk_bytes/10⁶) + f(tail_bytes/10⁶) when tail>0`,
@@ -110,6 +110,48 @@ export function storageEventCalculation(
       },
     ],
   };
+  if (e.gds) {
+    const g = e.gds;
+    service = {
+      ...calc(
+        "Direct SSD–GPU service · GDS assumption",
+        "Service_ms = startup_ms + max(storage_ms, link_ms)\nLink_ms = bytes / (GDS_GBps × 10⁶)",
+        [
+          v("startup_ms", "GDS startup", g.startup_ms, "ms"),
+          v("storage_ms", "SSD storage service", g.storage_ms, "ms", () =>
+            storageEventCalculation(
+              r,
+              { ...e, gds: null, duration_ms: g.storage_ms },
+              true,
+            ),
+          ),
+          v("link_ms", "Direct SSD–GPU link service", g.link_ms, "ms", () =>
+            calc(
+              "Direct-link service",
+              "Link_ms = bytes / (GDS_GBps × 10⁶)",
+              [
+                v("bytes", "Transfer payload", e.payload_bytes, "bytes"),
+                v(
+                  "GDS_GBps",
+                  "Configured direct-link bandwidth",
+                  g.bandwidth_GBps,
+                  "GB/s",
+                ),
+              ],
+              g.link_ms,
+              "ms",
+              "Streaming storage and link service are combined with max, rather than charged as two serial copies.",
+            ),
+          ),
+        ],
+        e.duration_ms,
+        "ms",
+      ),
+      summary:
+        "A configured streaming direct path. No host DRAM relay or separate host–GPU copy is charged. The local Mooncake file-path fit does not calibrate this path. CPU control overhead, detailed PCIe contention and GDS kernel behavior are not measured.",
+      source: "configured-gds-assumption",
+    };
+  }
   if (e.extrapolated)
     service.note =
       "At least one chunk size lies outside the measured I/O-size range.";
@@ -144,7 +186,7 @@ export function storageEventCalculation(
       e.end_ms,
       "ms",
     ),
-    summary: `${e.payload_bytes.toLocaleString()} bytes. ${e.scope === "active" ? "Active decode KV transfer. Per-token read/append and initialization stalls are included in their parent GPU/stream reservation once." : e.cause === "restore" ? "The request cannot compute its suffix until restoration finishes." : e.cause === "spill" ? "An LRU victim moves to its spill tier. The destination becomes ready only after this transfer completes; the triggering publication waits." : "Cache publication completes before this request hands off to decode."}`,
+    summary: `${e.payload_bytes.toLocaleString()} bytes · ${e.transfer_path || "legacy path"}. ${e.scope === "active" ? "Active decode KV transfer. Stalls are included in their parent GPU/stream reservation once." : e.cause === "restore" ? "The prefix is restored into GPU HBM before suffix computation." : e.background ? "Background prefix publication/spill can overlap serving. Its source remains reserved until copying and handoff complete; this interval is not automatically added to TTFT." : "Blocking cache publication/spill completes before decode handoff."}`,
     source: "Executed storage reservation · " + e.resource,
   };
 }
@@ -157,7 +199,7 @@ function span(
   predicate: (e: Obj) => boolean,
 ): Calculation {
   const events = r.timeline.filter(
-    (e: Obj) => e.request_ids.includes(q.id) && predicate(e),
+    (e: Obj) => e.request_ids.includes(q.id) && !e.background && predicate(e),
   );
   const service = total(events, (e) => e.duration_ms);
   const wait = Math.max(0, end - begin - service);
@@ -227,6 +269,45 @@ export function storageRequestCalculation(
   q: Obj,
   key: string,
 ): Calculation {
+  if (key === "prefill_release_ms" && q.cache.publication_mode === "async") {
+    const k = q.cache;
+    return calc(
+      "Prefill source KV release",
+      "Release_ms = max(handoff_end_ms, background_publication_end_ms)",
+      [
+        v("handoff_end_ms", "KV handoff completes", k.handoff_end_ms, "ms"),
+        v(
+          "background_publication_end_ms",
+          "Background prefix publication completes",
+          k.background_publication_end_ms,
+          "ms",
+          () =>
+            calc(
+              "Background prefix publication",
+              "Finish_ms = max(publication finish for microbatch members)",
+              r.storage.publications
+                .filter((p: Obj) =>
+                  (k.batch_request_ids || [q.id]).includes(p.request_id),
+                )
+                .map((p: Obj) =>
+                  v(
+                    "publication_" + p.request_id,
+                    `Request #${p.request_id} publication finish`,
+                    p.end_ms,
+                    "ms",
+                  ),
+                ),
+              k.background_publication_end_ms,
+              "ms",
+              "Transfers execute on their physical queues and can overlap decode. Source HBM cannot be reused before these copies finish.",
+            ),
+        ),
+      ],
+      k.prefill_release_ms,
+      "ms",
+      "Asynchronous publication is not a decode barrier, but source KV stays allocated until both consumers finish.",
+    );
+  }
   if (
     r.active_kv &&
     ["first_token_ms", "finish_ms", "prefill_release_ms"].includes(key)
@@ -295,7 +376,7 @@ export function storageRequestCalculation(
         "ms",
       ),
       summary:
-        "The first token is released after cache publication and any required spill, handoff and decode-memory admission. Only subsequent token iterations contribute to TPOT.",
+        "The first token is released after restoration, prefill, any blocking publication, handoff and decode-memory admission. Asynchronous prefix publication can continue in the background. Only subsequent token iterations contribute to TPOT.",
     };
   }
   const release = key === "prefill_release_ms";

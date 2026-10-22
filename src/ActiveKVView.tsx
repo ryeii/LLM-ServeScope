@@ -44,6 +44,11 @@ export function ActiveKVControls({
         Prefill working KV stays in HBM. Active decode backing is freed at
         request completion; retained prefixes have a separate lifetime.
       </p>
+      <p className="fine">
+        The Dynamo-style default keeps active decode KV in HBM and restores
+        reusable prefixes from lower tiers before computation. Other active
+        placements are experimental per-token streaming scenarios.
+      </p>
       {off && (
         <>
           <p className="model-scope-note">
@@ -114,6 +119,22 @@ export function KVDeviceControls({
         Capacities and placement policies are configured separately.
       </p>
       <label className="field vertical">
+        <span>SSD transfer path</span>
+        <select
+          aria-label="SSD transfer path"
+          value={s.ssd_transfer_mode}
+          onChange={(e) => onChange("ssd_transfer_mode", e.target.value)}
+        >
+          <option value="gds">Direct SSD ↔ GPU · GDS</option>
+          <option value="host-staged">SSD ↔ host DRAM ↔ GPU</option>
+        </select>
+      </label>
+      <p className="model-scope-note">
+        {s.ssd_transfer_mode === "gds"
+          ? "GDS assumes supported hardware, filesystem and drivers. Direct GPU–SSD transfers bypass the host relay. Timing = startup + max(SSD service, direct-link service); configured assumptions, without measured GDS validation. SSD–DRAM copies still use the storage path."
+          : "Host-staged transfers charge SSD service and a separate host–GPU copy. Host–GPU latency and bandwidth are configured assumptions."}
+      </p>
+      <label className="field vertical">
         <span>SSD service model</span>
         <select
           aria-label="SSD service model"
@@ -123,7 +144,10 @@ export function KVDeviceControls({
           <option value="manual">
             Configured affine function · uncalibrated
           </option>
-          <option value="local-mooncake-path">
+          <option
+            value="local-mooncake-path"
+            disabled={s.ssd_transfer_mode === "gds"}
+          >
             Fitted local Mooncake file path · QD1
           </option>
         </select>
@@ -131,11 +155,18 @@ export function KVDeviceControls({
       <p className="fine">
         The fitted profile measures warm buffered file reads and fsync writes on
         a development Mac; it does not calibrate target-server SSD or streamed
-        attention.
+        attention. Select the host-staged path to use this fit; it cannot
+        calibrate GDS.
       </p>
       {[
         ["pcie_GBps", "Host–GPU aggregate link", "GB/s"],
         ["pcie_latency_us", "Host–GPU latency", "µs"],
+        ...(s.ssd_transfer_mode === "gds"
+          ? [
+              ["gds_GBps", "Direct SSD–GPU link", "GB/s"],
+              ["gds_latency_us", "GDS startup latency", "µs"],
+            ]
+          : []),
         ["io_chunk_KiB", "Storage I/O chunk", "KiB"],
         ...(s.profile === "manual"
           ? [

@@ -32,6 +32,11 @@ missing operators and new architectures can require extrapolation.
 
 ## SSD/file-path service — Mooncake benchmark integration
 
+**The new GDS default is not calibrated by these file-I/O results.** The measured
+fit is available only for host-staged transfers. Dynamo-style cache behavior,
+asynchronous publication and direct-link coefficients require end-to-end
+validation; see [scope and equations](dynamo-alignment.md).
+
 ServeScope collected **768 local I/O observations** using Mooncake’s archived,
 unmodified `DiskHashTable` benchmark class: 384 reads and 384 writes, 16 KiB–2 MiB,
 serial queue depth one, warm buffered reads and fsync writes on a development Mac.

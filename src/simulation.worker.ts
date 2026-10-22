@@ -28,6 +28,7 @@ function loadRuntime(): Promise<PyodideAPI> {
       "gpu_functions.py",
       "model.py",
       "storage.py",
+      "kv_transfer.py",
       "active_kv.py",
     ];
     const files = await Promise.all(

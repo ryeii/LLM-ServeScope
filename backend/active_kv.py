@@ -8,6 +8,7 @@ import copy, hashlib
 from pathlib import Path
 from collections import Counter
 import simpy
+from .kv_transfer import active_paths
 
 PLACEMENTS = {
     'hbm': dict(label='HBM only', backing=None, description='Active decode KV remains fully resident in GPU HBM.'),
@@ -55,7 +56,7 @@ class ActiveKV:
         prefix = c['storage']
         prefix_dram = prefix['dram_cache_GB']*1e9 if prefix['enabled'] and 'dram' in tiers.layout['tiers'] else 0
         prefix_ssd = prefix['ssd_cache_GB']*1e9 if prefix['enabled'] and 'ssd' in tiers.layout['tiers'] else 0
-        relay = prefix['io_chunk_KiB']*1024 if self.backing=='ssd' else 0
+        relay = prefix['io_chunk_KiB']*1024 if self.backing=='ssd' and prefix['ssd_transfer_mode']=='host-staged' else 0
         self.partition = dict(prefix_dram_bytes=prefix_dram, prefix_ssd_bytes=prefix_ssd,
                               relay_dram_bytes=relay, dram_total_bytes=self.a['dram_total_GB']*1e9,
                               ssd_total_bytes=self.a['ssd_total_GB']*1e9)
@@ -133,10 +134,10 @@ class ActiveKV:
         events = []
         if payload <= 0:
             return events
-        paths = (['ssd','pcie'] if self.backing=='ssd' else ['pcie']) if operation=='read' else (['pcie','ssd'] if self.backing=='ssd' else ['pcie'])
+        paths = active_paths(self.backing,self.c['storage']['ssd_transfer_mode'],operation)
         for path in paths:
             event = yield from self.tiers._io(path, operation, payload, ids[0], cause,
-                scope='active', model_phase='decode', request_ids=list(ids), batch_size=len(ids), context=kv_tokens, stage=stage, token_step=step, serial_tile_stream=True, staging_bytes_per_gpu=self.a['staging_GB']*1e9,kv_tokens=kv_tokens,all_stages=all_stages)
+                scope='active', model_phase='decode', direct_gpu=(path=='ssd'), request_ids=list(ids), batch_size=len(ids), context=kv_tokens, stage=stage, token_step=step, serial_tile_stream=True, staging_bytes_per_gpu=self.a['staging_GB']*1e9,kv_tokens=kv_tokens,all_stages=all_stages)
             events.append(event['event_id'])
         self.stats[operation+'_bytes'] += payload
         return events

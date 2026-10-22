@@ -198,7 +198,7 @@ export async function storageLayoutsScenario(page: Page) {
     exact: true,
   });
   await expect(layout).toHaveValue("ssd-only");
-  await expect(layout.locator("option")).toHaveCount(13);
+  await expect(layout.locator("option")).toHaveCount(14);
   for (const tier of ["hbm", "dram", "ssd"]) {
     await layout.selectOption(tier + "-only");
     await expect(
@@ -333,6 +333,26 @@ export async function prefixBaselineScenario(page: Page) {
   await expect(
     page.getByText("Generation throughput", { exact: true }),
   ).toBeVisible({ timeout: 60000 });
+  // Preserve this regression's historical blocking, staged reference. New
+  // default behavior is exercised independently by the GDS scenario.
+  await page
+    .getByRole("complementary")
+    .getByText("Retained prefixes", { exact: true })
+    .click();
+  await page
+    .getByLabel("Retained prefix cache layout", { exact: true })
+    .selectOption("disabled");
+  await page
+    .getByRole("complementary")
+    .getByText("KV I/O paths", { exact: true })
+    .click();
+  await page
+    .getByLabel("SSD transfer path", { exact: true })
+    .selectOption("host-staged");
+  await page.getByRole("button", { name: "Run scenario", exact: true }).click();
+  await expect(
+    page.getByText("Results match scenario", { exact: true }),
+  ).toBeVisible();
   const baseline = await exported(page);
   const withoutStorage = (config: any) => {
     const { storage, ...rest } = config;
@@ -343,9 +363,11 @@ export async function prefixBaselineScenario(page: Page) {
   expect(baseline.metrics.throughput_tps).toBeCloseTo(186.63494412484803, 9);
   await page.getByRole("button", { name: "KV storage", exact: true }).click();
   await page
-    .getByRole("complementary")
-    .getByText("Retained prefixes", { exact: true })
-    .click();
+    .getByLabel("Retained prefix cache layout", { exact: true })
+    .selectOption("none");
+  await page
+    .getByLabel("Prefix publication", { exact: true })
+    .selectOption("blocking");
   const layout = page.getByLabel("Retained prefix cache layout", {
     exact: true,
   });

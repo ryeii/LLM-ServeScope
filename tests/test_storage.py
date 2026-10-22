@@ -8,7 +8,8 @@ ROOT=Path(__file__).resolve().parents[1]
 def scenario():
  c=copy.deepcopy(DEFAULT);c.update(model_id='llama8',requests=8,input_tokens=1024,output_tokens=2,arrival_rate=2)
  for phase in ['prefill','decode']:c[phase].update(batch_size=1,replicas=1,tp=1)
- c['storage'].update(enabled=True,hbm_cache_GB=0,dram_cache_GB=0,ssd_cache_GB=4)
+ c['storage'].update(enabled=True,placement='inclusive',hbm_cache_GB=0,dram_cache_GB=0,ssd_cache_GB=4,
+                     ssd_transfer_mode='host-staged',publication_mode='blocking',max_inflight_publications=128)
  return c
 
 class StorageTests(unittest.TestCase):
@@ -189,6 +190,7 @@ class StorageTests(unittest.TestCase):
  def test_no_retention_preserves_original_batched_schedule_and_all_metrics(self):
   for prefill,decode,separated in [(4,4,True),(4,1,True),(2,2,False),(4,2,False),(8,4,True)]:
    c=copy.deepcopy(DEFAULT);c['prefill']['batch_size']=prefill;c['decode']['batch_size']=decode;c['separated']=separated
+   c['storage']['enabled']=False
    baseline=simulate(c);c['storage'].update(enabled=True,placement='none');r=simulate(c)
    self.assertEqual(r['metrics'],baseline['metrics'])
    self.assertEqual(r['traffic'],baseline['traffic'])

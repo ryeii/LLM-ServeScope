@@ -16,6 +16,11 @@ are three different evidence classes. They must not share an accuracy claim.**
 
 ## Published coverage: what is available and what it establishes
 
+This report documents the original host-staged, blocking storage integration.
+The current default uses [Dynamo-style caching, asynchronous publication and
+configured GDS](../dynamo-alignment.md). The measured file-I/O errors below do
+not validate that direct path or the complete serving model.
+
 The source audit is pinned to `REV`. The unchanged
 FAST25 request dumps use the earlier pinned release `e4229791f39d1f4cdb00df1b28366130f742deb0`.
 Source paths and SHA-256 hashes are in [benchmark manifest](../../third_party/mooncake-storage/manifest.json)

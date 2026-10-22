@@ -9,11 +9,12 @@ def scenario(mode='ssd'):
     c.update(model_id='llama8',requests=2,input_tokens=512,output_tokens=3,arrival_rate=1000)
     for phase in ['prefill','decode']:c[phase].update(tp=1,pp=1,ep=1,batch_size=2)
     c['active_kv']['placement']=mode
+    c['storage'].update(enabled=False,ssd_transfer_mode='host-staged',publication_mode='blocking')
     return c
 
 class ActiveKVTests(unittest.TestCase):
     def test_hbm_control_preserves_existing_baseline(self):
-        old=json.loads((ROOT/'examples/default-result.json').read_text());new=simulate(DEFAULT)
+        old=json.loads((ROOT/'examples/default-result.json').read_text());new=simulate(old['config'])
         self.assertEqual(new['metrics'],old['metrics'])
         self.assertEqual(new['timeline'],old['timeline'])
         self.assertEqual([q['token_times_ms'] for q in new['requests']],[q['token_times_ms'] for q in old['requests']])

@@ -1,6 +1,6 @@
 # How ServeScope turns a serving scenario into a result
 
-The quoted values describe the **default simulated run**, not measured inference on an H100. There are two kinds of time: a **timestamp** tells you where an event sits on the simulation clock; a **duration** tells you how long an interval lasts. The clock starts at the first generated request, at 0 ms. A request arriving at 1,500 ms has not spent 1,500 ms waiting in the server.
+The quoted values describe the **archived no-retention reference run** in `examples/default-result.json`, not measured inference on an H100. Import `examples/default-scenario.json` to reproduce it. The current default adds [Dynamo-style prefix caching, asynchronous publication and a GDS path](dynamo-alignment.md); its timestamps can differ. A **timestamp** locates an event on the simulation clock; a **duration** measures an interval. The clock starts at the first generated request, at 0 ms. A request arriving at 1,500 ms has not spent 1,500 ms waiting in the server.
 
 The key dependency is:
 

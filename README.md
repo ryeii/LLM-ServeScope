@@ -91,7 +91,8 @@ backing store adds waiting. Completion times emerge from that schedule.
 
 ![How model inputs, service estimates and scheduling produce generation throughput](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/calculation-process.png?v=7fd8f61d14bd)
 
-The default scenario has 16 requests, four requests per batch, 2,048 input tokens
+The archived no-retention reference scenario (`examples/default-scenario.json`)
+has 16 requests, four requests per batch, 2,048 input tokens
 and 64 output tokens. Request #12 follows this path:
 
 | Event | Simulation timestamp | Elapsed since previous event |
@@ -133,15 +134,26 @@ It includes an actual batch timeline, source-linked equations and a
 | GPU kernels | Functions fitted separately to KAIST BF16 and Microsoft Vidur FP16 profiles | Prefill and decode; internal HBM effects are already included |
 | SSD/file-path I/O | Configured latency/bandwidth, or the selected fit to local measurements using Mooncake benchmark code | Actual SSD reads/writes for retained prefixes or active decode KV |
 | Host–GPU transfers and explicit HBM copies | Configured effective bandwidth and latency | KV restore, publication, spill or active backing transfers |
+| Direct SSD–GPU transfers (GDS) | Configured startup + max(storage service, direct-link service); no measured GDS calibration | GPU–SSD transfers when the direct path is selected |
 | Collectives and KV handoff | Analytical network functions and configured topology | Communication inside/between GPU pools |
 | Admission and resource waits | SimPy queues, dependencies and capacity limits | When work cannot yet acquire the resources it needs |
 
-The default keeps active KV in HBM and disables prefix retention, so **no separate
-DRAM/SSD I/O service time is added**. Its network costs and scheduling waits still
-apply. The fitted SSD option is used only when **“Fitted local Mooncake file path”**
-is selected and the scenario actually performs SSD I/O. Changing link settings
-alone does not create transfers. A kernel’s HBM access time is not added again on
-top of its fitted operator service.
+The default uses **active decode KV in HBM, a Dynamo-style tiered prefix cache,
+asynchronous publication and direct SSD–GPU transfers through GDS**. Prefixes
+are restored into HBM before computation; the default does not stream attention
+KV from SSD every token. Host staging and the original cache policies remain
+selectable. This is an independent approximation of selected NVIDIA Dynamo ideas,
+without its complete scheduler or policy semantics.
+[Default behavior, equations, differences and reproduction](docs/dynamo-alignment.md).
+
+GDS timing is a configured assumption. The fitted SSD option is available only
+with the **host-staged** path and **“Fitted local Mooncake file path”** selected;
+its measured errors do not validate GDS. Changing link settings alone does not
+create transfers. A kernel's HBM cost is not added again to fitted GPU service.
+
+Overview now shows **Executed resource service**, including storage and explicit
+transfers. **Nominal GPU resource work** remains an expandable analytical
+diagnostic. Parallel resource times cannot be summed to obtain request latency.
 
 ## Fitted GPU service-time model
 

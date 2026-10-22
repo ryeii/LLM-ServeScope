@@ -14,6 +14,15 @@ export async function formulaScenario(page: Page) {
     '[data-formula-key="metrics.throughput_tps"]',
   );
   await expect(throughput).toBeVisible({ timeout: 60000 });
+  // Preserve the published N_req × L_out worked-example regression.
+  await page
+    .getByLabel("Import scenario", { exact: true })
+    .setInputFiles("examples/default-scenario.json");
+  await expect(page.getByRole("alert")).toContainText("Imported");
+  await page.getByRole("button", { name: "Run scenario", exact: true }).click();
+  await expect(
+    page.getByText("Results match scenario", { exact: true }),
+  ).toBeVisible();
   const initial = await exported(page);
   await throughput.hover();
   let tip = page.locator('[data-cascade-depth="0"]');
