@@ -87,6 +87,7 @@ export async function prefixReuseScenario(page: Page) {
       buffer: Buffer.from(JSON.stringify(invalid)),
     });
   await expect(page.getByRole("alert")).toContainText("retired KV placement");
+  await page.getByRole("button", { name: "Dismiss error", exact: true }).click();
   await expect(page.locator("footer")).toContainText(
     "Prefix-reuse workload evidence: Mooncake",
   );
