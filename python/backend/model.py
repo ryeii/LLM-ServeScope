@@ -9,7 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PIN = "b09c7aaab4b072d73136641841cc2688616c49eb"
 from .catalog import MODELS, HARDWARE, BASE
 from .active_kv import DEFAULT_ACTIVE, PLACEMENTS as ACTIVE_PLACEMENTS, ActiveKV, offloaded, validate_active
-from .storage import DEFAULT_STORAGE, CACHE_LAYOUTS, cache_capacity_GB, CacheTiers, validate_storage, workload as storage_workload, fit_dataset as storage_fits
+from .storage import DEFAULT_STORAGE, CACHE_LAYOUTS, cache_capacity_GB, CacheTiers, validate_storage, workload as storage_workload
+from .prefix_reuse import hit_fit_dataset
 from .calibration import OPERATOR_NAMES, manifest as calibration_manifest, timing as calibrated_timing
 
 DEFAULT = dict(
@@ -1323,7 +1324,7 @@ def simulate(config):
         calibration["summary"] = "Original roofline · uncalibrated"
     if tier_mode:
         warnings = [w for w in warnings if not w.startswith("Memory utilization and runtime")]
-        warnings.extend(["Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, configured asynchronous or blocking publication, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.","Storage profile fits and hit-curve errors have separate data scopes; policy-replay hit fits do not decide runtime hits. GPU energy excludes storage and host power.","GDS is a configured direct-path approximation, not measured GDS or Dynamo performance. Dynamo-style cache policy is simplified and does not reproduce its full scheduler."])
+        warnings.extend(["Prefix retention: fixed uniform microbatches use a common restored-prefix floor, the selected retained-cache layout, configured asynchronous or blocking publication, and pinned prefill HBM allocations. Cache reuse skips query work while retaining full attention context.","Published request traces supply workload and prefix identities, not device-service timings. Storage and transfers use configured assumptions with no measured error bound. Trace-policy hit forecasts do not decide runtime hits. GPU energy excludes storage and host power.","GDS is a configured direct-path approximation, not measured GDS or Dynamo performance. Dynamo-style cache policy is simplified and does not reproduce its full scheduler."])
     if active_model:
         warnings.extend([active_model.summary()['model'],active_model.summary()['calibration'],"Prefill active KV remains in HBM. Active decode backing and retained prefixes have independent placement and capacity accounting; they share SSD and host/GPU queues."])
     modern_storage = tier_mode and (c['storage']['ssd_transfer_mode']=='gds' or c['storage']['publication_mode']=='async' or c['storage']['placement']=='dynamo')
@@ -1373,7 +1374,7 @@ def catalog():
         models=MODELS,
         hardware=HARDWARE,
         default_config=validate(DEFAULT),
-        storage_profiles=storage_fits(),
+        prefix_hit_profiles=hit_fit_dataset(),
         storage_layouts=CACHE_LAYOUTS,
         active_kv_placements=ACTIVE_PLACEMENTS,
         upstream_revision=PIN,

@@ -1,0 +1,59 @@
+{
+  "schema_version": "servescope.prefix-hit-fit.v1",
+  "hit": {
+    "conversation": {
+      "family": "exponential",
+      "coefficients": [
+        0.9869606340485892,
+        0.22043931508639894
+      ],
+      "observations": 420,
+      "validation": {
+        "mae_pp": 1.269089991719495,
+        "rmse_pp": 1.8696538939847993,
+        "p95_pp": 3.7799042811958
+      },
+      "min_requests": 8,
+      "max_requests": 2006
+    },
+    "toolagent": {
+      "family": "weibull",
+      "coefficients": [
+        0.9999999999999999,
+        0.025172436080389698,
+        0.2890166428143976
+      ],
+      "observations": 420,
+      "validation": {
+        "mae_pp": 3.79404501604659,
+        "rmse_pp": 6.974854794194957,
+        "p95_pp": 13.750720906115959
+      },
+      "min_requests": 8,
+      "max_requests": 3935
+    },
+    "synthetic": {
+      "family": "exponential",
+      "coefficients": [
+        0.9999999999999974,
+        0.3328386115100144
+      ],
+      "observations": 420,
+      "validation": {
+        "mae_pp": 0.5310283406962917,
+        "rmse_pp": 1.4975771948508165,
+        "p95_pp": 3.2881953388642144
+      },
+      "min_requests": 8,
+      "max_requests": 666
+    }
+  },
+  "scope": "Published request-trace LRU replay only; no storage or transfer timing and no measured hardware cache hits.",
+  "sources": {
+    "hit_sha256": "38ef964e91a6a26218d0f45957d1e5cc84fe0f2a3bc75f993c543f60491195b4",
+    "trace_manifest_sha256": "bbf623d36ea91ad1bbfab747c216fcb6fdb6879fda0d5322b8a97f946c64b7f0"
+  },
+  "training_script_sha256": "d3c8e7983f95f72c5ffff0f75c6bbfc830b1b10342b2eeef794816227990b264",
+  "runtime_sha256": "44d7ab329ad99aab7c1cfc32da6dda8a4af9a125099ab8e36a171e1906b5e65c",
+  "payload_sha256": "20febf40b8530b9ad21e485e5240c8b5889efe8d3aa99d9bfb36b77fa709b25c"
+}

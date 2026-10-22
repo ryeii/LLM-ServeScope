@@ -5,11 +5,11 @@ separate from pinned active-request KV.
 Publication is write-through before handoff; cache I/O shares explicit FIFO links.
 """
 from collections import OrderedDict, Counter
-from functools import lru_cache
 from pathlib import Path
 import copy, hashlib, json, math
 import simpy
 from .kv_transfer import direct_service
+from .prefix_reuse import hit_fit_dataset, hit_prediction
 
 CACHE_LAYOUTS = {
     'dynamo': dict(label='Dynamo-style tiered cache', tiers=['hbm','dram','ssd'], kind='write-through', description='Retain GPU prefix blocks, write through to host DRAM, and retain frequently referenced blocks on SSD. Restore cached prefixes into HBM before computation. Simplified Dynamo-style policy.'),
@@ -37,27 +37,10 @@ DEFAULT_STORAGE=dict(enabled=True,placement='dynamo',profile='manual',hbm_cache_
                      publication_mode='async',max_inflight_publications=4,disk_min_uses=2,
                      source_id='synthetic-demo',source_label='Generated repeated-prefix workload',workload=[])
 
-@lru_cache(maxsize=1)
-def fit_dataset():
-    p=Path(__file__).with_name('storage-fit.json')
-    if not p.exists():return None
-    data=json.loads(p.read_text());payload=dict(data);expected=payload.pop('payload_sha256')
-    actual=hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-    if actual!=expected:raise ValueError('Storage fit checksum mismatch.')
-    return data
-
-def latency_ms(fit,nbytes):
-    x=nbytes/1e6;c=fit['coefficients'];f=fit['family']
+def latency_ms(model,nbytes):
+    x=nbytes/1e6;c=model['coefficients']
     y=c[0]+c[1]*x
-    if f=='sqrt-affine':y+=c[2]*math.sqrt(x)
-    if f=='two-slope':y+=c[2]*max(0,x-.25)
     return max(1e-9,y)
-
-def hit_prediction(fit,capacity_blocks,unique_blocks,max_hit_fraction=1):
-    a,s=fit['coefficients'][:2];x=capacity_blocks/max(1,unique_blocks)
-    if fit['family']=='capped-linear':return max_hit_fraction*a*min(1,x/s)
-    p=fit['coefficients'][2] if fit['family']=='weibull' else 1
-    return max_hit_fraction*a*(-math.expm1(-min(700,(x/s)**p)))
 
 def validate_storage(c,number):
     raw=c.get('storage') or {}
@@ -69,11 +52,10 @@ def validate_storage(c,number):
     s=dict(defaults,**raw);c['storage']=s
     if type(s['enabled']) is not bool:raise ValueError('KV storage enabled must be boolean.')
     if s['placement'] not in CACHE_LAYOUTS:raise ValueError('Unknown KV cache layout.')
-    if s['profile'] not in ('manual','local-mooncake-path'):raise ValueError('Unknown storage profile.')
+    if s['profile'] != 'manual':
+        raise ValueError('Only configured storage timing assumptions are supported. Published request traces contain no device-service timings; removed storage fits cannot be imported.')
     if s['ssd_transfer_mode'] not in ('gds','host-staged'):raise ValueError('Unknown SSD transfer path.')
     if s['publication_mode'] not in ('async','blocking'):raise ValueError('Unknown prefix publication mode.')
-    if s['ssd_transfer_mode']=='gds' and s['profile']=='local-mooncake-path':
-        raise ValueError('The local buffered Mooncake file-path fit cannot calibrate GDS. Select configured SSD service or the host-staged path.')
     for k in ['max_inflight_publications','disk_min_uses']:
         s[k]=number(s[k],k,1,128,True)
     for k in ['hbm_cache_GB','dram_cache_GB','ssd_cache_GB']:
@@ -89,7 +71,6 @@ def validate_storage(c,number):
     for phase in phases:
         if number(c[phase].get('replicas'),phase+'.replicas',1,64,True)!=1:
             raise ValueError('Retained prefix mode currently supports one replica per pool. Change replicas explicitly; selecting a layout never changes scheduling.')
-    if s['profile']=='local-mooncake-path' and not fit_dataset():raise ValueError('Local storage fit unavailable.')
     rows=s.get('workload',[])
     if not isinstance(rows,list) or len(rows)>128:raise ValueError('Workload must contain at most 128 request records.')
     if rows:
@@ -137,7 +118,6 @@ class CacheTiers:
         self.caches={k:OrderedDict() for k in self.capacity};self.pins={k:Counter() for k in self.capacity};self.pending={}
         self.links={k:simpy.Resource(env,1) for k in ['ssd','pcie','hbm']}
         self.stats=Counter();self.active_io_stats=Counter();self.peaks=Counter();self.evictions=Counter();self.drops=Counter();self.events=[];self.snapshots=[]
-        self.fit=fit_dataset() if self.s['profile']=='local-mooncake-path' and (self.capacity['ssd'] or c.get('active_kv',{}).get('placement') in ('ssd','hbm-ssd')) else None
 
     def keys(self,row):
         parent='';keys=[]
@@ -165,11 +145,9 @@ class CacheTiers:
             yield ticket;begin=self.env.now
             chunk=self.s['io_chunk_KiB']*1024;full=int(nbytes//chunk);tail=nbytes-full*chunk
             if tier=='ssd':
-                if self.fit:model=self.fit['io'][op]
-                else:model=dict(family='affine',coefficients=[self.s['ssd_'+op+'_latency_us']/1000,1/self.s['ssd_'+op+'_GBps']])
+                model=dict(family='affine',coefficients=[self.s['ssd_'+op+'_latency_us']/1000,1/self.s['ssd_'+op+'_GBps']])
                 duration=full*latency_ms(model,chunk)+(latency_ms(model,tail) if tail else 0)
-                extrapolated=bool(self.fit and ((full and not model['min_bytes']<=chunk<=model['max_bytes']) or (tail and not model['min_bytes']<=tail<=model['max_bytes'])))
-                if extrapolated:counter['extrapolated_io_events']+=1
+                extrapolated=False
             else:
                 bw=self.s['pcie_GBps'] if tier=='pcie' else self.c[model_phase]['hardware']['dram_bandwidth_TBps']*1000*self.c[model_phase]['tp']*self.c[model_phase]['pp']*self.c[model_phase]['ep']
                 latency=self.s['pcie_latency_us']/1000 if tier=='pcie' else 0
@@ -315,7 +293,7 @@ class CacheTiers:
 
     def summary(self,rows):
         st=dict(self.stats);st['hit_fraction']=st.get('hit_blocks',0)/max(1,st.get('eligible_blocks',0));st['reused_fraction']=st.get('reused_tokens',0)/sum(r['input_length'] for r in rows)
-        dataset=fit_dataset();source=self.s['source_id'];unique=len({key for row in rows for key in self.keys(row)});references=sum(len(self.keys(row)) for row in rows);potential=max(0,(references-unique)/max(1,references))
+        dataset=hit_fit_dataset();source=self.s['source_id'];unique=len({key for row in rows for key in self.keys(row)});references=sum(len(self.keys(row)) for row in rows);potential=max(0,(references-unique)/max(1,references))
         forecast=None
         effective_capacity=max(self.capacity.values()) if self.layout['kind'] in ('inclusive','write-through') else sum(self.capacity.values())
         if dataset and source in dataset['hit']:
@@ -330,10 +308,10 @@ class CacheTiers:
             ssd_transfer_mode=self.s['ssd_transfer_mode'],disk_min_uses=self.s['disk_min_uses'],max_inflight_publications=self.s['max_inflight_publications'],
             profile=self.s['profile'],block_tokens=512,block_bytes=self.block_bytes,per_gpu_block_bytes=self.per_gpu_block_bytes,
             capacity_blocks=self.capacity,peak_blocks=dict(self.peaks),evictions=dict(self.evictions),admission_drops=dict(self.drops),
-            stats=st,snapshots=self.snapshots,hit_forecast=forecast,fit=dataset if self.fit else None,
+            stats=st,snapshots=self.snapshots,hit_forecast=forecast,timing_evidence='configured-assumptions-not-request-trace-measurements',
             workload_source=dict(id=source,label=self.s['source_label'],sha256=self.s['source_sha256'],source_file_sha256=self.s.get('source_file_sha256'),source_revision=self.s.get('source_revision'),requests=len(rows),classification='simulated-replay' if self.s['workload'] else 'generated-scenario'),
             limitations=[
-                'Local I/O fit measures warm buffered file reads and fsync writes on macOS, not raw SSD service, a production GPU server or Mooncake end-to-end performance.',
+                'Published request traces provide arrivals, token lengths and prefix identities, not measured SSD, DRAM, GDS or host-GPU service time. All storage and transfer timing uses configured assumptions with no measured error bound.',
                 'Dynamo-style policy is an approximation: independent LRU copies and a non-decaying request-reference disk filter, without Dynamo LFU aging, priorities or NIXL kernels.',
                 'GDS timing is configured startup + max(storage service, direct-link service); no measured GDS accuracy claim. No host relay or additional host-GPU copy is charged for direct GPU-SSD transfers.',
                 'Background publication retains its prefill source until publication and handoff both complete. Placement commits are serialized; background copies can overlap GPU computation and independent restores.',

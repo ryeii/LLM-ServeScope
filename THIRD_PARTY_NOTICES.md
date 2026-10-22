@@ -90,12 +90,13 @@ are also retained under `licenses/` and copied into the Pages deployment. Their 
 revisions are documented in `docs/configuration.md` and
 `docs/model-sources.json`. No model weights are distributed.
 
-## Mooncake storage benchmark and workload traces
+## Mooncake published request traces
 
-The pinned benchmark sources and request dumps are by the Mooncake contributors,
-under Apache License 2.0. See `third_party/mooncake-storage/manifest.json` and
-`third_party/mooncake-traces/manifest.json` for source revisions and SHA-256 hashes.
-The licenses and upstream documentation are retained with each archive.
-ServeScope’s local measurement harness, fitted functions, policy-replay study,
-KV-tier behavioral model and serving/UI integration are by ryeii (Ryan Z An).
-No Mooncake end-to-end validation or device-performance claim is inherited.
+The unchanged published request dumps are by the Mooncake contributors under
+Apache License 2.0. Source revisions and SHA-256 hashes are recorded in
+`third_party/mooncake-traces/manifest.json`; the license and upstream trace
+documentation are retained in that archive. These provide request arrivals,
+token lengths and prefix identities, not measured device-service timings.
+ServeScope's trace-policy replay, prefix-reuse fitting, KV-tier model and
+serving/UI integration are by ryeii (Ryan Z An). Storage and transfer timings
+are configured assumptions; no Mooncake hardware-performance claim is inherited.
