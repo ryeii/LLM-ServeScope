@@ -35,10 +35,14 @@ export async function inputHelpScenario(page: Page) {
         "data-input-help-label",
         (await control.getAttribute("aria-label"))!,
       );
+      await expect(help.locator("h3")).toBeVisible();
+      await expect(help.locator("p")).toHaveCount(1);
+      expect(
+        (await help.locator("p").innerText()).split(/\s+/).length,
+      ).toBeLessThanOrEqual(30);
       await expect(
-        help.getByRole("heading", { name: "What it changes", exact: true }),
-      ).toBeVisible();
-      await expect(help).toContainText("Evidence & assumptions");
+        help.locator("h4,.input-help-value,.input-help-hint"),
+      ).toHaveCount(0);
       await expect(help).not.toContainText("A configurable scenario input.");
       await expect(control).toHaveAttribute(
         "aria-describedby",
@@ -54,27 +58,25 @@ export async function inputHelpScenario(page: Page) {
   await clock.scrollIntoViewIfNeeded();
   await clock.focus();
   await expect(help).toContainText("Prefill · Compute clock scale");
-  await expect(help).toContainText("saturated decoder");
+  await expect(help.locator("p")).toHaveText(
+    "A multiplier on tensor/vector compute peaks for the selected pool; 2× represents twice the modeled compute rate.",
+  );
   await clock.fill("");
   await expect(clock).toHaveValue("");
-  await expect(help.locator(".input-help-value strong")).toContainText(
-    "Editing…",
-  );
   await clock.fill("2");
-  await expect(help.locator(".input-help-value strong")).toHaveText("2 ×");
+  await expect(clock).toHaveValue("2");
   await page.keyboard.press("Escape");
   await expect(clock).toHaveValue("2");
   await page.getByRole("button", { name: "Decode pool", exact: true }).click();
   await clock.hover();
   await expect(help).toContainText("Decode · Compute clock scale");
-  await expect(help.locator(".input-help-value strong")).toHaveText("1 ×");
+  await expect(clock).toHaveValue("1");
   await page.keyboard.press("Escape");
   await page
     .getByLabel("Prefix reuse assumption", { exact: true })
     .selectOption("conversation");
   await page.getByLabel("Prefix reuse assumption", { exact: true }).hover();
-  await expect(help).toContainText("37.33%");
-  await expect(help).toContainText("12,031 requests");
+  await expect(help).toContainText("KV is assumed already ready in HBM");
   await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: "Customize architecture", exact: true })
@@ -84,9 +86,8 @@ export async function inputHelpScenario(page: Page) {
     .getByRole("button", { name: "Reset scenario", exact: true })
     .click();
   await page.getByRole("button", { name: "Prefill pool", exact: true }).click();
-  await page.getByLabel("Memory bandwidth", { exact: true }).hover();
-  await expect(help).toContainText("Prefill · Memory bandwidth");
-  await expect(help).toContainText("Slower prefill can lower observed TPOT");
+  await clock.hover();
+  await expect(help).toContainText("Prefill · Compute clock scale");
   if (!process.env.SERVESCOPE_SKIP_SCREENSHOTS)
     await page.screenshot({
       path:
@@ -118,9 +119,6 @@ export async function inputHelpScenario(page: Page) {
       .click();
     await page.getByLabel("Native memory capacity", { exact: true }).hover();
     await expect(help).toContainText("binary GiB");
-    await expect(help).toContainText(
-      "preserving recorded kernel-latency profiles",
-    );
   }
   expect(errors).toEqual([]);
 }

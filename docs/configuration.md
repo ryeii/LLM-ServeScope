@@ -4,11 +4,8 @@ These options belong to the behavioral engine. Peak specifications are inputs to
 our equations; they are not measured LLMServingSim operation profiles. Native
 simulation retains its own supported model/hardware selectors.
 
-Hover or keyboard-focus any input value for its meaning, current value and units,
-effect on calculations, and evidence or modeling assumption. Pool-specific help
-identifies Prefill or Decode. Cards follow live edits; they do not change the
-completed results until **Run scenario**. Press Esc or move away to dismiss.
-Numeric editing, dropdown choices and toggles keep their standard behavior.
+Hover or keyboard-focus any input value for a short definition.
+Pool-specific tooltips identify Prefill or Decode; press Esc to dismiss.
 See an [example input explanation](screenshots/input-help.png).
 
 ## Accelerator presets

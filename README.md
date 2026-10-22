@@ -79,11 +79,8 @@ outside closes the cascade. On narrow screens, one card is shown at a time.
 Explanations use the completed run, so pending edits do not change its derivation. Changed inputs
 are applied only when **Run scenario** is selected.
 
-Hover or keyboard-focus a scenario input to see its current value, meaning,
-effect on the model, and evidence or assumption. This covers numeric fields,
-selectors, toggles, custom model geometry and native-reference inputs. Pool-specific
-cards identify Prefill or Decode; input explanations follow live edits, while
-result explanations continue to use the completed run. Press Esc to dismiss help.
+Hover or keyboard-focus any scenario value for a short definition.
+Pool-specific tooltips identify Prefill or Decode; press Esc to dismiss.
 
 ## How a scenario becomes a result
 

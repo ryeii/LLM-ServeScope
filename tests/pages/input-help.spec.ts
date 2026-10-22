@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
 import { inputHelpScenario } from "../input-help-scenario";
-test("Pages explains every scenario input with pool context, provenance and accessible hover/focus", async ({
+test("Pages gives every input a concise definition with accessible hover and focus", async ({
   page,
 }) => inputHelpScenario(page));

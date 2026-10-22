@@ -9,7 +9,6 @@ type Active = {
   value: string;
   unit: string;
   anchor: DOMRect;
-  note: string;
 };
 const selector =
   '.sidebar input:not([type="file"]), .sidebar select, .sidebar [data-input-help], .native-form input, .native-form select';
@@ -35,7 +34,6 @@ function snapshot(element: Control): Active {
     value,
     anchor: element.getBoundingClientRect(),
     unit: element.closest("label")?.querySelector("small")?.textContent || "",
-    note: element.closest("label")?.getAttribute("data-input-tip") || "",
   };
 }
 
@@ -197,7 +195,7 @@ export default function ScenarioInputHelp(context: InputHelpContext) {
 
   if (!active) return null;
   const help = inputExplanation(active.label, context);
-  const width = Math.min(410, window.innerWidth - 24);
+  const width = Math.min(340, window.innerWidth - 24);
   const rightFits = active.anchor.right + 12 + width <= window.innerWidth - 12;
   const left = rightFits
     ? active.anchor.right + 12
@@ -208,10 +206,10 @@ export default function ScenarioInputHelp(context: InputHelpContext) {
   // On narrow screens, place help above/below the control rather than over it.
   const below = Math.max(0, window.innerHeight - active.anchor.bottom - 24);
   const above = Math.max(0, active.anchor.top - 24);
-  const placeBelow = below >= Math.min(390, above);
+  const placeBelow = below >= Math.min(160, above);
   const height = rightFits
-    ? Math.min(480, window.innerHeight - 24)
-    : Math.min(390, Math.max(96, placeBelow ? below : above));
+    ? Math.min(160, window.innerHeight - 24)
+    : Math.min(160, Math.max(96, placeBelow ? below : above));
   const top = rightFits
     ? Math.max(
         12,
@@ -234,23 +232,7 @@ export default function ScenarioInputHelp(context: InputHelpContext) {
       }}
     >
       <h3>{help.title}</h3>
-      <div className="input-help-value">
-        <span>Current input</span>
-        <strong>
-          {active.value}
-          {active.unit ? " " + active.unit : ""}
-        </strong>
-      </div>
       <p>{help.meaning}</p>
-      <h4>What it changes</h4>
-      <p>{help.effect}</p>
-      {active.note && <p>{active.note}</p>}
-      <h4>Evidence & assumptions</h4>
-      <p>{help.evidence}</p>
-      <div className="input-help-hint">
-        Editable inputs explain the current scenario. Results update after Run
-        scenario. Esc closes this explanation.
-      </div>
     </section>,
     document.body,
   );
