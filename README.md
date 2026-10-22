@@ -32,8 +32,7 @@ is not. Hardware inputs and assumptions remain visible and exportable.
 A request arrives, forms a microbatch, passes through chunked prefill, optionally
 transfers its KV cache, and completes decode iterations. SimPy models queueing,
 replica admission, pipeline stages, shared resources and KV-transfer contention.
-Fitted GPU operator times include the kernels’ compute/HBM interaction. Separate
-models cover KV transfers, cache policies, memory admission and network links;
+Fitted GPU operator times include the kernels’ compute/HBM interaction. Separate analytical models cover inter-GPU transfers and network links;
 SimPy determines when their work can run and how long it queues.
 
 - Nine GPU presets plus custom hardware: A100, A40, H100, H200, B200, L40S,
@@ -43,9 +42,8 @@ SimPy determines when their work can run and how long it queues.
   availability does not imply measured timing coverage for every model/GPU pair.
 - Independent prefill/decode hardware, TP/PP/EP, replicas, engine-efficiency
   policies, batch caps, active-batch limits and memory reservations.
-- Independent retained-prefix policies and active decode KV placement: HBM, DRAM,
-  SSD, HBM + DRAM spill or HBM + SSD spill. Explicit staging, admission and
-  shared I/O queues; [model and validation scope](docs/active-kv-model.md).
+- HBM-resident KV only. Optional Mooncake-derived prefix-reuse potential reduces
+  prefill query work while preserving full attention context; no-reuse is the default.
 - Separate weight/KV precision, chunk sizes, hierarchical fabrics, parallel KV
   links, power assumptions and GPU-hour cost inputs.
 
@@ -58,7 +56,6 @@ SimPy determines when their work can run and how long it queues.
 | Roofline      | Compute/memory ceilings and per-operation arithmetic intensity and attainment                                                                      |
 | Layer / chunk | Per-operation compute, memory, network and service costs; CSV export                                                                               |
 | Box graph     | Simulated pipeline/resource timeline and request-latency distributions                                                                             |
-| KV storage    | Independent active-KV and retained-prefix residency, backing capacity, reads/writes, cache reuse and I/O queues |
 | Model graph   | Interactive representative computation DAG with KV and residual branches                                                                           |
 | Configuration | Complete resolved inputs, source revisions, assumptions and SHA-256 fingerprint                                                                    |
 
@@ -85,13 +82,12 @@ are applied only when **Run scenario** is selected.
 ## How a scenario becomes a result
 
 **Inputs → service-time estimates → resource scheduling → request timestamps → metrics.**
-GPU functions estimate operation service, link/storage functions estimate transfers,
-and SimPy schedules those operations on shared resources. A busy GPU, link or
-backing store adds waiting. Completion times emerge from that schedule.
+GPU functions estimate operation service, analytical network functions estimate transfers,
+and SimPy schedules those operations on shared resources. A busy GPU or link adds waiting. Completion times emerge from that schedule.
 
-![How model inputs, service estimates and scheduling produce generation throughput](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/calculation-process.png?v=7fd8f61d14bd)
+![How model inputs, service estimates and scheduling produce generation throughput](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/calculation-process.png?v=eebe690e9974)
 
-The archived no-retention reference scenario (`examples/default-scenario.json`)
+The default no-reuse scenario (`examples/default-scenario.json`)
 has 16 requests, four requests per batch, 2,048 input tokens
 and 64 output tokens. Request #12 follows this path:
 
@@ -127,33 +123,19 @@ numbers down to individual GPU services, FIFO waits and the KV-transfer formula.
 It includes an actual batch timeline, source-linked equations and a
 [reproducible numeric breakdown](docs/results-explained/numbers.json).
 
-## Which timing model is used where?
+## Evidence and scope
 
-| Component | Data/model | When it contributes time |
+| Component | Evidence | Boundary |
 | --- | --- | --- |
-| GPU kernels | Functions fitted separately to KAIST BF16 and Microsoft Vidur FP16 profiles | Prefill and decode; internal HBM effects are already included |
-| SSD reads/writes | Configured latency and bandwidth assumptions; no measured timing error bound | Simulated SSD operations for retained prefixes or active decode KV |
-| Host–GPU transfers and explicit HBM copies | Configured effective bandwidth and latency | KV restore, publication, spill or active backing transfers |
-| Direct SSD–GPU transfers (GDS) | Configured startup + max(storage service, direct-link service); no measured GDS calibration | GPU–SSD transfers when the direct path is selected |
-| Collectives and KV handoff | Analytical network functions and configured topology | Communication inside/between GPU pools |
-| Admission and resource waits | SimPy queues, dependencies and capacity limits | When work cannot yet acquire the resources it needs |
+| GPU operator timing, including internal HBM behavior | Functions fitted to KAIST BF16 and Vidur FP16 profiles | Cross-validation measures kernel-time prediction error, not whole-serving accuracy |
+| Prefix-reuse potential | Exact earlier-arrival prefix counts from Mooncake's published request traces | Optional workload assumption; ready HBM residency and transfer to another workload are unvalidated |
+| Scheduling and network | SimPy dependencies and configured analytical network functions | Behavioral assumptions; no general measured end-to-end error guarantee |
+| Memory, utilization, energy and cost | Geometry, resource accounting, power/cost inputs | Estimates; GPU timing residuals do not validate these outputs |
 
-The default uses **active decode KV in HBM, a Dynamo-style tiered prefix cache,
-asynchronous publication and direct SSD–GPU transfers through GDS**. Prefixes
-are restored into HBM before computation; the default does not stream attention
-KV from SSD every token. Host staging and the original cache policies remain
-selectable. This is an independent approximation of selected NVIDIA Dynamo ideas,
-without its complete scheduler or policy semantics.
-[Default behavior, equations, differences and reproduction](docs/dynamo-alignment.md).
-
-SSD, host–GPU and GDS timing are **configured assumptions**, not functions fitted
-to Mooncake data. Mooncake contributes only its published request traces:
-arrivals, token lengths and prefix identities. Those traces contain no device
-service times. Kernel HBM costs remain inside fitted GPU operator service.
-
-Overview now shows **Executed resource service**, including storage and explicit
-transfers. **Nominal GPU resource work** remains an expandable analytical
-diagnostic. Parallel resource times cannot be summed to obtain request latency.
+All active KV stays in HBM. The unsupported SSD, offload, tiering and cache-I/O
+subsystem has been removed. Old exports containing its settings fail validation
+rather than silently receiving different semantics. The GPU fitted payload and
+its validation artifacts are unchanged.
 
 ## Fitted GPU service-time model
 
@@ -199,60 +181,26 @@ The [current serving integration recheck](docs/accuracy-2026-10-19/README.md#ser
 reports 4.83% mean throughput difference from nine native simulator references;
 this is separate evidence from operator CV and from physical GPU serving accuracy.
 
-## Published Mooncake request traces and storage assumptions
+## Mooncake-derived prefix reuse
 
-ServeScope uses **Mooncake's published FAST'25 request traces only**. Conversation
-contains 12,031 requests; tool/agent 23,608; upstream synthetic 3,993. The unchanged
-JSONL supplies arrival timestamps, input/output lengths and 512-token prefix hashes.
-It does not supply SSD read/write timings, transfer events, observed cache hits,
-completion times or the original token IDs/text.
+Under **Model & workload → Prefix reuse assumption**, choose **No reuse** (default)
+or a published Mooncake source. Its full-trace input-token-weighted reuse potential
+is **37.33% conversation**, **57.02% tool/agent**, or **65.04% synthetic**.
+We count only matching complete leading blocks from strictly earlier arrivals,
+with cold initial history and unlimited retention. These are descriptive workload
+statistics, not measured hardware hits or a validated cache policy.
 
-Trace replay preserves arrival differences and original lengths. Ready prefixes
-change executed prefill work, and the selected cache policy determines simulated
-hits and transfers. Storage and transfer service still require **explicit configured
-bandwidth and latency assumptions**. There is no measured SSD, DRAM, GDS or
-host–GPU timing accuracy claim. GPU fitting to KAIST/Vidur profiles is separate.
+ServeScope applies the selected fraction uniformly to the configured prompt length,
+assumes reused KV is already ready in HBM, and evaluates the remaining prefill queries
+against their full attention context. Decode context and KV capacity remain complete.
+This is a warm-input scenario assumption, not replay of Mooncake's original requests.
+It is not a universal reuse percentage or guaranteed speedup.
 
-[Published-trace coverage and timing equations](docs/storage-model.md) ·
-[Source manifest and checksums](third_party/mooncake-traces/manifest.json) ·
-[Trace-only prefix-reuse study](docs/trace-reuse/README.md).
+[Source counts, method, feasibility limits and reproduction](docs/prefix-reuse/README.md) ·
+[Source manifest](third_party/mooncake-traces/manifest.json) ·
+[Audited summary](backend/prefix-reuse.json).
 
-Import the [published conversation example](examples/mooncake-conversation-scenario.json)
-to replay the first four source records unchanged. Its
-[result summary](examples/mooncake-conversation-result-summary.json) distinguishes
-source workload fields from modeled results.
-
-### Independent active KV and retained prefixes
-
-- **Active decode KV** belongs to an ongoing request. Choose HBM, host DRAM, SSD,
-  HBM + DRAM spill or HBM + SSD spill. Offload adds initialization, per-step reads,
-  append writes, staging capacity and backing admission. Prefill working KV remains
-  in HBM. The serialized offload composition is **not end-to-end calibrated** by
-  request traces or device measurements; see [model and limitations](docs/active-kv-model.md).
-- **Retained prefixes** can survive completed requests and save later prefill work.
-  Choose no retention, HBM-only, DRAM-only, SSD-only, directional spill or inclusive
-  copies. Ready hits reduce query work while preserving full attention context;
-  publication is asynchronous by default, with blocking mode available. See
-  [cache policy details](docs/configuration.md#cache-layouts-and-eviction-spill).
-- **KV I/O paths** configure the shared SSD and host–GPU timing assumptions. Both
-  lifetimes contend for those physical queues, with separate counters. Host DRAM
-  currently uses the configured effective host–GPU path, not its own fitted
-  DRAM service function. Explicit HBM copies and kernel HBM behavior do not share
-  a detailed bandwidth-contention model.
-
-Choose **Load cache demo**, then **Run scenario** for a synthetic example. Import
-unchanged Mooncake JSONL or load a bundled published trace window; source identity,
-relative arrivals and original token lengths remain in exports. The resulting
-serving and storage intervals are simulated, not captured Mooncake hardware events.
-Fixed uniform batches support one replica per pool; variable-length replay requires
-batch size one. Layout changes preserve workload and batch settings.
-
-Cache-hit forecasts have a different target: **1,260 trace-replayed LRU curve
-observations**, rather than measured hardware hits. Nested held-region MAE is
-1.27 percentage points for conversation, 3.79 for tool/agent and 0.53 for synthetic
-traces. Runtime hits come from executed cache state, never from those fitted
-forecasts. [Trace-only sources, methods and held-out results](docs/trace-reuse/README.md)
-are separate from the uncalibrated storage and transfer timing assumptions.
+![Mooncake earlier-arrival reuse potential](https://ryeii.github.io/LLM-ServeScope/prefix-reuse/reuse-potential.png)
 
 ## Limitations: behavioral, not mechanistic simulation
 
@@ -293,8 +241,8 @@ instruction-, cycle-, page- or transaction-level behavior is the question.
 ### LLM-ServeScope — ryeii (Ryan Z An)
 
 [ryeii (Ryan Z An)](https://github.com/ryeii) created LLM-ServeScope, including
-its behavioral serving model, GPU and prefix-reuse fitting/validation pipelines,
-published-request replay, KV-tier integration, scenario controls, visualizations,
+its behavioral serving model, GPU fitting/validation pipeline, published-trace
+prefix-reuse analysis, scenario controls, visualizations,
 request-timestamp explanations, user interface, browser execution layer and
 native backend integration.
 
@@ -341,8 +289,7 @@ its end-to-end accuracy claims.
 
 [Mooncake](https://github.com/kvcache-ai/Mooncake) supplies the unchanged published
 request traces, with the Apache 2.0 license and source checksums retained in the
-[trace archive](third_party/mooncake-traces). Trace-policy replay, prefix-reuse
-fitting and ServeScope integration are by [ryeii (Ryan Z An)](https://github.com/ryeii).
+[trace archive](third_party/mooncake-traces). Published-trace prefix-reuse analysis and ServeScope integration are by [ryeii (Ryan Z An)](https://github.com/ryeii).
 The request traces provide workload evidence, not hardware timing measurements.
 
 ### Scheduling and browser runtime — SimPy and Pyodide

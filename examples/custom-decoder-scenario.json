@@ -134,5 +134,6 @@
     "max_context": 40960,
     "tie_embeddings": true,
     "qk_norm": false
-  }
+  },
+  "prefix_reuse_source": "none"
 }

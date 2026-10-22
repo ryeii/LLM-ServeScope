@@ -5,7 +5,6 @@ const views = [
   "Roofline",
   "Layer / chunk",
   "Box graph",
-  "KV storage",
   "Model graph",
   "Configuration",
 ];

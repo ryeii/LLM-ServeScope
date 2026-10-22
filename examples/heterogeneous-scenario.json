@@ -116,5 +116,6 @@
     "spine_latency_us": 10.0,
     "handoff_channels": 2
   },
-  "kv_precision": "fp8"
+  "kv_precision": "fp8",
+  "prefix_reuse_source": "none"
 }

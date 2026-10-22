@@ -1,12 +1,12 @@
 # How ServeScope turns a serving scenario into a result
 
-The quoted values describe the **archived no-retention reference run** in `examples/default-result.json`, not measured inference on an H100. Import `examples/default-scenario.json` to reproduce it. The current default adds [Dynamo-style prefix caching, asynchronous publication and a GDS path](dynamo-alignment.md); its timestamps can differ. A **timestamp** locates an event on the simulation clock; a **duration** measures an interval. The clock starts at the first generated request, at 0 ms. A request arriving at 1,500 ms has not spent 1,500 ms waiting in the server.
+The quoted values describe the **current default no-reuse run** in `examples/default-result.json`, not measured inference on an H100. Import `examples/default-scenario.json` to reproduce it. A **timestamp** locates an event on the simulation clock; a **duration** measures an interval. The clock starts at the first generated request, at 0 ms. A request arriving at 1,500 ms has not spent 1,500 ms waiting in the server.
 
 The key dependency is:
 
 **inputs → estimated operation/link service times → shared-resource schedule → request completion times → reported metrics.**
 
-![Process connecting workload, service estimates and scheduling to throughput](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/calculation-process.png?v=7fd8f61d14bd)
+![Process connecting workload, service estimates and scheduling to throughput](https://ryeii.github.io/LLM-ServeScope/docs/results-explained/calculation-process.png?v=eebe690e9974)
 
 ## 1. What is in this example?
 
@@ -171,18 +171,14 @@ The prompt tokens are not part of this numerator. The prefill-produced first tok
 
 `base_result` is a **unit-conversion helper in the hover interface**, not a model stage or a fitted coefficient. For this horizon it means the already-calculated 5,486.646698 ms before multiplication by 0.001 to display seconds. Elsewhere the same helper converts bytes to GB or fractions to percentages. It consumes no simulated time and adds no new physical assumption.
 
-## 7. What changes with KV storage enabled?
+## 7. What changes with a prefix-reuse assumption?
 
-The quoted run uses the original HBM-only path. [Retained prefixes](configuration.md#cache-layouts-and-eviction-spill) can add prefix lookup, restore, publication and spill, while reducing uncached prefill work. [Active decode KV offload](active-kv-model.md) can add backing admission, initialization and per-step reads/appends. Both paths share configured I/O queues but have separate lifetimes and counters. Their detailed explanation paths expose those extra steps.
+The default has no reuse. An optional Mooncake-derived fraction specifies how
+many prompt tokens already have ready KV in HBM. Only remaining queries execute
+prefill; attention still reads the full preceding context. Decode length, KV
+capacity and handoff payload remain complete. The source trace does not supply
+these scenario completions or a measured cache hit rate. No physical cache policy
+or cache transfer is modeled. [Source analysis and scope](prefix-reuse/README.md).
 
-A stage-reservation interval can contain nested I/O intervals. Do not add the parent GPU-stage duration and the same child storage durations again. The figures here avoid that problem by using the default non-offloaded path and one pipeline stage. Nor should nominal Compute/Memory/Network demand bars be treated as a measured decomposition of elapsed time.
-
-## Reproduce these figures and numbers
-
-[Machine-readable breakdown](results-explained/numbers.json) · [Figure generator](../scripts/explain-results.py) · [Time definitions in the hover](../src/derivations.ts) · [Display-unit conversion](../src/calculations.ts) · [SimPy schedule](../backend/model.py)
-
-```bash
-.venv-sim/bin/python -B scripts/explain-results.py
-```
-
-The generator reads the exported run and checks that spans reconstruct completion, service plus queueing reconstructs each phase, the horizon equals the latest completion and throughput uses the completed output token count. It produces PNG and SVG figures. These are explanatory plots of simulated events, not additional hardware calibration.
+Nominal Compute/Memory/Network demand bars are analytical diagnostics, not a
+measured decomposition of elapsed GPU service.

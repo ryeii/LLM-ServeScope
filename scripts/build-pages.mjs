@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(root);
-execFileSync(process.execPath,["scripts/prepare-storage-assets.mjs"],{stdio:"inherit"});
+execFileSync(process.execPath,["scripts/prepare-evidence-assets.mjs"],{stdio:"inherit"});
 const base = process.env.SERVESCOPE_BASE_PATH || "/LLM-ServeScope/";
 if (!base.startsWith("/") || !base.endsWith("/"))
   throw new Error("SERVESCOPE_BASE_PATH must begin and end with /.");
@@ -49,11 +49,8 @@ for (const name of [
   "calibration.py",
   "gpu_functions.py",
   "gpu-fit.json",
-  "storage.py",
-  "kv_transfer.py",
-  "active_kv.py",
   "prefix_reuse.py",
-  "prefix-hit-fit.json",
+  "prefix-reuse.json",
 ])
   copy(`backend/${name}`, `${output}/python/backend/${name}`);
 const wheel = "simpy-4.1.1-py3-none-any.whl";

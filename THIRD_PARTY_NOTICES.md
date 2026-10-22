@@ -47,17 +47,6 @@ GitHub Pages branch.
 - Historical CUDA/driver/clock details are incomplete. Profile-reference model
   presets preserve the profiler's padded vocabulary and documented geometry.
 
-## NVIDIA Dynamo and GPUDirect Storage — architectural references
-
-The Dynamo-style cache preset and GDS behavioral path are independently
-implemented by ryeii (Ryan Z An), informed by NVIDIA's
-[KVBM design](https://docs.nvidia.com/dynamo/v1.2.0/design-docs/component-design/kvbm-design),
-[configuration](https://docs.dynamo.nvidia.com/dynamo/v1.5.1/reference/components/kvbm-configuration)
-and [GDS design guide](https://docs.nvidia.com/gpudirect-storage/design-guide/index.html).
-This addition distributes no Dynamo/NIXL source code or measured Dynamo timing
-dataset. It is not an NVIDIA product, exact runtime reproduction or inherited
-performance validation. GDS timing is configured and uncalibrated.
-
 ## SimPy 4.1.1
 
 SimPy provides the discrete-event scheduling engine in local and browser editions.
@@ -97,6 +86,7 @@ Apache License 2.0. Source revisions and SHA-256 hashes are recorded in
 `third_party/mooncake-traces/manifest.json`; the license and upstream trace
 documentation are retained in that archive. These provide request arrivals,
 token lengths and prefix identities, not measured device-service timings.
-ServeScope's trace-policy replay, prefix-reuse fitting, KV-tier model and
-serving/UI integration are by ryeii (Ryan Z An). Storage and transfer timings
-are configured assumptions; no Mooncake hardware-performance claim is inherited.
+ServeScope's published-trace prefix-reuse analysis and
+serving/UI integration are by [ryeii (Ryan Z An)](https://github.com/ryeii).
+The optional reuse fraction is workload potential; ready HBM availability is an
+assumption, with no Mooncake hardware-performance claim inherited.

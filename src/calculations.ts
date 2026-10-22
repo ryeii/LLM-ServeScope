@@ -84,79 +84,6 @@ function metricBase(r: Obj, key: string): Calculation {
     v("T_s", "Simulation horizon", t, "s"),
   ];
   const title = metricNames[key] || key;
-  if (
-    r.storage &&
-    [
-      "throughput_tps",
-      "prompt_tps",
-      "tokens_per_gpu_s",
-      "tokens_per_joule",
-      "cost_per_million_tokens",
-    ].includes(key)
-  ) {
-    const input = key === "prompt_tps";
-    const total = input
-      ? r.workload_totals.input_tokens
-      : r.workload_totals.output_tokens;
-    return calc(
-      metricNames[key],
-      key === "tokens_per_joule"
-        ? "Tokens/J = Σ output_tokens / E"
-        : key === "tokens_per_gpu_s"
-          ? "Tokens/GPU-second = Σ output_tokens / (T_s × G)"
-          : key === "cost_per_million_tokens"
-            ? "Cost/million = Cost × 10⁶ / Σ output_tokens"
-            : `${input ? "Prompt" : "Generation"} throughput = Σ ${input ? "input" : "output"}_tokens / T_s`,
-      [
-        v(
-          input ? "Σ input_tokens" : "Σ output_tokens",
-          "Actual tokens in selected workload",
-          total,
-          "tokens",
-          () =>
-            calc(
-              "Per-request workload tokens",
-              "Total = Σ request lengths",
-              r.requests.map((q: Obj) =>
-                v(
-                  "request_" + q.id,
-                  `Request #${q.id}`,
-                  input ? q.input_tokens : q.output_tokens,
-                  "tokens",
-                ),
-              ),
-              total,
-              "tokens",
-              "Original selected workload lengths; no clipping or replacement.",
-            ),
-        ),
-        v("T_s", "Simulation horizon", t, "s"),
-        v("G", "Allocated GPUs", g),
-        v("E", "Estimated GPU energy", m.energy_j, "J"),
-        v("Cost", "GPU rental cost", m.cost_usd, "USD"),
-      ].filter(
-        (row) =>
-          row.symbol === (input ? "Σ input_tokens" : "Σ output_tokens") ||
-          (key === "tokens_per_joule"
-            ? ["E"]
-            : key === "tokens_per_gpu_s"
-              ? ["T_s", "G"]
-              : key === "cost_per_million_tokens"
-                ? ["Cost"]
-                : ["T_s"]
-          ).includes(row.symbol),
-      ),
-      m[key],
-      key === "tokens_per_joule"
-        ? "tokens/J"
-        : key === "tokens_per_gpu_s"
-          ? "tokens/GPU-second"
-          : key === "cost_per_million_tokens"
-            ? "USD/million tokens"
-            : "tokens/s",
-      "Storage-mode workload totals use actual request lengths. GPU energy excludes storage and host power.",
-    );
-  }
   if (key === "throughput_tps")
     return calc(
       title,
@@ -363,9 +290,7 @@ function metricBase(r: Obj, key: string): Calculation {
   return calc(
     title,
     key === "tpot_mean_ms"
-      ? r.storage
-        ? "TPOT_mean = Σᵢ [(finishᵢ − first_tokenᵢ) / max(1, L_out,ᵢ − 1)] / N"
-        : "TPOT_mean = Σᵢ [(finishᵢ − first_tokenᵢ) / max(1, L_out − 1)] / N"
+      ? "TPOT_mean = Σᵢ [(finishᵢ − first_tokenᵢ) / max(1, L_out − 1)] / N"
       : "TTFT_mean = Σᵢ (first_tokenᵢ − arrivalᵢ) / N",
     [
       v("N", "Completed requests", values.length),
@@ -376,9 +301,7 @@ function metricBase(r: Obj, key: string): Calculation {
         values.reduce((a: number, b: number) => a + b, 0),
         "ms",
       ),
-      ...(!r.storage
-        ? [v("L_out", "Output tokens per request", c.output_tokens)]
-        : []),
+      v("L_out", "Output tokens per request", c.output_tokens),
     ],
     m[key],
     "ms",
@@ -389,43 +312,6 @@ function metricBase(r: Obj, key: string): Calculation {
 }
 
 function memoryBase(r: Obj, phase: string, key: string): Calculation {
-  if (r.storage && ["kv_GB", "total_GB", "headroom_GB"].includes(key)) {
-    const mem = r.memory[phase];
-    return calc(
-      `${phase} ${key}`,
-      key === "kv_GB"
-        ? "KV_GB = peak_active_GB + peak_retained_GB + staging_GB"
-        : key === "total_GB"
-          ? "Total_GB = weights_GB + activation_GB + peak_active_GB + peak_retained_GB + staging_GB"
-          : "Headroom_GB = usable_capacity_GB − total_GB",
-      [
-        v(
-          "peak_active_GB",
-          "Peak pinned active-request KV",
-          mem.active_kv_GB,
-          "GB",
-        ),
-        v(
-          "peak_retained_GB",
-          "Peak retained prefix copies",
-          mem.retained_kv_GB,
-          "GB",
-        ),
-        v(
-          "staging_GB",
-          "Reserved active KV staging",
-          mem.staging_GB || 0,
-          "GB",
-        ),
-        v("weights_GB", "Model weights", mem.weights_GB, "GB"),
-        v("activation_GB", "Conservative workspace", mem.activation_GB, "GB"),
-        v("usable_capacity_GB", "Usable HBM capacity", mem.capacity_GB, "GB"),
-      ],
-      mem[key],
-      "GB",
-      "Peak active and peak retained values are combined conservatively; they need not occur at the same instant. A retained-cache reservation limits the active-memory container; queued requests allocate only when admitted.",
-    );
-  }
   const m = r.model,
     c = r.config,
     p = c[phase],

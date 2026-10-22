@@ -1,0 +1,385 @@
+{
+  "none": {
+    "metrics": {
+      "throughput_tps": 186.63494412484803,
+      "request_throughput": 2.9161710019507505,
+      "prompt_tps": 5972.318211995137,
+      "ttft_mean_ms": 1100.8406367187595,
+      "ttft_p95_ms": 1367.6902022758654,
+      "tpot_mean_ms": 39.17395335875785,
+      "latency_p95_ms": 4200.304252640163,
+      "elapsed_ms": 5486.646698460729,
+      "gpu_count": 8,
+      "energy_j": 18643.367000878345,
+      "tokens_per_joule": 0.054925700918281355,
+      "tokens_per_gpu_s": 23.329368015606004,
+      "cost_usd": 0.03657764465640486,
+      "cost_per_million_tokens": 35.72035610977037,
+      "gpu_utilization": 0.618142213277874
+    },
+    "prefix_reuse": {
+      "source": "none",
+      "fraction": 0,
+      "reused_tokens_per_request": 0,
+      "computed_tokens_per_request": 2048,
+      "effective_fraction": 0.0,
+      "evidence": null,
+      "payload_sha256": "9089b89aac98c4e431b8dfa0b897adc2c44b7ec78deda8501bd423b6016ae2c6",
+      "scope": "Trace-derived reuse potential applied uniformly. Cached prefixes are assumed already ready in HBM; no readiness, eviction or cache-policy simulation. This is not an observed hardware hit rate or validated end-to-end serving result."
+    },
+    "memory": {
+      "prefill": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.067108864,
+        "total_GB": 38.110892032,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.889107968,
+        "gpus": 4
+      },
+      "decode": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.000131072,
+        "total_GB": 38.04391424,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.95608576,
+        "gpus": 4
+      }
+    }
+  },
+  "conversation": {
+    "metrics": {
+      "throughput_tps": 194.27321832633305,
+      "request_throughput": 3.035519036348954,
+      "prompt_tps": 6216.742986442658,
+      "ttft_mean_ms": 672.0958488564042,
+      "ttft_p95_ms": 859.5958488564042,
+      "tpot_mean_ms": 45.889375145805076,
+      "latency_p95_ms": 4076.9224173564853,
+      "elapsed_ms": 5270.927247830538,
+      "gpu_count": 8,
+      "energy_j": 16734.681301702425,
+      "tokens_per_joule": 0.06119028988594053,
+      "tokens_per_gpu_s": 24.28415229079163,
+      "cost_usd": 0.03513951498553692,
+      "cost_per_million_tokens": 34.315932603063395,
+      "gpu_utilization": 0.5615879129460986
+    },
+    "prefix_reuse": {
+      "source": "conversation",
+      "fraction": 0.3733480812921142,
+      "reused_tokens_per_request": 764,
+      "computed_tokens_per_request": 1284,
+      "effective_fraction": 0.373046875,
+      "evidence": {
+        "label": "Conversation",
+        "origin": "production-sampled",
+        "source_file": "conversation_trace.jsonl",
+        "source_sha256": "b8cbb061a85206d729d91cdc2981f43c9e0d99209dce588d3af5f7934408b9df",
+        "requests": 12031,
+        "input_tokens": 144793823,
+        "reusable_tokens": 54058496,
+        "fraction": 0.3733480812921142,
+        "requests_with_reuse": 12021,
+        "unique_prefix_blocks": 170899,
+        "temporal_windows": [
+          {
+            "requests": 1714,
+            "input_tokens": 23826613,
+            "reusable_tokens": 6866432,
+            "fraction": 0.2881833015880184
+          },
+          {
+            "requests": 1880,
+            "input_tokens": 24469389,
+            "reusable_tokens": 8786432,
+            "fraction": 0.3590785205139368
+          },
+          {
+            "requests": 2012,
+            "input_tokens": 24215054,
+            "reusable_tokens": 9456128,
+            "fraction": 0.39050617025260403
+          },
+          {
+            "requests": 2083,
+            "input_tokens": 23210312,
+            "reusable_tokens": 9052672,
+            "fraction": 0.39002801858070674
+          },
+          {
+            "requests": 2153,
+            "input_tokens": 23648715,
+            "reusable_tokens": 9455616,
+            "fraction": 0.3998363547448561
+          },
+          {
+            "requests": 2189,
+            "input_tokens": 25423740,
+            "reusable_tokens": 10441216,
+            "fraction": 0.41068764863076795
+          }
+        ]
+      },
+      "payload_sha256": "9089b89aac98c4e431b8dfa0b897adc2c44b7ec78deda8501bd423b6016ae2c6",
+      "scope": "Trace-derived reuse potential applied uniformly. Cached prefixes are assumed already ready in HBM; no readiness, eviction or cache-policy simulation. This is not an observed hardware hit rate or validated end-to-end serving result."
+    },
+    "memory": {
+      "prefill": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.067108864,
+        "total_GB": 38.110892032,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.889107968,
+        "gpus": 4
+      },
+      "decode": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.000131072,
+        "total_GB": 38.04391424,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.95608576,
+        "gpus": 4
+      }
+    }
+  },
+  "toolagent": {
+    "metrics": {
+      "throughput_tps": 198.75540141450725,
+      "request_throughput": 3.1055531471016757,
+      "prompt_tps": 6360.172845264232,
+      "ttft_mean_ms": 553.2298416883691,
+      "ttft_p95_ms": 740.7298416883691,
+      "tpot_mean_ms": 45.889375145805076,
+      "latency_p95_ms": 3958.05641018845,
+      "elapsed_ms": 5152.061240662503,
+      "gpu_count": 8,
+      "energy_j": 15682.95487027965,
+      "tokens_per_joule": 0.06529381793609285,
+      "tokens_per_gpu_s": 24.844425176813406,
+      "cost_usd": 0.03434707493775002,
+      "cost_per_million_tokens": 33.54206536889651,
+      "gpu_utilization": 0.5284015253113988
+    },
+    "prefix_reuse": {
+      "source": "toolagent",
+      "fraction": 0.5702008480493188,
+      "reused_tokens_per_request": 1167,
+      "computed_tokens_per_request": 881,
+      "effective_fraction": 0.56982421875,
+      "evidence": {
+        "label": "Tool & agent",
+        "origin": "production-sampled",
+        "source_file": "toolagent_trace.jsonl",
+        "source_sha256": "48a2db1a13d3bc05e6330140c64f604ba366df20d3c9e128b5c35a01c1fa5f71",
+        "requests": 23608,
+        "input_tokens": 202940084,
+        "reusable_tokens": 115716608,
+        "fraction": 0.5702008480493188,
+        "requests_with_reuse": 23592,
+        "unique_prefix_blocks": 159983,
+        "temporal_windows": [
+          {
+            "requests": 3422,
+            "input_tokens": 32491486,
+            "reusable_tokens": 16270336,
+            "fraction": 0.5007569059783846
+          },
+          {
+            "requests": 3735,
+            "input_tokens": 33640546,
+            "reusable_tokens": 18846720,
+            "fraction": 0.5602382315673473
+          },
+          {
+            "requests": 4002,
+            "input_tokens": 34203712,
+            "reusable_tokens": 19863040,
+            "fraction": 0.5807276122544828
+          },
+          {
+            "requests": 4096,
+            "input_tokens": 33344408,
+            "reusable_tokens": 19654144,
+            "fraction": 0.5894284882790541
+          },
+          {
+            "requests": 4138,
+            "input_tokens": 33998593,
+            "reusable_tokens": 20026880,
+            "fraction": 0.5890502586386442
+          },
+          {
+            "requests": 4215,
+            "input_tokens": 35261339,
+            "reusable_tokens": 21055488,
+            "fraction": 0.5971267285113592
+          }
+        ]
+      },
+      "payload_sha256": "9089b89aac98c4e431b8dfa0b897adc2c44b7ec78deda8501bd423b6016ae2c6",
+      "scope": "Trace-derived reuse potential applied uniformly. Cached prefixes are assumed already ready in HBM; no readiness, eviction or cache-policy simulation. This is not an observed hardware hit rate or validated end-to-end serving result."
+    },
+    "memory": {
+      "prefill": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.067108864,
+        "total_GB": 38.110892032,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.889107968,
+        "gpus": 4
+      },
+      "decode": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.000131072,
+        "total_GB": 38.04391424,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.95608576,
+        "gpus": 4
+      }
+    }
+  },
+  "synthetic": {
+    "metrics": {
+      "throughput_tps": 200.46808520550996,
+      "request_throughput": 3.132313831336093,
+      "prompt_tps": 6414.978726576319,
+      "ttft_mean_ms": 509.21359956139656,
+      "ttft_p95_ms": 696.7135995613967,
+      "tpot_mean_ms": 45.88937514580508,
+      "latency_p95_ms": 3914.0401680614787,
+      "elapsed_ms": 5108.044998535532,
+      "gpu_count": 8,
+      "energy_j": 15293.499159940198,
+      "tokens_per_joule": 0.06695655384624248,
+      "tokens_per_gpu_s": 25.058510650688746,
+      "cost_usd": 0.03405363332357021,
+      "cost_per_million_tokens": 33.255501292549035,
+      "gpu_utilization": 0.5157206983425393
+    },
+    "prefix_reuse": {
+      "source": "synthetic",
+      "fraction": 0.6504309495925035,
+      "reused_tokens_per_request": 1332,
+      "computed_tokens_per_request": 716,
+      "effective_fraction": 0.650390625,
+      "evidence": {
+        "label": "Synthetic workload",
+        "origin": "synthetic",
+        "source_file": "synthetic_trace.jsonl",
+        "source_sha256": "bd070915a98fc0ed264d7cfef2ce746002eb3076a695ec31ba2674c0111ec131",
+        "requests": 3993,
+        "input_tokens": 61194628,
+        "reusable_tokens": 39802880,
+        "fraction": 0.6504309495925035,
+        "requests_with_reuse": 1761,
+        "unique_prefix_blocks": 40148,
+        "temporal_windows": [
+          {
+            "requests": 620,
+            "input_tokens": 7549867,
+            "reusable_tokens": 863744,
+            "fraction": 0.1144051941577249
+          },
+          {
+            "requests": 622,
+            "input_tokens": 7074808,
+            "reusable_tokens": 2071040,
+            "fraction": 0.2927344459383209
+          },
+          {
+            "requests": 683,
+            "input_tokens": 8897577,
+            "reusable_tokens": 4635648,
+            "fraction": 0.5210011669469115
+          },
+          {
+            "requests": 675,
+            "input_tokens": 10761035,
+            "reusable_tokens": 7422464,
+            "fraction": 0.6897537272204765
+          },
+          {
+            "requests": 678,
+            "input_tokens": 12301975,
+            "reusable_tokens": 10865152,
+            "fraction": 0.8832038758004305
+          },
+          {
+            "requests": 715,
+            "input_tokens": 14609366,
+            "reusable_tokens": 13944832,
+            "fraction": 0.9545131527268192
+          }
+        ]
+      },
+      "payload_sha256": "9089b89aac98c4e431b8dfa0b897adc2c44b7ec78deda8501bd423b6016ae2c6",
+      "scope": "Trace-derived reuse potential applied uniformly. Cached prefixes are assumed already ready in HBM; no readiness, eviction or cache-policy simulation. This is not an observed hardware hit rate or validated end-to-end serving result."
+    },
+    "memory": {
+      "prefill": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.067108864,
+        "total_GB": 38.110892032,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.889107968,
+        "gpus": 4
+      },
+      "decode": {
+        "resident_requests": 16,
+        "representative_batch": 4,
+        "weights_GB": 35.276853248,
+        "kv_GB": 2.76692992,
+        "activation_GB": 0.000131072,
+        "total_GB": 38.04391424,
+        "capacity_GB": 80.0,
+        "physical_capacity_GB": 80.0,
+        "runtime_reserved_GB": 0.0,
+        "memory_utilization": 1.0,
+        "headroom_GB": 41.95608576,
+        "gpus": 4
+      }
+    }
+  }
+}

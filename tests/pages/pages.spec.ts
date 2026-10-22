@@ -34,7 +34,7 @@ test("static Pages runs the same Python SimPy model without an API or external a
     await readFile((await (await download).path())!, "utf8"),
   );
   const local = JSON.parse(
-    await readFile("examples/dynamo-default-result.json", "utf8"),
+    await readFile("examples/default-result.json", "utf8"),
   );
   for (const [key, value] of Object.entries(local.metrics)) {
     expect(result.metrics[key], key).toBeCloseTo(value as number, 8);

@@ -38,11 +38,7 @@ import BehavioralGraph from "./ModelGraph";
 import FormulaValue, { RUN_CHANGED_EVENT } from "./FormulaValue";
 import RunComparison from "./RunComparison";
 import ResourceService from "./ResourceService";
-import StorageView, { StorageControls } from "./StorageView";
-import ActiveKVView, {
-  ActiveKVControls,
-  KVDeviceControls,
-} from "./ActiveKVView";
+import { PrefixReuseControls, PrefixReuseSummary } from "./PrefixReuse";
 import {
   intervalDerivation,
   explainCalculation,
@@ -104,7 +100,6 @@ const tabs = [
   ["roofline", "Roofline"],
   ["layers", "Layer / chunk"],
   ["boxes", "Box graph"],
-  ["storage", "KV storage"],
   ["graph", "Model graph"],
   ["configuration", "Configuration"],
   ["native", "LLMServingSim 2.0"],
@@ -451,11 +446,10 @@ function MemoryChart({ r }: { r: Obj }) {
         ))}
       </svg>
       <div className="subnote">
-        {r.active_kv
-          ? "HBM bars include active resident allocations, reserved staging and retained-prefix copies. Active backing storage is reported separately in KV storage. Peak components are combined conservatively."
-          : r.storage
-            ? "Active KV is pinned in HBM. Retained prefix copies use a separate per-GPU cache reservation; host/SSD tiers are shown in KV storage. Capacity bars combine peak active and peak retained KV conservatively."
-            : "KV remains resident in HBM; SRAM reduces modeled read traffic. Runtime reservations reduce usable capacity; allocator fragmentation is excluded."}
+        KV remains resident in HBM. Reused prefixes are assumed already
+        available within the full per-request KV allocation. Runtime
+        reservations reduce usable capacity; allocator fragmentation is
+        excluded.
       </div>
     </Chart>
   );
@@ -780,9 +774,7 @@ function BoxGraph({ r }: { r: Obj }) {
                   ? "#35a58a"
                   : e.phase === "decode"
                     ? "#6389d0"
-                    : e.phase === "storage"
-                      ? "#a17ac3"
-                      : "#ed9c55"
+                    : "#ed9c55"
               }
               opacity=".8"
             ></FormulaValue>
@@ -823,12 +815,6 @@ function BoxGraph({ r }: { r: Obj }) {
           <i style={{ background: "#ed9c55" }} />
           KV handoff
         </span>
-        {r.storage && (
-          <span>
-            <i style={{ background: "#a17ac3" }} />
-            KV storage / HBM admission
-          </span>
-        )}
       </div>
       <div className="subnote">
         Boxes show modeled resource occupancy, including memory and
@@ -1401,121 +1387,6 @@ function App() {
     setConfig((c: Obj | null) => ({ ...c, [k]: v }));
     setDirty(true);
   }
-  function activeKVChange(k: string, value: any) {
-    setConfig((c: Obj | null) => ({
-      ...c,
-      active_kv: { ...c!.active_kv, [k]: value },
-    }));
-    setDirty(true);
-  }
-  function storageChange(k: string, value: any) {
-    setConfig((c: Obj | null) => ({
-      ...c,
-      storage: {
-        ...c!.storage,
-        [k]: value,
-        ...(k === "ssd_transfer_mode" && value === "gds"
-          ? { profile: "manual" }
-          : {}),
-      },
-    }));
-    setDirty(true);
-  }
-  function selectStorageLayout(id: string) {
-    if (id === "disabled") {
-      enableStorage(false);
-      return;
-    }
-    const tiers: string[] = catalog!.storage_layouts[id].tiers;
-    setConfig((c: Obj | null) => {
-      const storage = { ...c!.storage, enabled: true, placement: id };
-      for (const tier of tiers) {
-        const key = tier + "_cache_GB";
-        if (!storage[key])
-          storage[key] = { hbm: 1, dram: 4, ssd: 32 }[
-            tier as "hbm" | "dram" | "ssd"
-          ];
-      }
-      return {
-        ...c,
-        storage,
-      };
-    });
-    setDirty(true);
-  }
-  function enableStorage(enabled: boolean) {
-    setConfig((c: Obj | null) => ({
-      ...c,
-      storage: { ...c!.storage, enabled },
-    }));
-    setDirty(true);
-  }
-  function loadCacheDemo() {
-    const c = clone(catalog!.default_config);
-    Object.assign(c, {
-      model_id: "llama8",
-      requests: 8,
-      input_tokens: 1024,
-      output_tokens: 2,
-      arrival_rate: 2,
-      batch_size: 1,
-    });
-    for (const ph of ["prefill", "decode"])
-      Object.assign(c[ph], { tp: 1, pp: 1, ep: 1, replicas: 1, batch_size: 1 });
-    Object.assign(c.storage, {
-      enabled: true,
-      placement: "ssd-only",
-      ssd_transfer_mode: "host-staged",
-      publication_mode: "blocking",
-      hbm_cache_GB: 0,
-      dram_cache_GB: 0,
-      ssd_cache_GB: 4,
-      source_id: "synthetic-demo",
-      source_label: "Generated repeated-prefix demonstration",
-      workload: [],
-    });
-    setConfig(c);
-    setDirty(true);
-    setTab("storage");
-  }
-  function applyDynamoSetup() {
-    setConfig((c: Obj | null) => ({
-      ...c,
-      active_kv: { ...c!.active_kv, placement: "hbm" },
-      storage: {
-        ...c!.storage,
-        enabled: true,
-        placement: "dynamo",
-        publication_mode: "async",
-        ssd_transfer_mode: "gds",
-        profile: "manual",
-        hbm_cache_GB:
-          c!.storage.hbm_cache_GB ||
-          catalog!.default_config.storage.hbm_cache_GB,
-        dram_cache_GB:
-          c!.storage.dram_cache_GB ||
-          catalog!.default_config.storage.dram_cache_GB,
-        ssd_cache_GB:
-          c!.storage.ssd_cache_GB ||
-          catalog!.default_config.storage.ssd_cache_GB,
-      },
-    }));
-    setDirty(true);
-  }
-  async function loadStorageWorkload(rows: Obj[], source: Obj) {
-    const candidate = {
-      ...config,
-      storage: { ...config!.storage, ...source, enabled: true, workload: rows },
-    };
-    try {
-      const result = await api("validate", candidate);
-      setConfig(result.config);
-      setDirty(true);
-      setError("");
-    } catch (e: any) {
-      setError(e.message);
-    }
-  }
   function pool(k: string, v: any) {
     update(editPhase, { ...config![editPhase], [k]: v });
   }
@@ -1946,20 +1817,13 @@ function App() {
                 ))}
               </select>
             </label>
-            <fieldset
-              className="trace-workload-fields"
-              disabled={config.storage?.workload?.length > 0}
-            >
+            <fieldset className="workload-fields">
               <Field
                 label="Input length"
                 value={config.input_tokens}
                 unit="tokens"
                 min={1}
-                max={
-                  config.storage?.enabled || config.storage?.workload?.length
-                    ? 131072
-                    : 32768
-                }
+                max={32768}
                 step={128}
                 onChange={(n) => update("input_tokens", n)}
               />
@@ -1968,11 +1832,7 @@ function App() {
                 value={config.output_tokens}
                 unit="tokens"
                 min={1}
-                max={
-                  config.storage?.enabled || config.storage?.workload?.length
-                    ? 4096
-                    : 256
-                }
+                max={256}
                 onChange={(n) => update("output_tokens", n)}
               />
               <Field
@@ -1991,33 +1851,10 @@ function App() {
                 onChange={(n) => update("arrival_rate", n)}
               />
             </fieldset>
-          </Section>
-          <Section title="Active decode KV">
-            <ActiveKVControls
-              active={config.active_kv}
-              placements={catalog.active_kv_placements}
-              Field={Field}
-              onChange={activeKVChange}
-            />
-          </Section>
-          <Section title="Retained prefixes">
-            <StorageControls
-              storage={config.storage || catalog.default_config.storage}
-              Field={Field}
-              onChange={storageChange}
-              onLayout={selectStorageLayout}
-              layouts={catalog.storage_layouts}
-              onDemo={loadCacheDemo}
-              onDynamo={applyDynamoSetup}
-              onWorkload={loadStorageWorkload}
-              onError={setError}
-            />
-          </Section>
-          <Section title="KV I/O paths">
-            <KVDeviceControls
-              storage={config.storage}
-              Field={Field}
-              onChange={storageChange}
+            <PrefixReuseControls
+              source={config.prefix_reuse_source}
+              evidence={catalog.prefix_reuse_evidence}
+              onChange={(source) => update("prefix_reuse_source", source)}
             />
           </Section>
           <Section title="Serving topology" initial>
@@ -2389,12 +2226,6 @@ function App() {
                   <ArrowRight size={13} />
                 </button>
               </div>
-              {tab === "storage" && (
-                <>
-                  <ActiveKVView r={r} />
-                  <StorageView r={r} onDemo={loadCacheDemo} />
-                </>
-              )}
               {tab === "overview" && (
                 <>
                   <div
@@ -2580,13 +2411,14 @@ function App() {
                             )}
                             %
                           </FormulaValue>
-                          . This is the analytical HBM-reference workload;
-                          external KV backing transfers are shown separately in
-                          Executed resource service.
+                          . This is an analytical traffic diagnostic; fitted GPU
+                          timings already include their profiled memory
+                          behavior.
                         </p>
                       </div>
                     </section>
                   </details>
+                  <PrefixReuseSummary r={r} />
                   <div className="economics-grid">
                     {[
                       {
@@ -3066,15 +2898,7 @@ function App() {
               target="_blank"
               rel="noreferrer"
             >
-              Published request traces: Mooncake
-            </a>
-            <a
-              className="footer-credit"
-              href="https://github.com/ai-dynamo/dynamo"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Cache architecture reference: NVIDIA Dynamo
+              Prefix-reuse workload evidence: Mooncake
             </a>
             <button onClick={() => setShowMethods(true)}>
               Model notes

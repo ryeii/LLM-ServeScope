@@ -1,5 +1,15 @@
 {
-  "schema_version": "servescope.behavioral.v3",
+  "schema_version": "servescope.behavioral.v7",
+  "prefix_reuse": {
+    "source": "none",
+    "fraction": 0,
+    "reused_tokens_per_request": 0,
+    "computed_tokens_per_request": 2048,
+    "effective_fraction": 0.0,
+    "evidence": null,
+    "payload_sha256": "9089b89aac98c4e431b8dfa0b897adc2c44b7ec78deda8501bd423b6016ae2c6",
+    "scope": "Trace-derived reuse potential applied uniformly. Cached prefixes are assumed already ready in HBM; no readiness, eviction or cache-policy simulation. This is not an observed hardware hit rate or validated end-to-end serving result."
+  },
   "calibration": {
     "mode": "calibrated",
     "operator_sources": [
@@ -1093,32 +1103,7 @@
     "output_tokens": 64,
     "arrival_rate": 8.0,
     "batch_size": 4,
-    "storage": {
-      "enabled": false,
-      "placement": "inclusive",
-      "profile": "manual",
-      "hbm_cache_GB": 0.125,
-      "dram_cache_GB": 0.25,
-      "ssd_cache_GB": 4.0,
-      "ssd_read_GBps": 3.0,
-      "ssd_write_GBps": 2.0,
-      "ssd_read_latency_us": 100.0,
-      "ssd_write_latency_us": 200.0,
-      "pcie_GBps": 24.0,
-      "pcie_latency_us": 10.0,
-      "io_chunk_KiB": 1024,
-      "block_tokens": 512,
-      "source_id": "synthetic-demo",
-      "source_label": "Generated repeated-prefix workload",
-      "workload": []
-    },
-    "active_kv": {
-      "placement": "hbm",
-      "hbm_resident_GB": 1.0,
-      "staging_GB": 0.0625,
-      "dram_total_GB": 128.0,
-      "ssd_total_GB": 1024.0
-    },
+    "prefix_reuse_source": "none",
     "prefill_chunk": 512,
     "separated": true,
     "prefill": {
@@ -50236,7 +50221,9 @@
         2475.6783098424726,
         2528.192599412138,
         2580.7072490782934
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 1,
@@ -50317,7 +50304,9 @@
         2475.6783098424726,
         2528.192599412138,
         2580.7072490782934
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 2,
@@ -50398,7 +50387,9 @@
         2475.6783098424726,
         2528.192599412138,
         2580.7072490782934
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 3,
@@ -50479,7 +50470,9 @@
         2475.6783098424726,
         2528.192599412138,
         2580.7072490782934
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 4,
@@ -50560,7 +50553,9 @@
         4558.74821026473,
         4611.269221635535,
         4663.79059310283
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 5,
@@ -50641,7 +50636,9 @@
         4558.74821026473,
         4611.269221635535,
         4663.79059310283
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 6,
@@ -50722,7 +50719,9 @@
         4558.74821026473,
         4611.269221635535,
         4663.79059310283
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 7,
@@ -50803,7 +50802,9 @@
         4558.74821026473,
         4611.269221635535,
         4663.79059310283
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 8,
@@ -50884,7 +50885,9 @@
         5224.021116106793,
         5259.0375643413145,
         5294.054252640163
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 9,
@@ -50965,7 +50968,9 @@
         5224.021116106793,
         5259.0375643413145,
         5294.054252640163
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 10,
@@ -51046,7 +51051,9 @@
         5224.021116106793,
         5259.0375643413145,
         5294.054252640163
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 11,
@@ -51127,7 +51134,9 @@
         5224.021116106793,
         5259.0375643413145,
         5294.054252640163
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 12,
@@ -51208,7 +51217,9 @@
         5451.628809840248,
         5469.137694134407,
         5486.646698460729
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 13,
@@ -51289,7 +51300,9 @@
         5451.628809840248,
         5469.137694134407,
         5486.646698460729
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 14,
@@ -51370,7 +51383,9 @@
         5451.628809840248,
         5469.137694134407,
         5486.646698460729
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     },
     {
       "id": 15,
@@ -51451,7 +51466,9 @@
         5451.628809840248,
         5469.137694134407,
         5486.646698460729
-      ]
+      ],
+      "reused_prefix_tokens": 0,
+      "computed_prefill_tokens": 2048
     }
   ],
   "timeline": [
@@ -129370,7 +129387,7 @@
     "upstream_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
     "model_architecture_source": "https://github.com/casys-kaist/LLMServingSim/blob/b09c7aaab4b072d73136641841cc2688616c49eb/configs/model/meta-llama/Llama-3.1-70B.json",
     "model_source_revision": "b09c7aaab4b072d73136641841cc2688616c49eb",
-    "config_sha256": "b6cc5fc3a5aa59b955ab997690210e7b92f9cb199c6894f1a1c9a53f84e841b7",
+    "config_sha256": "f37f7f88d98b246fc2017be784b03da7f7817e8f989f643244701ed717b532b9",
     "timing_source": "GPU service functions fitted to KAIST/Vidur profiles; no GPU-ID selection; SimPy serving and analytical network",
     "precision_note": "Peak TFLOPS must use dense/non-sparse values. Weight precision changes bytes; KV precision is configured separately; conversion overhead is excluded. GB/TB are decimal."
   }

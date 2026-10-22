@@ -43,28 +43,7 @@ const fields: Record<string, [string, string?]> = {
   idle_watts: ["Idle power", "W"],
   tdp_watts: ["TDP", "W"],
   hourly_cost: ["GPU hourly cost", "USD/h"],
-  enabled: ["Prefix retention"],
-  profile: ["SSD service model"],
-  hbm_cache_GB: ["Retained HBM / GPU", "GB"],
-  dram_cache_GB: ["Host DRAM cache", "GB"],
-  ssd_cache_GB: ["SSD cache capacity", "GB"],
-  pcie_GBps: ["Host–GPU aggregate link", "GB/s"],
-  pcie_latency_us: ["Host–GPU latency", "µs"],
-  ssd_transfer_mode: ["SSD transfer path"],
-  gds_GBps: ["Direct SSD–GPU link", "GB/s"],
-  gds_latency_us: ["GDS startup latency", "µs"],
-  publication_mode: ["Prefix publication"],
-  max_inflight_publications: ["In-flight prefix publications"],
-  disk_min_uses: ["SSD admission minimum uses"],
-  io_chunk_KiB: ["Storage I/O chunk", "KiB"],
-  ssd_read_GBps: ["SSD read bandwidth", "GB/s"],
-  ssd_write_GBps: ["SSD write bandwidth", "GB/s"],
-  ssd_read_latency_us: ["SSD read latency", "µs"],
-  ssd_write_latency_us: ["SSD write latency", "µs"],
-  hbm_resident_GB: ["HBM resident budget / GPU", "GB"],
-  staging_GB: ["GPU staging / GPU", "GB"],
-  dram_total_GB: ["Total host DRAM capacity", "GB"],
-  ssd_total_GB: ["Total SSD capacity", "GB"],
+  prefix_reuse_source: ["Prefix reuse assumption"],
   spine_bw_GBps: ["Spine bandwidth", "GB/s"],
   spine_latency_us: ["Spine latency", "µs"],
   handoff_channels: ["KV transfer channels"],
@@ -138,16 +117,12 @@ export function inputChanges(before: Obj, after: Obj, catalog: Obj): Change[] {
         prefill: "Prefill",
         decode: "Decode",
         network: "Network",
-        storage: "Retained prefixes",
-        active_kv: "Active decode KV",
         custom_model: "Model",
       } as Obj
     )[path[0]];
     let [label, unit = ""] = fields[key] || [humanize(key)];
     if (key.endsWith("_tflops"))
       [label, unit] = [humanize(key.replace("_tflops", "")), "TFLOPS"];
-    if (key === "placement")
-      label = path[0] === "storage" ? "Cache layout" : "Placement";
     function format(value: any): string {
       if (value === undefined || value === null) return "Not set";
       if (Array.isArray(value)) return `${value.length} request records`;
@@ -156,12 +131,11 @@ export function inputChanges(before: Obj, after: Obj, catalog: Obj): Change[] {
         return catalog.models[value]?.name || String(value);
       if (key === "hardware_id")
         return catalog.hardware[value]?.name || String(value);
-      if (key === "placement")
-        return (
-          (path[0] === "storage"
-            ? catalog.storage_layouts
-            : catalog.active_kv_placements)[value]?.label || String(value)
-        );
+      if (key === "prefix_reuse_source")
+        return value === "none"
+          ? "No reuse"
+          : catalog.prefix_reuse_evidence.workloads[value]?.label ||
+              String(value);
       if (["precision", "kv_precision"].includes(key))
         return String(value).toUpperCase();
       if (key === "timing_mode")

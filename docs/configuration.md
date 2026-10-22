@@ -111,7 +111,7 @@ concurrent transfers as one exclusively reserved resource.
 
 Scenario/result JSON includes the resolved model geometry or preset ID, pool
 policies, all hardware inputs and a SHA-256 fingerprint. Behavioral output uses
-`servescope.behavioral.v2`; legacy scenarios without new controls remain valid
+`servescope.behavioral.v7`; legacy scenarios without new controls remain valid
 and receive documented defaults. A legacy top-level `batch_size` initializes
 both pools; explicit per-pool values take precedence. On resolution, that legacy
 field becomes an alias for the prefill batch cap.
@@ -121,82 +121,17 @@ H200 prefill pool and A100 decode pool, independent batch caps and engine polici
 `examples/custom-decoder-scenario.json` demonstrates custom MHA geometry. These
 are strategy examples, not benchmark claims.
 
-## Optional KV storage tiers
+## HBM-resident prefix-reuse assumption
 
-Enable **KV storage tiers** to model retained prefix cache in HBM/DRAM/SSD. The
-implementation supports fixed uniform-length batches and one replica per pool.
-Layout selection preserves all batch and replica settings. Unsupported configurations
-are rejected explicitly. Concurrent requests and TP/PP/EP remain supported.
-Import an unchanged Mooncake JSONL window to preserve actual arrivals and token
-lengths; uniform workload fields are disabled while a trace supplies them.
-Selected traces are verified against the pinned source manifest.
+All active KV remains in HBM. **Prefix reuse assumption** is under Model & workload.
+The default computes the full prompt. Optional published Mooncake fractions are
+derived from matching prefixes at strictly earlier timestamps with unlimited history.
+They are applied uniformly as `min(input_length-1, floor(input_length*fraction))`.
+Remaining queries attend to the full preceding context; decode, KV capacity and
+full-context handoff are preserved. Cached state is assumed already ready in HBM.
+No persistent cache pool, eviction or cache readiness is simulated. This is a
+workload-informed warm-input assumption, not measured serving validation.
+See [the source counts and reproducible method](prefix-reuse/README.md).
 
-HBM cache GB is per prefill GPU; DRAM/SSD GB cover aggregate prefilling shards.
-Active HBM KV is reserved through explicit admission, separately from retained
-copies. Prefix publication can be asynchronous or blocking. SSD, host–GPU and
-GDS times use editable configured bandwidth/latency assumptions. Published
-Mooncake request traces do not contain device-service timings. Experimental
-active decode KV streaming remains independently selectable and unvalidated.
-See [trace coverage and timing equations](storage-model.md).
-
-### Cache layouts and eviction spill
-
-The **KV cache layout** selector controls placement and executed I/O, with independent
-capacity settings retained when switching layouts:
-
-| Layout | Placement behavior |
-| --- | --- |
-| HBM only / DRAM only / SSD only | Retain in the selected tier; discard LRU victims at capacity. |
-| HBM → DRAM / HBM → SSD | Place in HBM; move LRU victims to the named spill tier. |
-| DRAM → HBM / DRAM → SSD | Place in DRAM; move LRU victims to the named spill tier. |
-| SSD → HBM / SSD → DRAM | Place on SSD; move LRU victims to the named spill tier. |
-| HBM → DRAM → SSD | Cascade evictions through the three tiers. |
-| Custom inclusive copies | Original policy: publish copies to every tier with nonzero capacity. |
-| No retained prefix cache | Same configured fixed batching and explicit active-HBM admission, without prefix retention; useful comparison baseline. |
-| Disabled | Return to the original serving mode; tier-mode scheduling/admission is disabled too. |
-
-Arrows mean **primary placement → eviction destination**, including the explicitly
-supported DRAM-primary/HBM-spill policy. Spill layouts are exclusive: one retained
-copy per block, separate from active request KV. Hits update their tier's LRU order
-and stay in that tier; there is no automatic promotion. Pinned restore sources
-cannot be evicted. If all candidates are pinned, insertion bypasses that tier.
-Zero-capacity tiers are bypassed. Inactive capacities allocate no cache space or HBM
-reservation, even though their configured values are preserved for later selection.
-
-Spill copies become reusable only when their transfer completes. Publication waits
-for required eviction moves; outgoing victims are unavailable to new lookups while
-in flight. Host↔GPU moves use the PCIe queue, SSD→host moves read SSD, and host→SSD
-moves write SSD. Cascades charge each actual move; the last tier discards its LRU
-victim. These policies control retained prefixes; active decode placement is independent.
-The result exports the selected layout, spill direction/counts, transitions, queue
-intervals and resulting latency. The UI shows primary/spill/unused roles and the
-last 100 completed moves; exports retain every move.
-
-The fitted hit-rate forecast still represents a single-LRU policy reference. It
-uses summed exclusive-tier capacity (largest capacity for inclusive copies) as an
-approximate capacity feature. Its archived error does **not** validate these new
-multi-tier replacement policies. Runtime hits always come from the executed cache
-state. I/O fit coefficients/data are unchanged.
-
-### Fair layout comparisons and active KV scope
-
-Selecting a retained-prefix layout preserves batch sizes, replicas, model and workload.
-Uniform-length requests support fixed microbatches, including the default 4/4 caps.
-Each prefill group uses the minimum restored prefix across its members so its GPU
-query/context shape stays uniform; excess restored tokens are recomputed. Active KV
-admission reserves the whole microbatch atomically. Variable-length replay requires
-batch size one. Loading a trace does not change caps or replicas automatically.
-
-The retained-prefix “SSD only” selection means **SSD-only retained prompt prefixes**.
-Set **Active decode KV placement** independently to model per-token DRAM/SSD traffic.
-The default active placement is HBM only.
-See the [controlled default comparison](prefix-layout-comparison.md) for the original
-batching regression, corrected numbers, exact baseline-equivalence checks and scope.
-
-Turning prefix retention off preserves imported request records and their relative arrivals; only retained-cache placement is disabled. Uniform fields remain locked while records supply the workload. Use generated requests to return to uniform inputs.
-
-### Independent active decode KV
-
-Use **Active decode KV placement** independently of **Retained prefix cache layout**. Choose HBM, DRAM, SSD, HBM + DRAM spill or HBM + SSD spill. Hybrid HBM budgets and staging buffers are per decode GPU; total DRAM/SSD capacities are shared device totals, including enabled prefix partitions. Configure both lifetimes’ shared physical service functions in **KV I/O paths**.
-
-Offload adds explicit initialization, every-step reads and append writes, staging and backing admission. Prefill working KV remains in HBM. The model uses HBM-reference GPU costs plus serialized external stalls; its active-offload composition has no measured end-to-end error bound. See [equations, event interpretation and limitations](active-kv-model.md), and [controlled placement predictions](active-kv-comparison.md).
+Exports use `servescope.behavioral.v7`. Imports containing retired placement
+settings are rejected explicitly. Other older GPU-only scenarios default to no reuse.

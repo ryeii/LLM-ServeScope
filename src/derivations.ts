@@ -1,7 +1,3 @@
-import {
-  activeStageCalculation,
-  activeHandoffCalculation,
-} from "./activeCalculations";
 /* Run-specific dependency graph. Every edge is lazy, and leaves identify provenance. */
 import {
   type Calculation,
@@ -14,10 +10,6 @@ import {
   operationCalculation,
   quantileCalculation,
 } from "./calculations";
-import {
-  storageEventCalculation,
-  storageRequestCalculation,
-} from "./storageCalculations";
 type Obj = Record<string, any>;
 type Context = {
   metric?: string;
@@ -214,7 +206,6 @@ export function horizonCalculation(r: Obj): Calculation {
   };
 }
 export function requestCalculation(r: Obj, q: Obj, key: string): Calculation {
-  if (q.cache) return storageRequestCalculation(r, q, key);
   const c = r.config;
   if (key === "arrival_ms")
     return {
@@ -601,7 +592,6 @@ const eventLabel = (e: Obj) =>
       ? `${e.phase} pipeline link · chunk ${e.chunk}`
       : `${e.phase} stage ${e.stage ?? ""} · ${e.phase === "decode" ? "token step" : "chunk"} ${e.chunk} · batch ${e.batch_id}`;
 export function eventCalculation(r: Obj, e: Obj): Calculation {
-  if (e.phase === "storage") return storageEventCalculation(r, e);
   return {
     ...calc(
       eventLabel(e),
@@ -723,16 +713,6 @@ function queueCalculation(r: Obj, e: Obj): Calculation {
   };
 }
 export function eventService(r: Obj, e: Obj): Calculation {
-  if (e.phase === "storage") return storageEventCalculation(r, e);
-  if (e.kind === "active_handoff") return activeHandoffCalculation(r, e);
-  if (e.active_io_event_ids !== undefined)
-    return activeStageCalculation(r, e, () =>
-      eventService(r, {
-        ...e,
-        active_io_event_ids: undefined,
-        duration_ms: e.gpu_service_ms,
-      }),
-    );
   if (e.phase === "transfer" || e.kind === "pipeline_transfer")
     return {
       ...calc(
@@ -2383,11 +2363,7 @@ function busyCalculation(
           "Busy_GPU_ms = Σ stage_service_ms × TP × EP",
           [
             ...r.timeline
-              .filter(
-                (e: Obj) =>
-                  e.resource === resource &&
-                  (!computeOnly || e.kind !== "active_staging"),
-              )
+              .filter((e: Obj) => e.resource === resource && true)
               .map((e: Obj) =>
                 ms(
                   `event_${e.event_id}`,
@@ -2401,7 +2377,6 @@ function busyCalculation(
                       computeOnly
                         ? {
                             ...e,
-                            active_io_event_ids: undefined,
                             duration_ms: e.gpu_service_ms ?? e.duration_ms,
                           }
                         : e,

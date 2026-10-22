@@ -134,7 +134,7 @@ extrapolation as a measured KAIST result. No accuracy percentage is claimed here
 ## Reproducibility
 
 All results include resolved inputs, configuration SHA-256 and source revisions.
-Behavioral results now use `servescope.behavioral.v3`, including timing provenance and calibration fingerprints. Legacy scenarios with a
+Behavioral results now use `servescope.behavioral.v7`, including timing provenance and calibration fingerprints. Legacy scenarios with a
 single top-level `batch_size` and missing server controls are still accepted;
 that batch size initializes both pool caps. Resolved per-pool caps take precedence,
 and the top-level field remains an alias for the prefill cap.
@@ -143,21 +143,17 @@ checks, binary/profile/runner hashes, exact command/config/workload, raw CSV/log
 actual Chakra DAGs, and wall/RSS watchdog measurements. Its build adaptation is
 isolated and documented in `integration/README.md`.
 
-## Optional cache-aware storage mode
+## HBM-resident prefix-reuse assumption
 
-The retained original capacity/fixed-workload descriptions above apply when KV
-tiers are disabled. Tier mode reserves active KV only when memory admission
-grants it, uses actual per-request lengths, restores ready contiguous prefixes,
-and executes remaining query tokens with full attention context. Inclusive
-retained copies use explicit per-tier capacities. Publication can be asynchronous
-or blocking before KV handoff. Active decode KV defaults to HBM and has a separate
-placement control.
-Published Mooncake request traces provide arrivals, token lengths and prefix
-identities. They contain no device-service timing measurements. SSD, host–GPU
-and GDS timing are configured assumptions. Trace-policy prefix-reuse fits are
-separate from device timing and never assign runtime cache hits. Read the
-[trace coverage and storage assumptions](storage-model.md).
+All active KV remains in HBM. **Prefix reuse assumption** is under Model & workload.
+The default computes the full prompt. Optional published Mooncake fractions are
+derived from matching prefixes at strictly earlier timestamps with unlimited history.
+They are applied uniformly as `min(input_length-1, floor(input_length*fraction))`.
+Remaining queries attend to the full preceding context; decode, KV capacity and
+full-context handoff are preserved. Cached state is assumed already ready in HBM.
+No persistent cache pool, eviction or cache readiness is simulated. This is a
+workload-informed warm-input assumption, not measured serving validation.
+See [the source counts and reproducible method](prefix-reuse/README.md).
 
-Cache placement now follows the selected [single-tier, exclusive-spill or inclusive-copy policy](configuration.md#cache-layouts-and-eviction-spill). Spill transfer costs and readiness are scheduled explicitly. Active decode placement is independent; hit-fit residuals remain single-LRU replay validation, with no new multi-tier or streamed-attention calibration claim.
-
-Fixed uniform-length prefix-cache microbatches preserve the configured prefill/decode caps and use a common restored-prefix floor. Group HBM admission is atomic. [Controlled baseline comparisons](prefix-layout-comparison.md) hold active decode KV in HBM. The [active-KV model](active-kv-model.md) separately documents serialized DRAM/SSD backing, staging, admission and queue assumptions. Its end-to-end accuracy is unvalidated.
+Exports use `servescope.behavioral.v7`. Imports containing retired placement
+settings are rejected explicitly. Other older GPU-only scenarios default to no reuse.

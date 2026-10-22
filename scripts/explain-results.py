@@ -76,7 +76,7 @@ def box(x,y,w,h,title,detail):
 def arrow(a,b):ax.add_patch(FancyArrowPatch(a,b,arrowstyle='-|>',mutation_scale=13,lw=1.2,color='#587181',connectionstyle='arc3'))
 box(.25,8.35,3.45,1.05,'Workload','16 requests · 8 requests/s\n2,048 input · 64 output tokens')
 box(4.2,8.35,3.45,1.05,'GPU service estimates','Model geometry + GPU specs\n+ functions fitted to profiles')
-box(8.15,8.35,3.45,1.05,'Serving and I/O settings','Batch cap 4 · separate pools\nKV payload + bandwidth + latency')
+box(8.15,8.35,3.45,1.05,'Serving and network settings','Batch cap 4 · separate pools\nKV handoff + bandwidth + latency')
 box(2.0,6.25,8.0,1.15,'SimPy schedules work on shared resources','Work readiness + resource availability → start time\nStart time + modeled service duration → finish time')
 for x in [1.975,5.925,9.875]:arrow((x,8.25),(6,7.5))
 box(2.0,4.35,8.0,1.05,'Each request gets a timestamped path','Arrival → batch ready → prefill → KV handoff → decode → completion')
@@ -90,5 +90,7 @@ ax.set_title('How inputs become the reported throughput',loc='left',fontsize=17,
 for ext in ['png','svg']:fig.savefig(OUT/f'calculation-process.{ext}',dpi=180,bbox_inches='tight')
 plt.close(fig)
 summary=dict(source='examples/default-result.json',source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),config_sha256=r['provenance']['config_sha256'],request_id=12,arrival_ms=q['arrival_ms'],formation_wait_ms=formation,spans=spans,finish_ms=q['finish_ms'],latency_ms=q['latency_ms'],ttft_ms=q['ttft_ms'],tpot_ms=q['tpot_ms'],throughput_tps=r['metrics']['throughput_tps'])
+for target in OUT.glob('*.svg'):
+    target.write_text('\n'.join(line.rstrip() for line in target.read_text().splitlines())+'\n')
 (OUT/'numbers.json').write_text(json.dumps(summary,indent=2)+'\n')
 print(json.dumps(summary,indent=2))

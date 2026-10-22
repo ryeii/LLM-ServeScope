@@ -16,5 +16,4 @@ playwright-report/
 
 dist-pages/
 
-public/workloads/mooncake/
-public/trace-reuse/
+public/prefix-reuse/

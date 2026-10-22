@@ -19,7 +19,6 @@ from backend.model import (
 class ConfigurationTests(unittest.TestCase):
     def config(self):
         c = copy.deepcopy(DEFAULT)
-        c['storage']['enabled'] = False  # General serving tests, including multiple replicas.
         c.update(
             model_id="llama8",
             requests=12,
